@@ -1,0 +1,4698 @@
+[
+  {
+    "name_he": "אבו גוש",
+    "slug": "abu-ghosh"
+  },
+  {
+    "name_he": "אבו סנאן",
+    "slug": "abu-sinan"
+  },
+  {
+    "name_he": "אבטין",
+    "slug": "ibtin"
+  },
+  {
+    "name_he": "אבטליון",
+    "slug": "avtalyon"
+  },
+  {
+    "name_he": "אביאל",
+    "slug": "aviel"
+  },
+  {
+    "name_he": "אביבים",
+    "slug": "avivim"
+  },
+  {
+    "name_he": "אביגדור",
+    "slug": "avigedor"
+  },
+  {
+    "name_he": "אביחיל",
+    "slug": "avihayil"
+  },
+  {
+    "name_he": "אביטל",
+    "slug": "avital"
+  },
+  {
+    "name_he": "אביעזר",
+    "slug": "aviezer"
+  },
+  {
+    "name_he": "אבירים",
+    "slug": "abbirim"
+  },
+  {
+    "name_he": "אבן יהודה",
+    "slug": "even-yehuda"
+  },
+  {
+    "name_he": "אבן מנחם",
+    "slug": "even-menahem"
+  },
+  {
+    "name_he": "אבן ספיר",
+    "slug": "even-sappir"
+  },
+  {
+    "name_he": "אבן שמואל",
+    "slug": "even-shemuel"
+  },
+  {
+    "name_he": "אבני איתן",
+    "slug": "avne-etan"
+  },
+  {
+    "name_he": "אבני חפץ",
+    "slug": "avne-hefez"
+  },
+  {
+    "name_he": "אבנת",
+    "slug": "avenat"
+  },
+  {
+    "name_he": "אדורה",
+    "slug": "adora"
+  },
+  {
+    "name_he": "אדירים",
+    "slug": "addirim"
+  },
+  {
+    "name_he": "אדמית",
+    "slug": "adamit"
+  },
+  {
+    "name_he": "אדרת",
+    "slug": "adderet"
+  },
+  {
+    "name_he": "אודים",
+    "slug": "udim"
+  },
+  {
+    "name_he": "אודם",
+    "slug": "odem"
+  },
+  {
+    "name_he": "אוהד",
+    "slug": "ohad"
+  },
+  {
+    "name_he": "אוהלו",
+    "slug": "oholo"
+  },
+  {
+    "name_he": "אום אל-פחם",
+    "slug": "umm-al-fahm"
+  },
+  {
+    "name_he": "אום אל-קוטוף",
+    "slug": "umm-al-qutuf"
+  },
+  {
+    "name_he": "אומן",
+    "slug": "omen"
+  },
+  {
+    "name_he": "אומץ",
+    "slug": "omez"
+  },
+  {
+    "name_he": "אופקים",
+    "slug": "ofaqim"
+  },
+  {
+    "name_he": "אור הגנוז",
+    "slug": "or-haganuz"
+  },
+  {
+    "name_he": "אור הנר",
+    "slug": "or-haner"
+  },
+  {
+    "name_he": "אור יהודה",
+    "slug": "or-yehuda"
+  },
+  {
+    "name_he": "אור עקיבא",
+    "slug": "or-aqiva"
+  },
+  {
+    "name_he": "אורה",
+    "slug": "ora"
+  },
+  {
+    "name_he": "אורות",
+    "slug": "orot"
+  },
+  {
+    "name_he": "אורטל",
+    "slug": "ortal"
+  },
+  {
+    "name_he": "אורים",
+    "slug": "urim"
+  },
+  {
+    "name_he": "אורנית",
+    "slug": "oranit"
+  },
+  {
+    "name_he": "אושה",
+    "slug": "usha"
+  },
+  {
+    "name_he": "אזור",
+    "slug": "azor"
+  },
+  {
+    "name_he": "אחווה",
+    "slug": "ahawa"
+  },
+  {
+    "name_he": "אחוזם",
+    "slug": "ahuzzam"
+  },
+  {
+    "name_he": "אחוזת ברק",
+    "slug": "ahuzzat-baraq"
+  },
+  {
+    "name_he": "אחיהוד",
+    "slug": "ahihud"
+  },
+  {
+    "name_he": "אחיטוב",
+    "slug": "ahituv"
+  },
+  {
+    "name_he": "אחיסמך",
+    "slug": "ahisamakh"
+  },
+  {
+    "name_he": "אחיעזר",
+    "slug": "ahiezer"
+  },
+  {
+    "name_he": "אייל",
+    "slug": "eyal"
+  },
+  {
+    "name_he": "איילת השחר",
+    "slug": "ayyelet-hashahar"
+  },
+  {
+    "name_he": "אילון",
+    "slug": "elon"
+  },
+  {
+    "name_he": "אילות",
+    "slug": "elot"
+  },
+  {
+    "name_he": "אילנייה",
+    "slug": "ilaniyya"
+  },
+  {
+    "name_he": "אילת",
+    "slug": "elat"
+  },
+  {
+    "name_he": "איתמר",
+    "slug": "itamar"
+  },
+  {
+    "name_he": "איתן",
+    "slug": "etan"
+  },
+  {
+    "name_he": "איתנים",
+    "slug": "etanim"
+  },
+  {
+    "name_he": "אכסאל",
+    "slug": "iksal"
+  },
+  {
+    "name_he": "אל -עזי",
+    "slug": "al-azy"
+  },
+  {
+    "name_he": "אל -עריאן",
+    "slug": "al-aryan"
+  },
+  {
+    "name_he": "אל -רום",
+    "slug": "el-rom"
+  },
+  {
+    "name_he": "אלומה",
+    "slug": "alumma"
+  },
+  {
+    "name_he": "אלומות",
+    "slug": "alummot"
+  },
+  {
+    "name_he": "אלון הגליל",
+    "slug": "allon-hagalil"
+  },
+  {
+    "name_he": "אלון מורה",
+    "slug": "elon-more"
+  },
+  {
+    "name_he": "אלון שבות",
+    "slug": "allon-shevut"
+  },
+  {
+    "name_he": "אלוני אבא",
+    "slug": "allone-abba"
+  },
+  {
+    "name_he": "אלוני הבשן",
+    "slug": "allone-habashan"
+  },
+  {
+    "name_he": "אלוני יצחק",
+    "slug": "allone-yizhaq"
+  },
+  {
+    "name_he": "אלונים",
+    "slug": "allonim"
+  },
+  {
+    "name_he": "אלי סיני",
+    "slug": "ele-sinay"
+  },
+  {
+    "name_he": "אלי-עד",
+    "slug": "eli-ad"
+  },
+  {
+    "name_he": "אליכין",
+    "slug": "elyakhin"
+  },
+  {
+    "name_he": "אליפז",
+    "slug": "elifaz"
+  },
+  {
+    "name_he": "אליפלט",
+    "slug": "elifelet"
+  },
+  {
+    "name_he": "אליקים",
+    "slug": "elyaqim"
+  },
+  {
+    "name_he": "אלישיב",
+    "slug": "elyashiv"
+  },
+  {
+    "name_he": "אלישמע",
+    "slug": "elishama"
+  },
+  {
+    "name_he": "אלמגור",
+    "slug": "almagor"
+  },
+  {
+    "name_he": "אלמוג",
+    "slug": "almog"
+  },
+  {
+    "name_he": "אלעד",
+    "slug": "elad"
+  },
+  {
+    "name_he": "אלעזר",
+    "slug": "elazar"
+  },
+  {
+    "name_he": "אלפי מנשה",
+    "slug": "alfe-menashe"
+  },
+  {
+    "name_he": "אלקוש",
+    "slug": "elqosh"
+  },
+  {
+    "name_he": "אלקנה",
+    "slug": "elqana"
+  },
+  {
+    "name_he": "אמונים",
+    "slug": "emunim"
+  },
+  {
+    "name_he": "אמירים",
+    "slug": "amirim"
+  },
+  {
+    "name_he": "אמנון",
+    "slug": "amnun"
+  },
+  {
+    "name_he": "אמציה",
+    "slug": "amazya"
+  },
+  {
+    "name_he": "אניעם",
+    "slug": "aniam"
+  },
+  {
+    "name_he": "אספר",
+    "slug": "asfar"
+  },
+  {
+    "name_he": "אעבלין",
+    "slug": "ibillin"
+  },
+  {
+    "name_he": "אפיק",
+    "slug": "afiq"
+  },
+  {
+    "name_he": "אפיקים",
+    "slug": "afiqim"
+  },
+  {
+    "name_he": "אפק",
+    "slug": "afeq"
+  },
+  {
+    "name_he": "אפרתה",
+    "slug": "efrata"
+  },
+  {
+    "name_he": "ארבל",
+    "slug": "arbel"
+  },
+  {
+    "name_he": "ארגמן",
+    "slug": "argaman"
+  },
+  {
+    "name_he": "ארז",
+    "slug": "erez"
+  },
+  {
+    "name_he": "אריאל",
+    "slug": "ariel"
+  },
+  {
+    "name_he": "ארסוף",
+    "slug": "arsuf"
+  },
+  {
+    "name_he": "אשבול",
+    "slug": "eshbol"
+  },
+  {
+    "name_he": "אשדוד",
+    "slug": "ashdod"
+  },
+  {
+    "name_he": "אשדות יעקב (איחוד)",
+    "slug": "ashdot-yaaqov-ihud"
+  },
+  {
+    "name_he": "אשדות יעקב (מאוחד)",
+    "slug": "ashdot-yaaqov-meuhad"
+  },
+  {
+    "name_he": "אשחר",
+    "slug": "eshhar"
+  },
+  {
+    "name_he": "אשכולות",
+    "slug": "eshkolot"
+  },
+  {
+    "name_he": "אשלים",
+    "slug": "ashalim"
+  },
+  {
+    "name_he": "אשקלון",
+    "slug": "ashqelon"
+  },
+  {
+    "name_he": "אשרת",
+    "slug": "asherat"
+  },
+  {
+    "name_he": "אשתאול",
+    "slug": "eshtaol"
+  },
+  {
+    "name_he": "באקה-ג'ת",
+    "slug": "baqa-jatt"
+  },
+  {
+    "name_he": "באר טוביה",
+    "slug": "beer-toviyya"
+  },
+  {
+    "name_he": "באר יעקב",
+    "slug": "beer-yaaqov"
+  },
+  {
+    "name_he": "באר שבע",
+    "slug": "beersheba"
+  },
+  {
+    "name_he": "בארות יצחק",
+    "slug": "beerot-yizhaq"
+  },
+  {
+    "name_he": "בארותיים",
+    "slug": "beerotayim"
+  },
+  {
+    "name_he": "בארי",
+    "slug": "beeri"
+  },
+  {
+    "name_he": "בוסתן הגליל",
+    "slug": "bustan-hagalil"
+  },
+  {
+    "name_he": "בועיינה-נוג'ידאת",
+    "slug": "bueine-nujeidat"
+  },
+  {
+    "name_he": "בוקעאתא",
+    "slug": "buqata"
+  },
+  {
+    "name_he": "בורגתה",
+    "slug": "burgeta"
+  },
+  {
+    "name_he": "בחן",
+    "slug": "bahan"
+  },
+  {
+    "name_he": "בטחה",
+    "slug": "bitha"
+  },
+  {
+    "name_he": "ביאדה",
+    "slug": "bayada"
+  },
+  {
+    "name_he": "ביצרון",
+    "slug": "bizzaron"
+  },
+  {
+    "name_he": "ביר אל-מכסור",
+    "slug": "bir-el-maksur"
+  },
+  {
+    "name_he": "בירייה",
+    "slug": "biriyya"
+  },
+  {
+    "name_he": "בית אורן",
+    "slug": "bet-oren"
+  },
+  {
+    "name_he": "בית אל",
+    "slug": "bet-el"
+  },
+  {
+    "name_he": "בית אלעזרי",
+    "slug": "bet-elazari"
+  },
+  {
+    "name_he": "בית אלפא",
+    "slug": "bet-alfa"
+  },
+  {
+    "name_he": "בית אריה",
+    "slug": "bet-arye"
+  },
+  {
+    "name_he": "בית ברל",
+    "slug": "bet-berl"
+  },
+  {
+    "name_he": "בית ג,מאל",
+    "slug": "beit-jimal"
+  },
+  {
+    "name_he": "בית ג'ן",
+    "slug": "beit-jann"
+  },
+  {
+    "name_he": "בית גוברין",
+    "slug": "bet-guvrin"
+  },
+  {
+    "name_he": "בית גמליאל",
+    "slug": "bet-gamliel"
+  },
+  {
+    "name_he": "בית דגן",
+    "slug": "bet-dagan"
+  },
+  {
+    "name_he": "בית הגדי",
+    "slug": "bet-hagaddi"
+  },
+  {
+    "name_he": "בית הלוי",
+    "slug": "bet-halewi"
+  },
+  {
+    "name_he": "בית הלל",
+    "slug": "bet-hillel"
+  },
+  {
+    "name_he": "בית העמק",
+    "slug": "bet-haemeq"
+  },
+  {
+    "name_he": "בית הערבה",
+    "slug": "bet-haarava"
+  },
+  {
+    "name_he": "בית השיטה",
+    "slug": "bet-hashitta"
+  },
+  {
+    "name_he": "בית זיד",
+    "slug": "bet-zeid"
+  },
+  {
+    "name_he": "בית זית",
+    "slug": "bet-zayit"
+  },
+  {
+    "name_he": "בית זרע",
+    "slug": "bet-zera"
+  },
+  {
+    "name_he": "בית חורון",
+    "slug": "bet-horon"
+  },
+  {
+    "name_he": "בית חירות",
+    "slug": "bet-herut"
+  },
+  {
+    "name_he": "בית חלקיה",
+    "slug": "bet-hilqiyya"
+  },
+  {
+    "name_he": "בית חנן",
+    "slug": "bet-hanan"
+  },
+  {
+    "name_he": "בית חנניה",
+    "slug": "bet-hananya"
+  },
+  {
+    "name_he": "בית חשמונאי",
+    "slug": "bet-hashmonay"
+  },
+  {
+    "name_he": "בית יהושע",
+    "slug": "bet-yehoshua"
+  },
+  {
+    "name_he": "בית יוסף",
+    "slug": "bet-yosef"
+  },
+  {
+    "name_he": "בית ינאי",
+    "slug": "bet-yannay"
+  },
+  {
+    "name_he": "בית יצחק-שער חפר",
+    "slug": "bet-yizhaq-sh-hefer"
+  },
+  {
+    "name_he": "בית לחם הגלילית",
+    "slug": "bet-lehem-hagelilit"
+  },
+  {
+    "name_he": "בית מאיר",
+    "slug": "bet-meir"
+  },
+  {
+    "name_he": "בית נחמיה",
+    "slug": "bet-nehemya"
+  },
+  {
+    "name_he": "בית ניר",
+    "slug": "bet-nir"
+  },
+  {
+    "name_he": "בית נקופה",
+    "slug": "bet-neqofa"
+  },
+  {
+    "name_he": "בית עובד",
+    "slug": "bet-oved"
+  },
+  {
+    "name_he": "בית עוזיאל",
+    "slug": "bet-uzziel"
+  },
+  {
+    "name_he": "בית עזרא",
+    "slug": "bet-ezra"
+  },
+  {
+    "name_he": "בית עריף",
+    "slug": "bet-arif"
+  },
+  {
+    "name_he": "בית קמה",
+    "slug": "bet-qama"
+  },
+  {
+    "name_he": "בית קשת",
+    "slug": "bet-qeshet"
+  },
+  {
+    "name_he": "בית רבן",
+    "slug": "bet-rabban"
+  },
+  {
+    "name_he": "בית רימון",
+    "slug": "bet-rimmon"
+  },
+  {
+    "name_he": "בית שאן",
+    "slug": "bet-shean"
+  },
+  {
+    "name_he": "בית שמש",
+    "slug": "bet-shemesh"
+  },
+  {
+    "name_he": "בית שערים",
+    "slug": "bet-shearim"
+  },
+  {
+    "name_he": "בית שקמה",
+    "slug": "bet-shiqma"
+  },
+  {
+    "name_he": "ביתן אהרן",
+    "slug": "bitan-aharon"
+  },
+  {
+    "name_he": "ביתר עילית",
+    "slug": "betar-illit"
+  },
+  {
+    "name_he": "בכורה",
+    "slug": "city-1135"
+  },
+  {
+    "name_he": "בלפוריה",
+    "slug": "balfurya"
+  },
+  {
+    "name_he": "בן זכאי",
+    "slug": "ben-zakkay"
+  },
+  {
+    "name_he": "בן עמי",
+    "slug": "ben-ammi"
+  },
+  {
+    "name_he": "בן שמן (כפר נוער)",
+    "slug": "ben-shemen-k-noar"
+  },
+  {
+    "name_he": "בן שמן (מושב)",
+    "slug": "ben-shemen-moshav"
+  },
+  {
+    "name_he": "בני ברק",
+    "slug": "bnei-brak"
+  },
+  {
+    "name_he": "בני דרום",
+    "slug": "bene-darom"
+  },
+  {
+    "name_he": "בני דרור",
+    "slug": "bene-deror"
+  },
+  {
+    "name_he": "בני יהודה",
+    "slug": "bene-yehuda"
+  },
+  {
+    "name_he": "בני עטרות",
+    "slug": "bene-atarot"
+  },
+  {
+    "name_he": "בני עי\"ש",
+    "slug": "bene-ayish"
+  },
+  {
+    "name_he": "בני ציון",
+    "slug": "bene-ziyyon"
+  },
+  {
+    "name_he": "בני ראם",
+    "slug": "bene-reem"
+  },
+  {
+    "name_he": "בניה",
+    "slug": "benaya"
+  },
+  {
+    "name_he": "בנימינה",
+    "slug": "binyamina-givat-ada"
+  },
+  {
+    "name_he": "בסמת טבעון",
+    "slug": "basmat-tabun"
+  },
+  {
+    "name_he": "בענה",
+    "slug": "bine"
+  },
+  {
+    "name_he": "בצרה",
+    "slug": "bazra"
+  },
+  {
+    "name_he": "בצת",
+    "slug": "bezet"
+  },
+  {
+    "name_he": "בקוע",
+    "slug": "beqoa"
+  },
+  {
+    "name_he": "בקעות",
+    "slug": "beqaot"
+  },
+  {
+    "name_he": "בר גיורא",
+    "slug": "bar-giyyora"
+  },
+  {
+    "name_he": "בר יוחאי",
+    "slug": "bar-yohay"
+  },
+  {
+    "name_he": "ברור חיל",
+    "slug": "beror-hayil"
+  },
+  {
+    "name_he": "ברוש",
+    "slug": "berosh"
+  },
+  {
+    "name_he": "ברטעה",
+    "slug": "bartaa"
+  },
+  {
+    "name_he": "ברכה",
+    "slug": "berakha"
+  },
+  {
+    "name_he": "ברכיה",
+    "slug": "berekhya"
+  },
+  {
+    "name_he": "ברעם",
+    "slug": "baram"
+  },
+  {
+    "name_he": "ברק",
+    "slug": "baraq"
+  },
+  {
+    "name_he": "ברקאי",
+    "slug": "barqay"
+  },
+  {
+    "name_he": "ברקן",
+    "slug": "barqan"
+  },
+  {
+    "name_he": "ברקת",
+    "slug": "bareqet"
+  },
+  {
+    "name_he": "בת חפר",
+    "slug": "bat-hefer"
+  },
+  {
+    "name_he": "בת ים",
+    "slug": "bat-yam"
+  },
+  {
+    "name_he": "בת עין",
+    "slug": "bat-ayin"
+  },
+  {
+    "name_he": "בת שלמה",
+    "slug": "bat-shelomo"
+  },
+  {
+    "name_he": "ג'דיידה-מכר",
+    "slug": "judeide-maker"
+  },
+  {
+    "name_he": "ג'ולס",
+    "slug": "julis"
+  },
+  {
+    "name_he": "ג'לג'וליה",
+    "slug": "jaljulye"
+  },
+  {
+    "name_he": "ג'סר א-זרקא",
+    "slug": "jisr-az-zarqa"
+  },
+  {
+    "name_he": "ג'ש (גוש חלב)",
+    "slug": "jish-gush-halav"
+  },
+  {
+    "name_he": "גאולי תימן",
+    "slug": "geule-teman"
+  },
+  {
+    "name_he": "גאולים",
+    "slug": "geulim"
+  },
+  {
+    "name_he": "גאליה",
+    "slug": "gealya"
+  },
+  {
+    "name_he": "גבולות",
+    "slug": "gevulot"
+  },
+  {
+    "name_he": "גבים",
+    "slug": "gevim"
+  },
+  {
+    "name_he": "גבע",
+    "slug": "geva"
+  },
+  {
+    "name_he": "גבע בנימין",
+    "slug": "geva-binyamin"
+  },
+  {
+    "name_he": "גבע כרמל",
+    "slug": "geva-karmel"
+  },
+  {
+    "name_he": "גבעולים",
+    "slug": "givolim"
+  },
+  {
+    "name_he": "גבעון החדשה",
+    "slug": "givon-hahadasha"
+  },
+  {
+    "name_he": "גבעת אבני",
+    "slug": "givat-avni"
+  },
+  {
+    "name_he": "גבעת אלה",
+    "slug": "givat-ela"
+  },
+  {
+    "name_he": "גבעת ברנר",
+    "slug": "givat-brenner"
+  },
+  {
+    "name_he": "גבעת השלושה",
+    "slug": "givat-hashelosha"
+  },
+  {
+    "name_he": "גבעת זאב",
+    "slug": "givat-zeev"
+  },
+  {
+    "name_he": "גבעת ח\"ן",
+    "slug": "givat-hen"
+  },
+  {
+    "name_he": "גבעת חיים (איחוד)",
+    "slug": "givat-hayyim-ihud"
+  },
+  {
+    "name_he": "גבעת חיים (מאוחד)",
+    "slug": "givat-hayyim-meuhad"
+  },
+  {
+    "name_he": "גבעת יואב",
+    "slug": "givat-yoav"
+  },
+  {
+    "name_he": "גבעת יערים",
+    "slug": "givat-yearim"
+  },
+  {
+    "name_he": "גבעת ישעיהו",
+    "slug": "givat-yeshayahu"
+  },
+  {
+    "name_he": "גבעת כ\"ח",
+    "slug": "givat-koah"
+  },
+  {
+    "name_he": "גבעת ניל\"י",
+    "slug": "givat-nili"
+  },
+  {
+    "name_he": "גבעת עדה",
+    "slug": "binyamina-givat-ada-50"
+  },
+  {
+    "name_he": "גבעת עוז",
+    "slug": "givat-oz"
+  },
+  {
+    "name_he": "גבעת שמואל",
+    "slug": "givat-shemuel"
+  },
+  {
+    "name_he": "גבעת שמש",
+    "slug": "givat-shemesh"
+  },
+  {
+    "name_he": "גבעת שפירא",
+    "slug": "givat-shappira"
+  },
+  {
+    "name_he": "גבעתי",
+    "slug": "givati"
+  },
+  {
+    "name_he": "גבעתיים",
+    "slug": "givatayim"
+  },
+  {
+    "name_he": "גברעם",
+    "slug": "gevaram"
+  },
+  {
+    "name_he": "גבת",
+    "slug": "gevat"
+  },
+  {
+    "name_he": "גדות",
+    "slug": "gadot"
+  },
+  {
+    "name_he": "גדיש",
+    "slug": "gadish"
+  },
+  {
+    "name_he": "גדעונה",
+    "slug": "gidona"
+  },
+  {
+    "name_he": "גדרה",
+    "slug": "gedera"
+  },
+  {
+    "name_he": "גונן",
+    "slug": "gonen"
+  },
+  {
+    "name_he": "גורן",
+    "slug": "goren"
+  },
+  {
+    "name_he": "גורנות הגליל",
+    "slug": "gornot-hagalil"
+  },
+  {
+    "name_he": "גזית",
+    "slug": "gazit"
+  },
+  {
+    "name_he": "גזר",
+    "slug": "gezer"
+  },
+  {
+    "name_he": "גיאה",
+    "slug": "gea"
+  },
+  {
+    "name_he": "גיבתון",
+    "slug": "gibbeton"
+  },
+  {
+    "name_he": "גיזו",
+    "slug": "gizo"
+  },
+  {
+    "name_he": "גילון",
+    "slug": "gilon"
+  },
+  {
+    "name_he": "גילת",
+    "slug": "gilat"
+  },
+  {
+    "name_he": "גינוסר",
+    "slug": "ginnosar"
+  },
+  {
+    "name_he": "גיניגר",
+    "slug": "ginnegar"
+  },
+  {
+    "name_he": "גינתון",
+    "slug": "ginnaton"
+  },
+  {
+    "name_he": "גיתה",
+    "slug": "gitta"
+  },
+  {
+    "name_he": "גיתית",
+    "slug": "gittit"
+  },
+  {
+    "name_he": "גלאון",
+    "slug": "galon"
+  },
+  {
+    "name_he": "גלגל",
+    "slug": "gilgal"
+  },
+  {
+    "name_he": "גלעד (אבן יצחק)",
+    "slug": "galed-even-yizhaq"
+  },
+  {
+    "name_he": "גמזו",
+    "slug": "gimzo"
+  },
+  {
+    "name_he": "גן הדרום",
+    "slug": "gan-hadarom"
+  },
+  {
+    "name_he": "גן השומרון",
+    "slug": "gan-hashomeron"
+  },
+  {
+    "name_he": "גן חיים",
+    "slug": "gan-hayyim"
+  },
+  {
+    "name_he": "גן יאשיה",
+    "slug": "gan-yoshiyya"
+  },
+  {
+    "name_he": "גן יבנה",
+    "slug": "gan-yavne"
+  },
+  {
+    "name_he": "גן נר",
+    "slug": "gan-ner"
+  },
+  {
+    "name_he": "גן שלמה",
+    "slug": "gan-shelomo"
+  },
+  {
+    "name_he": "גן שמואל",
+    "slug": "gan-shemuel"
+  },
+  {
+    "name_he": "גנות",
+    "slug": "gannot"
+  },
+  {
+    "name_he": "גנות הדר",
+    "slug": "gannot-hadar"
+  },
+  {
+    "name_he": "גני הדר",
+    "slug": "ganne-hadar"
+  },
+  {
+    "name_he": "גני יוחנן",
+    "slug": "ganne-yohanan"
+  },
+  {
+    "name_he": "גני עם",
+    "slug": "ganne-am"
+  },
+  {
+    "name_he": "גני תקווה",
+    "slug": "ganne-tiqwa"
+  },
+  {
+    "name_he": "גנים",
+    "slug": "gannim"
+  },
+  {
+    "name_he": "געש",
+    "slug": "gaash"
+  },
+  {
+    "name_he": "געתון",
+    "slug": "gaton"
+  },
+  {
+    "name_he": "גפן",
+    "slug": "gefen"
+  },
+  {
+    "name_he": "גרופית",
+    "slug": "gerofit"
+  },
+  {
+    "name_he": "גשור",
+    "slug": "geshur"
+  },
+  {
+    "name_he": "גשר",
+    "slug": "gesher"
+  },
+  {
+    "name_he": "גשר הזיו",
+    "slug": "gesher-haziw"
+  },
+  {
+    "name_he": "גת",
+    "slug": "jatt"
+  },
+  {
+    "name_he": "גת (קיבוץ)",
+    "slug": "gat-qibbuz"
+  },
+  {
+    "name_he": "גת רימון",
+    "slug": "gat-rimmon"
+  },
+  {
+    "name_he": "דבורה",
+    "slug": "devora"
+  },
+  {
+    "name_he": "דבורייה",
+    "slug": "daburiyya"
+  },
+  {
+    "name_he": "דבירה",
+    "slug": "devira"
+  },
+  {
+    "name_he": "דברת",
+    "slug": "daverat"
+  },
+  {
+    "name_he": "דגניה א'",
+    "slug": "deganya-alef"
+  },
+  {
+    "name_he": "דגניה ב'",
+    "slug": "deganya-bet"
+  },
+  {
+    "name_he": "דוב\"ב",
+    "slug": "dovev"
+  },
+  {
+    "name_he": "דוגית",
+    "slug": "dugit"
+  },
+  {
+    "name_he": "דולב",
+    "slug": "dolev"
+  },
+  {
+    "name_he": "דור",
+    "slug": "dor"
+  },
+  {
+    "name_he": "דורות",
+    "slug": "dorot"
+  },
+  {
+    "name_he": "דחי",
+    "slug": "dahi"
+  },
+  {
+    "name_he": "דייר חנא",
+    "slug": "deir-hanna"
+  },
+  {
+    "name_he": "דייר ראפאת",
+    "slug": "deir-rafat"
+  },
+  {
+    "name_he": "דימונה",
+    "slug": "dimona"
+  },
+  {
+    "name_he": "דיר אל-אסד",
+    "slug": "deir-al-asad"
+  },
+  {
+    "name_he": "דישון",
+    "slug": "dishon"
+  },
+  {
+    "name_he": "דלייה",
+    "slug": "daliyya"
+  },
+  {
+    "name_he": "דלתון",
+    "slug": "dalton"
+  },
+  {
+    "name_he": "דן",
+    "slug": "dan"
+  },
+  {
+    "name_he": "דפנה",
+    "slug": "dafna"
+  },
+  {
+    "name_he": "דקל",
+    "slug": "deqel"
+  },
+  {
+    "name_he": "האון",
+    "slug": "haon"
+  },
+  {
+    "name_he": "הבונים",
+    "slug": "habonim"
+  },
+  {
+    "name_he": "הגושרים",
+    "slug": "hagosherim"
+  },
+  {
+    "name_he": "הדר עם",
+    "slug": "hadar-am"
+  },
+  {
+    "name_he": "הוד השרון",
+    "slug": "hod-hasharon"
+  },
+  {
+    "name_he": "הודייה",
+    "slug": "hodiyya"
+  },
+  {
+    "name_he": "הושעיה",
+    "slug": "hoshaaya"
+  },
+  {
+    "name_he": "הזורע",
+    "slug": "hazorea"
+  },
+  {
+    "name_he": "הזורעים",
+    "slug": "hazoreim"
+  },
+  {
+    "name_he": "החותרים",
+    "slug": "hahoterim"
+  },
+  {
+    "name_he": "היוגב",
+    "slug": "hayogev"
+  },
+  {
+    "name_he": "הילה",
+    "slug": "hilla"
+  },
+  {
+    "name_he": "המעפיל",
+    "slug": "hamapil"
+  },
+  {
+    "name_he": "הסוללים",
+    "slug": "hasolelim"
+  },
+  {
+    "name_he": "העוגן",
+    "slug": "haogen"
+  },
+  {
+    "name_he": "הר אדר",
+    "slug": "har-adar"
+  },
+  {
+    "name_he": "הר גילה",
+    "slug": "har-gillo"
+  },
+  {
+    "name_he": "הר עמשא",
+    "slug": "har-amasa"
+  },
+  {
+    "name_he": "הראל",
+    "slug": "harel"
+  },
+  {
+    "name_he": "הרדוף",
+    "slug": "harduf"
+  },
+  {
+    "name_he": "הרצליה",
+    "slug": "herzliya"
+  },
+  {
+    "name_he": "הררית",
+    "slug": "hararit"
+  },
+  {
+    "name_he": "ורד יריחו",
+    "slug": "wered-yeriho"
+  },
+  {
+    "name_he": "ורדון",
+    "slug": "wardon"
+  },
+  {
+    "name_he": "זבדיאל",
+    "slug": "zavdiel"
+  },
+  {
+    "name_he": "זוהר",
+    "slug": "zohar"
+  },
+  {
+    "name_he": "זיקים",
+    "slug": "ziqim"
+  },
+  {
+    "name_he": "זיתן",
+    "slug": "zetan"
+  },
+  {
+    "name_he": "זכרון יעקב",
+    "slug": "zikhron-yaaqov"
+  },
+  {
+    "name_he": "זכריה",
+    "slug": "zekharya"
+  },
+  {
+    "name_he": "זלפה",
+    "slug": "zalafe"
+  },
+  {
+    "name_he": "זמר",
+    "slug": "zemer"
+  },
+  {
+    "name_he": "זמרת",
+    "slug": "zimrat"
+  },
+  {
+    "name_he": "זרועה",
+    "slug": "zerua"
+  },
+  {
+    "name_he": "זרזיר",
+    "slug": "zarzir"
+  },
+  {
+    "name_he": "זרחיה",
+    "slug": "zerahya"
+  },
+  {
+    "name_he": "חבצלת השרון",
+    "slug": "havazzelet-hasharon"
+  },
+  {
+    "name_he": "חבר",
+    "slug": "hever"
+  },
+  {
+    "name_he": "חגור",
+    "slug": "hagor"
+  },
+  {
+    "name_he": "חגי",
+    "slug": "haggay"
+  },
+  {
+    "name_he": "חגלה",
+    "slug": "hogla"
+  },
+  {
+    "name_he": "חד-נס",
+    "slug": "had-nes"
+  },
+  {
+    "name_he": "חדיד",
+    "slug": "hadid"
+  },
+  {
+    "name_he": "חדרה",
+    "slug": "hadera"
+  },
+  {
+    "name_he": "חולדה",
+    "slug": "hulda"
+  },
+  {
+    "name_he": "חולון",
+    "slug": "holon"
+  },
+  {
+    "name_he": "חולית",
+    "slug": "holit"
+  },
+  {
+    "name_he": "חולתה",
+    "slug": "hulata"
+  },
+  {
+    "name_he": "חוסן",
+    "slug": "hosen"
+  },
+  {
+    "name_he": "חוסנייה",
+    "slug": "hussniyya"
+  },
+  {
+    "name_he": "חופית",
+    "slug": "hofit"
+  },
+  {
+    "name_he": "חוקוק",
+    "slug": "huqoq"
+  },
+  {
+    "name_he": "חורה",
+    "slug": "hura"
+  },
+  {
+    "name_he": "חורפיש",
+    "slug": "hurfeish"
+  },
+  {
+    "name_he": "חורשים",
+    "slug": "horeshim"
+  },
+  {
+    "name_he": "חזון",
+    "slug": "hazon"
+  },
+  {
+    "name_he": "חיבת ציון",
+    "slug": "hibbat-ziyyon"
+  },
+  {
+    "name_he": "חיננית",
+    "slug": "hinnanit"
+  },
+  {
+    "name_he": "חיפה",
+    "slug": "haifa"
+  },
+  {
+    "name_he": "חירות",
+    "slug": "herut"
+  },
+  {
+    "name_he": "חלוץ",
+    "slug": "haluz"
+  },
+  {
+    "name_he": "חלמיש",
+    "slug": "hallamish"
+  },
+  {
+    "name_he": "חלץ",
+    "slug": "helez"
+  },
+  {
+    "name_he": "חמאם",
+    "slug": "hamam"
+  },
+  {
+    "name_he": "חמד",
+    "slug": "hemed"
+  },
+  {
+    "name_he": "חמדיה",
+    "slug": "hamadya"
+  },
+  {
+    "name_he": "חמדת",
+    "slug": "hemdat"
+  },
+  {
+    "name_he": "חמרה",
+    "slug": "hamra"
+  },
+  {
+    "name_he": "חמש",
+    "slug": "homesh"
+  },
+  {
+    "name_he": "חניאל",
+    "slug": "hanniel"
+  },
+  {
+    "name_he": "חניתה",
+    "slug": "hanita"
+  },
+  {
+    "name_he": "חנתון",
+    "slug": "hannaton"
+  },
+  {
+    "name_he": "חספין",
+    "slug": "haspin"
+  },
+  {
+    "name_he": "חפץ חיים",
+    "slug": "hafez-hayyim"
+  },
+  {
+    "name_he": "חפצי-בה",
+    "slug": "hefzi-bah"
+  },
+  {
+    "name_he": "חצב",
+    "slug": "hazav"
+  },
+  {
+    "name_he": "חצבה",
+    "slug": "hazeva"
+  },
+  {
+    "name_he": "חצור הגלילית",
+    "slug": "hazor-hagelilit"
+  },
+  {
+    "name_he": "חצור-אשדוד",
+    "slug": "hazor-ashdod"
+  },
+  {
+    "name_he": "חצרים",
+    "slug": "hazerim"
+  },
+  {
+    "name_he": "חרב לאת",
+    "slug": "herev-leet"
+  },
+  {
+    "name_he": "חרוצים",
+    "slug": "haruzim"
+  },
+  {
+    "name_he": "חרמש",
+    "slug": "hermesh"
+  },
+  {
+    "name_he": "חרשים",
+    "slug": "harashim"
+  },
+  {
+    "name_he": "חשמונאים",
+    "slug": "hashmonaim"
+  },
+  {
+    "name_he": "טבריה",
+    "slug": "tiberias"
+  },
+  {
+    "name_he": "טובא-זנגרייה",
+    "slug": "tuba-zangariyye"
+  },
+  {
+    "name_he": "טורעאן",
+    "slug": "turan"
+  },
+  {
+    "name_he": "טייבה",
+    "slug": "tayibe"
+  },
+  {
+    "name_he": "טייבה (בעמק)",
+    "slug": "tayibe-baemeq"
+  },
+  {
+    "name_he": "טירה",
+    "slug": "tire"
+  },
+  {
+    "name_he": "טירת יהודה",
+    "slug": "tirat-yehuda"
+  },
+  {
+    "name_he": "טירת כרמל",
+    "slug": "tirat-karmel"
+  },
+  {
+    "name_he": "טירת צבי",
+    "slug": "tirat-zevi"
+  },
+  {
+    "name_he": "טל שחר",
+    "slug": "tal-shahar"
+  },
+  {
+    "name_he": "טל-אל",
+    "slug": "tal-el"
+  },
+  {
+    "name_he": "טללים",
+    "slug": "telalim"
+  },
+  {
+    "name_he": "טלמון",
+    "slug": "talmon"
+  },
+  {
+    "name_he": "טמרה",
+    "slug": "tamra"
+  },
+  {
+    "name_he": "טמרה (יזרעאל)",
+    "slug": "tamra-yizreel"
+  },
+  {
+    "name_he": "טנא",
+    "slug": "tene"
+  },
+  {
+    "name_he": "טפחות",
+    "slug": "tefahot"
+  },
+  {
+    "name_he": "יאנוח-ג'ת",
+    "slug": "yanuh-jat"
+  },
+  {
+    "name_he": "יבול",
+    "slug": "yevul"
+  },
+  {
+    "name_he": "יבנאל",
+    "slug": "yavneel"
+  },
+  {
+    "name_he": "יבנה",
+    "slug": "yavne"
+  },
+  {
+    "name_he": "יגור",
+    "slug": "yagur"
+  },
+  {
+    "name_he": "יגל",
+    "slug": "yagel"
+  },
+  {
+    "name_he": "יד בנימין",
+    "slug": "yad-binyamin"
+  },
+  {
+    "name_he": "יד השמונה",
+    "slug": "yad-hashemona"
+  },
+  {
+    "name_he": "יד חנה",
+    "slug": "yad-hanna"
+  },
+  {
+    "name_he": "יד מרדכי",
+    "slug": "yad-mordekhay"
+  },
+  {
+    "name_he": "יד נתן",
+    "slug": "yad-natan"
+  },
+  {
+    "name_he": "יד רמב\"ם",
+    "slug": "yad-rambam"
+  },
+  {
+    "name_he": "ידידה",
+    "slug": "yedida"
+  },
+  {
+    "name_he": "יהוד",
+    "slug": "yehud"
+  },
+  {
+    "name_he": "יהל",
+    "slug": "yahel"
+  },
+  {
+    "name_he": "יובל",
+    "slug": "yuval"
+  },
+  {
+    "name_he": "יובלים",
+    "slug": "yuvallim"
+  },
+  {
+    "name_he": "יודפת",
+    "slug": "yodefat"
+  },
+  {
+    "name_he": "יונתן",
+    "slug": "yonatan"
+  },
+  {
+    "name_he": "יושיביה",
+    "slug": "yoshivya"
+  },
+  {
+    "name_he": "יזרעאל",
+    "slug": "yizreel"
+  },
+  {
+    "name_he": "יזרעם",
+    "slug": "yizre-m"
+  },
+  {
+    "name_he": "יחיעם",
+    "slug": "yehiam"
+  },
+  {
+    "name_he": "יטבתה",
+    "slug": "yotvata"
+  },
+  {
+    "name_he": "ייט\"ב",
+    "slug": "yitav"
+  },
+  {
+    "name_he": "יכיני",
+    "slug": "yakhini"
+  },
+  {
+    "name_he": "ינוב",
+    "slug": "yanuv"
+  },
+  {
+    "name_he": "ינון",
+    "slug": "yinnon"
+  },
+  {
+    "name_he": "יסוד המעלה",
+    "slug": "yesud-hamaala"
+  },
+  {
+    "name_he": "יסודות",
+    "slug": "yesodot"
+  },
+  {
+    "name_he": "יסעור",
+    "slug": "yasur"
+  },
+  {
+    "name_he": "יעד",
+    "slug": "yaad"
+  },
+  {
+    "name_he": "יעף",
+    "slug": "yeaf"
+  },
+  {
+    "name_he": "יערה",
+    "slug": "yaara"
+  },
+  {
+    "name_he": "יפיע",
+    "slug": "yafi"
+  },
+  {
+    "name_he": "יפית",
+    "slug": "yafit"
+  },
+  {
+    "name_he": "יפעת",
+    "slug": "yifat"
+  },
+  {
+    "name_he": "יפתח",
+    "slug": "yiftah"
+  },
+  {
+    "name_he": "יצהר",
+    "slug": "yizhar"
+  },
+  {
+    "name_he": "יציץ",
+    "slug": "yaziz"
+  },
+  {
+    "name_he": "יקום",
+    "slug": "yaqum"
+  },
+  {
+    "name_he": "יקיר",
+    "slug": "yaqir"
+  },
+  {
+    "name_he": "יקנעם (מושבה)",
+    "slug": "yoqneam-moshava"
+  },
+  {
+    "name_he": "יקנעם עילית",
+    "slug": "yoqneam-illit"
+  },
+  {
+    "name_he": "יראון",
+    "slug": "yiron"
+  },
+  {
+    "name_he": "ירדנה",
+    "slug": "yardena"
+  },
+  {
+    "name_he": "ירוחם",
+    "slug": "yeroham"
+  },
+  {
+    "name_he": "ירושלים",
+    "slug": "jerusalem"
+  },
+  {
+    "name_he": "ירחיב",
+    "slug": "yarhiv"
+  },
+  {
+    "name_he": "ירכא",
+    "slug": "yirka"
+  },
+  {
+    "name_he": "ירקונה",
+    "slug": "yarqona"
+  },
+  {
+    "name_he": "ישע",
+    "slug": "yesha"
+  },
+  {
+    "name_he": "ישעי",
+    "slug": "yishi"
+  },
+  {
+    "name_he": "ישרש",
+    "slug": "yashresh"
+  },
+  {
+    "name_he": "יתד",
+    "slug": "yated"
+  },
+  {
+    "name_he": "כאבול",
+    "slug": "kabul"
+  },
+  {
+    "name_he": "כאוכב אבו אל-היג'א",
+    "slug": "kaokab-abu-al-hija"
+  },
+  {
+    "name_he": "כברי",
+    "slug": "kabri"
+  },
+  {
+    "name_he": "כדורי",
+    "slug": "kadoorie"
+  },
+  {
+    "name_he": "כדים",
+    "slug": "kaddim"
+  },
+  {
+    "name_he": "כוכב השחר",
+    "slug": "kokhav-hashahar"
+  },
+  {
+    "name_he": "כוכב יאיר",
+    "slug": "kokhav-yair"
+  },
+  {
+    "name_he": "כוכב יעקב",
+    "slug": "kokhav-yaaqov"
+  },
+  {
+    "name_he": "כוכב מיכאל",
+    "slug": "kokhav-mikhael"
+  },
+  {
+    "name_he": "כורזים",
+    "slug": "korazim"
+  },
+  {
+    "name_he": "כחל",
+    "slug": "kahal"
+  },
+  {
+    "name_he": "כיסופים",
+    "slug": "kissufim"
+  },
+  {
+    "name_he": "כישור",
+    "slug": "kishor"
+  },
+  {
+    "name_he": "כליל",
+    "slug": "kelil"
+  },
+  {
+    "name_he": "כלנית",
+    "slug": "kallanit"
+  },
+  {
+    "name_he": "כמאנה",
+    "slug": "kamane"
+  },
+  {
+    "name_he": "כמהין",
+    "slug": "kemehin"
+  },
+  {
+    "name_he": "כמון",
+    "slug": "kammon"
+  },
+  {
+    "name_he": "כנף",
+    "slug": "kanaf"
+  },
+  {
+    "name_he": "כנרת (מושבה)",
+    "slug": "kinneret-moshava"
+  },
+  {
+    "name_he": "כנרת (קבוצה)",
+    "slug": "kinneret-qevuza"
+  },
+  {
+    "name_he": "כסיפה",
+    "slug": "kuseife"
+  },
+  {
+    "name_he": "כסלון",
+    "slug": "kesalon"
+  },
+  {
+    "name_he": "כסרא-סמיע",
+    "slug": "kisra-sumei"
+  },
+  {
+    "name_he": "כעביה-טבאש-חג'אג'רה",
+    "slug": "kaabiyye-tabbash-hajajre"
+  },
+  {
+    "name_he": "כפר אביב",
+    "slug": "kefar-aviv"
+  },
+  {
+    "name_he": "כפר אדומים",
+    "slug": "kefar-adummim"
+  },
+  {
+    "name_he": "כפר אוריה",
+    "slug": "kefar-uriyya"
+  },
+  {
+    "name_he": "כפר אז\"ר",
+    "slug": "kefar-azar"
+  },
+  {
+    "name_he": "כפר אחים",
+    "slug": "kefar-ahim"
+  },
+  {
+    "name_he": "כפר ביאליק",
+    "slug": "kefar-bialik"
+  },
+  {
+    "name_he": "כפר ביל\"ו",
+    "slug": "kefar-bilu"
+  },
+  {
+    "name_he": "כפר בלום",
+    "slug": "kefar-blum"
+  },
+  {
+    "name_he": "כפר בן נון",
+    "slug": "kefar-bin-nun"
+  },
+  {
+    "name_he": "כפר ברא",
+    "slug": "kafar-bara"
+  },
+  {
+    "name_he": "כפר ברוך",
+    "slug": "kefar-barukh"
+  },
+  {
+    "name_he": "כפר גדעון",
+    "slug": "kefar-gidon"
+  },
+  {
+    "name_he": "כפר גלים",
+    "slug": "kefar-gallim"
+  },
+  {
+    "name_he": "כפר גליקסון",
+    "slug": "kefar-glikson"
+  },
+  {
+    "name_he": "כפר גלעדי",
+    "slug": "kefar-giladi"
+  },
+  {
+    "name_he": "כפר דניאל",
+    "slug": "kefar-daniyyel"
+  },
+  {
+    "name_he": "כפר האורנים",
+    "slug": "kefar-haoranim"
+  },
+  {
+    "name_he": "כפר החורש",
+    "slug": "kefar-hahoresh"
+  },
+  {
+    "name_he": "כפר המכבי",
+    "slug": "kefar-hamakkabbi"
+  },
+  {
+    "name_he": "כפר הנגיד",
+    "slug": "kefar-hanagid"
+  },
+  {
+    "name_he": "כפר הנוער הדתי",
+    "slug": "kefar-hanoar-hadati"
+  },
+  {
+    "name_he": "כפר הנשיא",
+    "slug": "kefar-hanasi"
+  },
+  {
+    "name_he": "כפר הס",
+    "slug": "kefar-hess"
+  },
+  {
+    "name_he": "כפר הרא\"ה",
+    "slug": "kefar-haroe"
+  },
+  {
+    "name_he": "כפר הרי\"ף",
+    "slug": "kefar-harif"
+  },
+  {
+    "name_he": "כפר ויתקין",
+    "slug": "kefar-vitkin"
+  },
+  {
+    "name_he": "כפר ורבורג",
+    "slug": "kefar-warburg"
+  },
+  {
+    "name_he": "כפר ורדים",
+    "slug": "kefar-weradim"
+  },
+  {
+    "name_he": "כפר זיתים",
+    "slug": "kefar-zetim"
+  },
+  {
+    "name_he": "כפר חב\"ד",
+    "slug": "kefar-habad"
+  },
+  {
+    "name_he": "כפר חושן",
+    "slug": "kefar-hoshen"
+  },
+  {
+    "name_he": "כפר חיטים",
+    "slug": "kefar-hittim"
+  },
+  {
+    "name_he": "כפר חיים",
+    "slug": "kefar-hayyim"
+  },
+  {
+    "name_he": "כפר חנניה",
+    "slug": "kefar-hananya"
+  },
+  {
+    "name_he": "כפר חסידים ב'",
+    "slug": "kefar-hasidim-bet"
+  },
+  {
+    "name_he": "כפר חרוב",
+    "slug": "kefar-haruv"
+  },
+  {
+    "name_he": "כפר טרומן",
+    "slug": "kefar-truman"
+  },
+  {
+    "name_he": "כפר יאסיף",
+    "slug": "kafar-yasif"
+  },
+  {
+    "name_he": "כפר ידידיה",
+    "slug": "kefar-yedidya"
+  },
+  {
+    "name_he": "כפר יהושע",
+    "slug": "kefar-yehoshua"
+  },
+  {
+    "name_he": "כפר יונה",
+    "slug": "kefar-yona"
+  },
+  {
+    "name_he": "כפר יחזקאל",
+    "slug": "kefar-yehezqel"
+  },
+  {
+    "name_he": "כפר יעבץ",
+    "slug": "kefar-yabez"
+  },
+  {
+    "name_he": "כפר כמא",
+    "slug": "kafar-kama"
+  },
+  {
+    "name_he": "כפר כנא",
+    "slug": "kafar-kanna"
+  },
+  {
+    "name_he": "כפר מונש",
+    "slug": "kefar-monash"
+  },
+  {
+    "name_he": "כפר מימון",
+    "slug": "kefar-maymon"
+  },
+  {
+    "name_he": "כפר מל\"ל",
+    "slug": "kefar-malal"
+  },
+  {
+    "name_he": "כפר מנדא",
+    "slug": "kafar-manda"
+  },
+  {
+    "name_he": "כפר מנחם",
+    "slug": "kefar-menahem"
+  },
+  {
+    "name_he": "כפר מסריק",
+    "slug": "kefar-masaryk"
+  },
+  {
+    "name_he": "כפר מצר",
+    "slug": "kafar-misr"
+  },
+  {
+    "name_he": "כפר מרדכי",
+    "slug": "kefar-mordekhay"
+  },
+  {
+    "name_he": "כפר נטר",
+    "slug": "kefar-netter"
+  },
+  {
+    "name_he": "כפר סאלד",
+    "slug": "kefar-szold"
+  },
+  {
+    "name_he": "כפר סבא",
+    "slug": "kefar-sava"
+  },
+  {
+    "name_he": "כפר סירקין",
+    "slug": "kefar-sirkin"
+  },
+  {
+    "name_he": "כפר עבודה",
+    "slug": "kefar-avoda"
+  },
+  {
+    "name_he": "כפר עזה",
+    "slug": "kefar-azza"
+  },
+  {
+    "name_he": "כפר עציון",
+    "slug": "kefar-ezyon"
+  },
+  {
+    "name_he": "כפר פינס",
+    "slug": "kefar-pines"
+  },
+  {
+    "name_he": "כפר קאסם",
+    "slug": "kafar-qasem"
+  },
+  {
+    "name_he": "כפר קיש",
+    "slug": "kefar-kisch"
+  },
+  {
+    "name_he": "כפר קרע",
+    "slug": "kafar-qara"
+  },
+  {
+    "name_he": "כפר ראש הנקרה",
+    "slug": "kefar-rosh-haniqra"
+  },
+  {
+    "name_he": "כפר רוזנואלד (זרעית)",
+    "slug": "kefar-rozenwald-zarit"
+  },
+  {
+    "name_he": "כפר רופין",
+    "slug": "kefar-ruppin"
+  },
+  {
+    "name_he": "כפר רות",
+    "slug": "kefar-rut"
+  },
+  {
+    "name_he": "כפר שמאי",
+    "slug": "kefar-shammay"
+  },
+  {
+    "name_he": "כפר שמואל",
+    "slug": "kefar-shemuel"
+  },
+  {
+    "name_he": "כפר שמריהו",
+    "slug": "kefar-shemaryahu"
+  },
+  {
+    "name_he": "כפר תבור",
+    "slug": "kefar-tavor"
+  },
+  {
+    "name_he": "כפר תפוח",
+    "slug": "kefar-tappuah"
+  },
+  {
+    "name_he": "כרכום",
+    "slug": "karkom"
+  },
+  {
+    "name_he": "כרם בן זמרה",
+    "slug": "kerem-ben-zimra"
+  },
+  {
+    "name_he": "כרם בן שמן",
+    "slug": "kerem-ben-shemen"
+  },
+  {
+    "name_he": "כרם יבנה (ישיבה)",
+    "slug": "kerem-yavne-yeshiva"
+  },
+  {
+    "name_he": "כרם מהר\"ל",
+    "slug": "kerem-maharal"
+  },
+  {
+    "name_he": "כרם שלום",
+    "slug": "kerem-shalom"
+  },
+  {
+    "name_he": "כרמי יוסף",
+    "slug": "karme-yosef"
+  },
+  {
+    "name_he": "כרמי צור",
+    "slug": "karme-zur"
+  },
+  {
+    "name_he": "כרמיאל",
+    "slug": "karmiel"
+  },
+  {
+    "name_he": "כרמייה",
+    "slug": "karmiyya"
+  },
+  {
+    "name_he": "כרמים",
+    "slug": "keramim"
+  },
+  {
+    "name_he": "כרמל",
+    "slug": "karmel"
+  },
+  {
+    "name_he": "לבון",
+    "slug": "lavon"
+  },
+  {
+    "name_he": "לביא",
+    "slug": "lavi"
+  },
+  {
+    "name_he": "לבנים",
+    "slug": "livnim"
+  },
+  {
+    "name_he": "להב",
+    "slug": "lahav"
+  },
+  {
+    "name_he": "להבות הבשן",
+    "slug": "lahavot-habashan"
+  },
+  {
+    "name_he": "להבות חביבה",
+    "slug": "lahavot-haviva"
+  },
+  {
+    "name_he": "להבים",
+    "slug": "lehavim"
+  },
+  {
+    "name_he": "לוד",
+    "slug": "lod"
+  },
+  {
+    "name_he": "לוזית",
+    "slug": "luzit"
+  },
+  {
+    "name_he": "לוחמי הגיטאות",
+    "slug": "lohame-hagetaot"
+  },
+  {
+    "name_he": "לוטם",
+    "slug": "lotem"
+  },
+  {
+    "name_he": "לוטן",
+    "slug": "lotan"
+  },
+  {
+    "name_he": "לימן",
+    "slug": "liman"
+  },
+  {
+    "name_he": "לכיש",
+    "slug": "lakhish"
+  },
+  {
+    "name_he": "לפיד",
+    "slug": "lappid"
+  },
+  {
+    "name_he": "לפידות",
+    "slug": "lappidot"
+  },
+  {
+    "name_he": "לקיה",
+    "slug": "laqye"
+  },
+  {
+    "name_he": "מאור",
+    "slug": "maor"
+  },
+  {
+    "name_he": "מאיר שפיה",
+    "slug": "meir-shefeya"
+  },
+  {
+    "name_he": "מבוא ביתר",
+    "slug": "mevo-betar"
+  },
+  {
+    "name_he": "מבוא דותן",
+    "slug": "mevo-dotan"
+  },
+  {
+    "name_he": "מבוא חורון",
+    "slug": "mevo-horon"
+  },
+  {
+    "name_he": "מבוא חמה",
+    "slug": "mevo-hamma"
+  },
+  {
+    "name_he": "מבוא מודיעים",
+    "slug": "mevo-modiim"
+  },
+  {
+    "name_he": "מבועים",
+    "slug": "mabbuim"
+  },
+  {
+    "name_he": "מבטחים",
+    "slug": "mivtahim"
+  },
+  {
+    "name_he": "מבקיעים",
+    "slug": "mavqiim"
+  },
+  {
+    "name_he": "מבשרת ציון",
+    "slug": "mevasseret-ziyyon"
+  },
+  {
+    "name_he": "מג'דל שמס",
+    "slug": "majdal-shams"
+  },
+  {
+    "name_he": "מגאר",
+    "slug": "mughar"
+  },
+  {
+    "name_he": "מגדים",
+    "slug": "megadim"
+  },
+  {
+    "name_he": "מגדל",
+    "slug": "migdal"
+  },
+  {
+    "name_he": "מגדל העמק",
+    "slug": "migdal-haemeq"
+  },
+  {
+    "name_he": "מגדל עוז",
+    "slug": "migdal-oz"
+  },
+  {
+    "name_he": "מגדל תפן",
+    "slug": "city-1722"
+  },
+  {
+    "name_he": "מגדלים",
+    "slug": "migdalim"
+  },
+  {
+    "name_he": "מגידו",
+    "slug": "megiddo"
+  },
+  {
+    "name_he": "מגל",
+    "slug": "maggal"
+  },
+  {
+    "name_he": "מגן",
+    "slug": "magen"
+  },
+  {
+    "name_he": "מגן שאול",
+    "slug": "magen-shaul"
+  },
+  {
+    "name_he": "מגשימים",
+    "slug": "magshimim"
+  },
+  {
+    "name_he": "מדרך עוז",
+    "slug": "midrakh-oz"
+  },
+  {
+    "name_he": "מדרשת רופין",
+    "slug": "midreshet-ruppin"
+  },
+  {
+    "name_he": "מודיעין עילית",
+    "slug": "modiin-illit"
+  },
+  {
+    "name_he": "מודיעין-מכבים-רעות",
+    "slug": "modiin-makkabbim-reut"
+  },
+  {
+    "name_he": "מולדת",
+    "slug": "moledet"
+  },
+  {
+    "name_he": "מועאוויה",
+    "slug": "muawiye"
+  },
+  {
+    "name_he": "מוצא עילית",
+    "slug": "moza-illit"
+  },
+  {
+    "name_he": "מוצמוץ",
+    "slug": "musmus"
+  },
+  {
+    "name_he": "מוקייבלה",
+    "slug": "muqeible"
+  },
+  {
+    "name_he": "מורן",
+    "slug": "moran"
+  },
+  {
+    "name_he": "מורשת",
+    "slug": "moreshet"
+  },
+  {
+    "name_he": "מושיירפה",
+    "slug": "musheirfe"
+  },
+  {
+    "name_he": "מזור",
+    "slug": "mazor"
+  },
+  {
+    "name_he": "מזכרת בתיה",
+    "slug": "mazkeret-batya"
+  },
+  {
+    "name_he": "מזרע",
+    "slug": "mizra"
+  },
+  {
+    "name_he": "מזרעה",
+    "slug": "mazraa"
+  },
+  {
+    "name_he": "מחולה",
+    "slug": "mehola"
+  },
+  {
+    "name_he": "מחניים",
+    "slug": "mahanayim"
+  },
+  {
+    "name_he": "מחסיה",
+    "slug": "mahseya"
+  },
+  {
+    "name_he": "מטולה",
+    "slug": "metula"
+  },
+  {
+    "name_he": "מטע",
+    "slug": "matta"
+  },
+  {
+    "name_he": "מי עמי",
+    "slug": "me-ammi"
+  },
+  {
+    "name_he": "מיטב",
+    "slug": "metav"
+  },
+  {
+    "name_he": "מייסר",
+    "slug": "meiser"
+  },
+  {
+    "name_he": "מיצר",
+    "slug": "mezar"
+  },
+  {
+    "name_he": "מירב",
+    "slug": "merav"
+  },
+  {
+    "name_he": "מירון",
+    "slug": "meron"
+  },
+  {
+    "name_he": "מישר",
+    "slug": "meshar"
+  },
+  {
+    "name_he": "מיתר",
+    "slug": "metar"
+  },
+  {
+    "name_he": "מכורה",
+    "slug": "mekhora"
+  },
+  {
+    "name_he": "מכמורת",
+    "slug": "mikhmoret"
+  },
+  {
+    "name_he": "מכמנים",
+    "slug": "mikhmannim"
+  },
+  {
+    "name_he": "מלאה",
+    "slug": "melea"
+  },
+  {
+    "name_he": "מלילות",
+    "slug": "melilot"
+  },
+  {
+    "name_he": "מלכייה",
+    "slug": "malkiyya"
+  },
+  {
+    "name_he": "מלכישוע",
+    "slug": "malkishua"
+  },
+  {
+    "name_he": "מנוחה",
+    "slug": "menuha"
+  },
+  {
+    "name_he": "מנוף",
+    "slug": "manof"
+  },
+  {
+    "name_he": "מנות",
+    "slug": "manot"
+  },
+  {
+    "name_he": "מנחמיה",
+    "slug": "menahemya"
+  },
+  {
+    "name_he": "מנרה",
+    "slug": "menara"
+  },
+  {
+    "name_he": "מנשית זבדה",
+    "slug": "manshiyyet-zabda"
+  },
+  {
+    "name_he": "מסד",
+    "slug": "massad"
+  },
+  {
+    "name_he": "מסדה",
+    "slug": "massada"
+  },
+  {
+    "name_he": "מסילות",
+    "slug": "mesillot"
+  },
+  {
+    "name_he": "מסילת ציון",
+    "slug": "mesillat-ziyyon"
+  },
+  {
+    "name_he": "מסלול",
+    "slug": "maslul"
+  },
+  {
+    "name_he": "מסעדה",
+    "slug": "masade"
+  },
+  {
+    "name_he": "מעברות",
+    "slug": "mabarot"
+  },
+  {
+    "name_he": "מעגלים",
+    "slug": "magalim"
+  },
+  {
+    "name_he": "מעגן",
+    "slug": "maagan"
+  },
+  {
+    "name_he": "מעגן מיכאל",
+    "slug": "maagan-mikhael"
+  },
+  {
+    "name_he": "מעוז חיים",
+    "slug": "maoz-hayyim"
+  },
+  {
+    "name_he": "מעון",
+    "slug": "maon"
+  },
+  {
+    "name_he": "מעונה",
+    "slug": "meona"
+  },
+  {
+    "name_he": "מעיין ברוך",
+    "slug": "mayan-barukh"
+  },
+  {
+    "name_he": "מעיין צבי",
+    "slug": "mayan-zevi"
+  },
+  {
+    "name_he": "מעיליא",
+    "slug": "mielya"
+  },
+  {
+    "name_he": "מעלה אדומים",
+    "slug": "maale-adummim"
+  },
+  {
+    "name_he": "מעלה אפרים",
+    "slug": "maale-efrayim"
+  },
+  {
+    "name_he": "מעלה גלבוע",
+    "slug": "maale-gilboa"
+  },
+  {
+    "name_he": "מעלה גמלא",
+    "slug": "maale-gamla"
+  },
+  {
+    "name_he": "מעלה החמישה",
+    "slug": "maale-hahamisha"
+  },
+  {
+    "name_he": "מעלה לבונה",
+    "slug": "maale-levona"
+  },
+  {
+    "name_he": "מעלה מכמש",
+    "slug": "maale-mikhmas"
+  },
+  {
+    "name_he": "מעלה עמוס",
+    "slug": "maale-amos"
+  },
+  {
+    "name_he": "מעלה שומרון",
+    "slug": "maale-shomeron"
+  },
+  {
+    "name_he": "מעלות-תרשיחא",
+    "slug": "maalot-tarshiha"
+  },
+  {
+    "name_he": "מענית",
+    "slug": "maanit"
+  },
+  {
+    "name_he": "מפלסים",
+    "slug": "mefallesim"
+  },
+  {
+    "name_he": "מצדות יהודה",
+    "slug": "mezadot-yehuda"
+  },
+  {
+    "name_he": "מצובה",
+    "slug": "mazzuva"
+  },
+  {
+    "name_he": "מצליח",
+    "slug": "mazliah"
+  },
+  {
+    "name_he": "מצפה",
+    "slug": "mizpa"
+  },
+  {
+    "name_he": "מצפה אבי\"ב",
+    "slug": "mizpe-aviv"
+  },
+  {
+    "name_he": "מצפה יריחו",
+    "slug": "mizpe-yeriho"
+  },
+  {
+    "name_he": "מצפה נטופה",
+    "slug": "mizpe-netofa"
+  },
+  {
+    "name_he": "מצפה רמון",
+    "slug": "mizpe-ramon"
+  },
+  {
+    "name_he": "מצפה שלם",
+    "slug": "mizpe-shalem"
+  },
+  {
+    "name_he": "מצר",
+    "slug": "mezer"
+  },
+  {
+    "name_he": "מרגליות",
+    "slug": "margaliyyot"
+  },
+  {
+    "name_he": "מרום גולן",
+    "slug": "merom-golan"
+  },
+  {
+    "name_he": "מרחביה (מושב)",
+    "slug": "merhavya-moshav"
+  },
+  {
+    "name_he": "מרחביה (קיבוץ)",
+    "slug": "merhavya-qibbuz"
+  },
+  {
+    "name_he": "מרכז שפירא",
+    "slug": "merkaz-shappira"
+  },
+  {
+    "name_he": "משאבי שדה",
+    "slug": "mashabbe-sade"
+  },
+  {
+    "name_he": "משגב דב",
+    "slug": "misgav-dov"
+  },
+  {
+    "name_he": "משגב עם",
+    "slug": "misgav-am"
+  },
+  {
+    "name_he": "משהד",
+    "slug": "meshhed"
+  },
+  {
+    "name_he": "משואה",
+    "slug": "massua"
+  },
+  {
+    "name_he": "משואות יצחק",
+    "slug": "massuot-yizhaq"
+  },
+  {
+    "name_he": "משכיות",
+    "slug": "maskiyyot"
+  },
+  {
+    "name_he": "משמר איילון",
+    "slug": "mishmar-ayyalon"
+  },
+  {
+    "name_he": "משמר דוד",
+    "slug": "mishmar-dawid"
+  },
+  {
+    "name_he": "משמר הירדן",
+    "slug": "mishmar-hayarden"
+  },
+  {
+    "name_he": "משמר הנגב",
+    "slug": "mishmar-hanegev"
+  },
+  {
+    "name_he": "משמר העמק",
+    "slug": "mishmar-haemeq"
+  },
+  {
+    "name_he": "משמר השבעה",
+    "slug": "mishmar-hashiva"
+  },
+  {
+    "name_he": "משמר השרון",
+    "slug": "mishmar-hasharon"
+  },
+  {
+    "name_he": "משמרות",
+    "slug": "mishmarot"
+  },
+  {
+    "name_he": "משמרת",
+    "slug": "mishmeret"
+  },
+  {
+    "name_he": "משען",
+    "slug": "mashen"
+  },
+  {
+    "name_he": "מתן",
+    "slug": "mattan"
+  },
+  {
+    "name_he": "מתת",
+    "slug": "mattat"
+  },
+  {
+    "name_he": "מתתיהו",
+    "slug": "mattityahu"
+  },
+  {
+    "name_he": "נאות גולן",
+    "slug": "neot-golan"
+  },
+  {
+    "name_he": "נאות הכיכר",
+    "slug": "neot-hakikkar"
+  },
+  {
+    "name_he": "נאות מרדכי",
+    "slug": "neot-mordekhay"
+  },
+  {
+    "name_he": "נאות סמדר",
+    "slug": "neot-smadar"
+  },
+  {
+    "name_he": "נאעורה",
+    "slug": "naura"
+  },
+  {
+    "name_he": "נבטים",
+    "slug": "nevatim"
+  },
+  {
+    "name_he": "נגבה",
+    "slug": "negba"
+  },
+  {
+    "name_he": "נגוהות",
+    "slug": "negohot"
+  },
+  {
+    "name_he": "נהורה",
+    "slug": "nehora"
+  },
+  {
+    "name_he": "נהלל",
+    "slug": "nahalal"
+  },
+  {
+    "name_he": "נהרייה",
+    "slug": "nahariyya"
+  },
+  {
+    "name_he": "נוב",
+    "slug": "nov"
+  },
+  {
+    "name_he": "נוגה",
+    "slug": "nogah"
+  },
+  {
+    "name_he": "נווה אור",
+    "slug": "newe-ur"
+  },
+  {
+    "name_he": "נווה אטי\"ב",
+    "slug": "newe-ativ"
+  },
+  {
+    "name_he": "נווה אילן",
+    "slug": "newe-ilan"
+  },
+  {
+    "name_he": "נווה איתן",
+    "slug": "newe-etan"
+  },
+  {
+    "name_he": "נווה אפרים",
+    "slug": "yehud-1062"
+  },
+  {
+    "name_he": "נווה דניאל",
+    "slug": "newe-daniyyel"
+  },
+  {
+    "name_he": "נווה זוהר",
+    "slug": "newe-zohar"
+  },
+  {
+    "name_he": "נווה זיו",
+    "slug": "newe-ziv"
+  },
+  {
+    "name_he": "נווה חריף",
+    "slug": "newe-harif"
+  },
+  {
+    "name_he": "נווה ים",
+    "slug": "newe-yam"
+  },
+  {
+    "name_he": "נווה ימין",
+    "slug": "newe-yamin"
+  },
+  {
+    "name_he": "נווה ירק",
+    "slug": "newe-yaraq"
+  },
+  {
+    "name_he": "נווה מבטח",
+    "slug": "newe-mivtah"
+  },
+  {
+    "name_he": "נווה מיכאל",
+    "slug": "newe-mikhael"
+  },
+  {
+    "name_he": "נווה שלום",
+    "slug": "newe-shalom"
+  },
+  {
+    "name_he": "נועם",
+    "slug": "noam"
+  },
+  {
+    "name_he": "נוף איילון",
+    "slug": "nof-ayyalon"
+  },
+  {
+    "name_he": "נופים",
+    "slug": "nofim"
+  },
+  {
+    "name_he": "נופית",
+    "slug": "nofit"
+  },
+  {
+    "name_he": "נופך",
+    "slug": "nofekh"
+  },
+  {
+    "name_he": "נוקדים",
+    "slug": "noqedim"
+  },
+  {
+    "name_he": "נורדייה",
+    "slug": "nordiyya"
+  },
+  {
+    "name_he": "נורית",
+    "slug": "nurit"
+  },
+  {
+    "name_he": "נח\"ל גבעות",
+    "slug": "nahal-geva-ot"
+  },
+  {
+    "name_he": "נחושה",
+    "slug": "nehusha"
+  },
+  {
+    "name_he": "נחל אלישע",
+    "slug": "nahal-elisha"
+  },
+  {
+    "name_he": "נחל גנת",
+    "slug": "nahal-ginnat"
+  },
+  {
+    "name_he": "נחל דורן",
+    "slug": "nahal-doran"
+  },
+  {
+    "name_he": "נחל נמרוד",
+    "slug": "nahal-nimrod"
+  },
+  {
+    "name_he": "נחל עוז",
+    "slug": "nahal-oz"
+  },
+  {
+    "name_he": "נחלה",
+    "slug": "nahala"
+  },
+  {
+    "name_he": "נחליאל",
+    "slug": "nahaliel"
+  },
+  {
+    "name_he": "נחלים",
+    "slug": "nehalim"
+  },
+  {
+    "name_he": "נחם",
+    "slug": "naham"
+  },
+  {
+    "name_he": "נחף",
+    "slug": "nahef"
+  },
+  {
+    "name_he": "נחשולים",
+    "slug": "nahsholim"
+  },
+  {
+    "name_he": "נחשון",
+    "slug": "nahshon"
+  },
+  {
+    "name_he": "נחשונים",
+    "slug": "nahshonim"
+  },
+  {
+    "name_he": "נטועה",
+    "slug": "netua"
+  },
+  {
+    "name_he": "נטור",
+    "slug": "natur"
+  },
+  {
+    "name_he": "נטעים",
+    "slug": "netaim"
+  },
+  {
+    "name_he": "נטף",
+    "slug": "nataf"
+  },
+  {
+    "name_he": "ניין",
+    "slug": "nein"
+  },
+  {
+    "name_he": "ניסנית",
+    "slug": "nisanit"
+  },
+  {
+    "name_he": "ניצן",
+    "slug": "nizzan"
+  },
+  {
+    "name_he": "ניצני סיני",
+    "slug": "nizzane-sinay"
+  },
+  {
+    "name_he": "ניצני עוז",
+    "slug": "nizzane-oz"
+  },
+  {
+    "name_he": "ניצנים",
+    "slug": "nizzanim"
+  },
+  {
+    "name_he": "ניר אליהו",
+    "slug": "nir-eliyyahu"
+  },
+  {
+    "name_he": "ניר בנים",
+    "slug": "nir-banim"
+  },
+  {
+    "name_he": "ניר גלים",
+    "slug": "nir-gallim"
+  },
+  {
+    "name_he": "ניר דוד (תל עמל)",
+    "slug": "nir-dawid-tel-amal"
+  },
+  {
+    "name_he": "ניר ח\"ן",
+    "slug": "nir-hen"
+  },
+  {
+    "name_he": "ניר יפה",
+    "slug": "nir-yafe"
+  },
+  {
+    "name_he": "ניר יצחק",
+    "slug": "nir-yizhaq"
+  },
+  {
+    "name_he": "ניר ישראל",
+    "slug": "nir-yisrael"
+  },
+  {
+    "name_he": "ניר משה",
+    "slug": "nir-moshe"
+  },
+  {
+    "name_he": "ניר עוז",
+    "slug": "nir-oz"
+  },
+  {
+    "name_he": "ניר עם",
+    "slug": "nir-am"
+  },
+  {
+    "name_he": "ניר עציון",
+    "slug": "nir-ezyon"
+  },
+  {
+    "name_he": "ניר עקיבא",
+    "slug": "nir-aqiva"
+  },
+  {
+    "name_he": "ניר צבי",
+    "slug": "nir-zevi"
+  },
+  {
+    "name_he": "נירים",
+    "slug": "nirim"
+  },
+  {
+    "name_he": "נירית",
+    "slug": "nirit"
+  },
+  {
+    "name_he": "נירן",
+    "slug": "niran"
+  },
+  {
+    "name_he": "נס הרים",
+    "slug": "nes-harim"
+  },
+  {
+    "name_he": "נס עמים",
+    "slug": "nes-ammim"
+  },
+  {
+    "name_he": "נס ציונה",
+    "slug": "nes-ziyyona"
+  },
+  {
+    "name_he": "נעורים",
+    "slug": "neurim"
+  },
+  {
+    "name_he": "נעלה",
+    "slug": "naale"
+  },
+  {
+    "name_he": "נעמי",
+    "slug": "noomi"
+  },
+  {
+    "name_he": "נען",
+    "slug": "naan"
+  },
+  {
+    "name_he": "נצר סרני",
+    "slug": "nezer-sereni"
+  },
+  {
+    "name_he": "נצרת",
+    "slug": "nazareth"
+  },
+  {
+    "name_he": "נצרת עילית",
+    "slug": "nazerat-illit"
+  },
+  {
+    "name_he": "נשר",
+    "slug": "nesher"
+  },
+  {
+    "name_he": "נתיב הגדוד",
+    "slug": "netiv-hagedud"
+  },
+  {
+    "name_he": "נתיב הל\"ה",
+    "slug": "netiv-halamed-he"
+  },
+  {
+    "name_he": "נתיב העשרה",
+    "slug": "netiv-haasara"
+  },
+  {
+    "name_he": "נתיב השיירה",
+    "slug": "netiv-hashayyara"
+  },
+  {
+    "name_he": "נתיבות",
+    "slug": "netivot"
+  },
+  {
+    "name_he": "נתניה",
+    "slug": "netanya"
+  },
+  {
+    "name_he": "סאג'ור",
+    "slug": "sajur"
+  },
+  {
+    "name_he": "סאלם",
+    "slug": "salem"
+  },
+  {
+    "name_he": "סאסא",
+    "slug": "sasa"
+  },
+  {
+    "name_he": "סביון",
+    "slug": "savyon"
+  },
+  {
+    "name_he": "סגולה",
+    "slug": "segulla"
+  },
+  {
+    "name_he": "סואעד (חמרייה)",
+    "slug": "sawaid-hamriyye"
+  },
+  {
+    "name_he": "סולם",
+    "slug": "sulam"
+  },
+  {
+    "name_he": "סוסיה",
+    "slug": "suseya"
+  },
+  {
+    "name_he": "סופה",
+    "slug": "sufa"
+  },
+  {
+    "name_he": "סח'נין",
+    "slug": "sakhnin"
+  },
+  {
+    "name_he": "סלמה",
+    "slug": "sallama"
+  },
+  {
+    "name_he": "סלעית",
+    "slug": "salit"
+  },
+  {
+    "name_he": "סמר",
+    "slug": "samar"
+  },
+  {
+    "name_he": "סעד",
+    "slug": "saad"
+  },
+  {
+    "name_he": "סער",
+    "slug": "saar"
+  },
+  {
+    "name_he": "ספיר",
+    "slug": "sappir"
+  },
+  {
+    "name_he": "סתרייה",
+    "slug": "sitriyya"
+  },
+  {
+    "name_he": "עבדון",
+    "slug": "avdon"
+  },
+  {
+    "name_he": "עגור",
+    "slug": "agur"
+  },
+  {
+    "name_he": "עדי",
+    "slug": "adi"
+  },
+  {
+    "name_he": "עדנים",
+    "slug": "adanim"
+  },
+  {
+    "name_he": "עוזה",
+    "slug": "uza"
+  },
+  {
+    "name_he": "עוזייר",
+    "slug": "uzeir"
+  },
+  {
+    "name_he": "עולש",
+    "slug": "olesh"
+  },
+  {
+    "name_he": "עומר",
+    "slug": "omer"
+  },
+  {
+    "name_he": "עופר",
+    "slug": "ofer"
+  },
+  {
+    "name_he": "עוצם",
+    "slug": "ozem"
+  },
+  {
+    "name_he": "עזר",
+    "slug": "ezer"
+  },
+  {
+    "name_he": "עזריאל",
+    "slug": "azriel"
+  },
+  {
+    "name_he": "עזריה",
+    "slug": "azarya"
+  },
+  {
+    "name_he": "עזריקם",
+    "slug": "azriqam"
+  },
+  {
+    "name_he": "עטרת",
+    "slug": "ateret"
+  },
+  {
+    "name_he": "עידן",
+    "slug": "iddan"
+  },
+  {
+    "name_he": "עיילבון",
+    "slug": "eilabun"
+  },
+  {
+    "name_he": "עיינות",
+    "slug": "ayanot"
+  },
+  {
+    "name_he": "עילוט",
+    "slug": "ilut"
+  },
+  {
+    "name_he": "עין א-סהלה",
+    "slug": "ein-as-sahle"
+  },
+  {
+    "name_he": "עין איילה",
+    "slug": "en-ayyala"
+  },
+  {
+    "name_he": "עין אל-אסד",
+    "slug": "ein-al-asad"
+  },
+  {
+    "name_he": "עין גב",
+    "slug": "en-gev"
+  },
+  {
+    "name_he": "עין גדי",
+    "slug": "en-gedi"
+  },
+  {
+    "name_he": "עין דור",
+    "slug": "en-dor"
+  },
+  {
+    "name_he": "עין הבשור",
+    "slug": "en-habesor"
+  },
+  {
+    "name_he": "עין הוד",
+    "slug": "en-hod"
+  },
+  {
+    "name_he": "עין החורש",
+    "slug": "en-hahoresh"
+  },
+  {
+    "name_he": "עין המפרץ",
+    "slug": "en-hamifraz"
+  },
+  {
+    "name_he": "עין הנצי\"ב",
+    "slug": "en-hanaziv"
+  },
+  {
+    "name_he": "עין השופט",
+    "slug": "en-hashofet"
+  },
+  {
+    "name_he": "עין השלושה",
+    "slug": "en-hashelosha"
+  },
+  {
+    "name_he": "עין ורד",
+    "slug": "en-wered"
+  },
+  {
+    "name_he": "עין זיוון",
+    "slug": "en-ziwan"
+  },
+  {
+    "name_he": "עין חוד",
+    "slug": "ein-hod"
+  },
+  {
+    "name_he": "עין חצבה",
+    "slug": "en-hazeva"
+  },
+  {
+    "name_he": "עין חרוד (איחוד)",
+    "slug": "en-harod-ihud"
+  },
+  {
+    "name_he": "עין חרוד (מאוחד)",
+    "slug": "en-harod-meuhad"
+  },
+  {
+    "name_he": "עין יהב",
+    "slug": "en-yahav"
+  },
+  {
+    "name_he": "עין יעקב",
+    "slug": "en-yaaqov"
+  },
+  {
+    "name_he": "עין כרמל",
+    "slug": "en-karmel"
+  },
+  {
+    "name_he": "עין מאהל",
+    "slug": "ein-mahel"
+  },
+  {
+    "name_he": "עין נקובא",
+    "slug": "ein-naqquba"
+  },
+  {
+    "name_he": "עין עירון",
+    "slug": "en-iron"
+  },
+  {
+    "name_he": "עין צורים",
+    "slug": "en-zurim"
+  },
+  {
+    "name_he": "עין קנייא",
+    "slug": "ein-qiniyye"
+  },
+  {
+    "name_he": "עין ראפה",
+    "slug": "ein-rafa"
+  },
+  {
+    "name_he": "עין שמר",
+    "slug": "en-shemer"
+  },
+  {
+    "name_he": "עין שריד",
+    "slug": "en-sarid"
+  },
+  {
+    "name_he": "עינת",
+    "slug": "enat"
+  },
+  {
+    "name_he": "עיר אובות",
+    "slug": "ir-ovot"
+  },
+  {
+    "name_he": "עיר כרמל",
+    "slug": "ir-karmel"
+  },
+  {
+    "name_he": "עכו",
+    "slug": "akko"
+  },
+  {
+    "name_he": "עלומים",
+    "slug": "alumim"
+  },
+  {
+    "name_he": "עלי",
+    "slug": "eli"
+  },
+  {
+    "name_he": "עלי זהב",
+    "slug": "ale-zahav"
+  },
+  {
+    "name_he": "עלמה",
+    "slug": "alma"
+  },
+  {
+    "name_he": "עלמון",
+    "slug": "almon"
+  },
+  {
+    "name_he": "עמוקה",
+    "slug": "amuqqa"
+  },
+  {
+    "name_he": "עמינדב",
+    "slug": "amminadav"
+  },
+  {
+    "name_he": "עמיעד",
+    "slug": "ammiad"
+  },
+  {
+    "name_he": "עמיעוז",
+    "slug": "ammioz"
+  },
+  {
+    "name_he": "עמיקם",
+    "slug": "ammiqam"
+  },
+  {
+    "name_he": "עמיר",
+    "slug": "amir"
+  },
+  {
+    "name_he": "עמנואל",
+    "slug": "immanuel"
+  },
+  {
+    "name_he": "עמקה",
+    "slug": "amqa"
+  },
+  {
+    "name_he": "ענב",
+    "slug": "enav"
+  },
+  {
+    "name_he": "עפולה",
+    "slug": "afula"
+  },
+  {
+    "name_he": "עפרה",
+    "slug": "ofra"
+  },
+  {
+    "name_he": "עפרים",
+    "slug": "ofarim"
+  },
+  {
+    "name_he": "עץ אפרים",
+    "slug": "ez-efrayim"
+  },
+  {
+    "name_he": "עראבה",
+    "slug": "arrabe"
+  },
+  {
+    "name_he": "עראמשה",
+    "slug": "aramsha"
+  },
+  {
+    "name_he": "ערד",
+    "slug": "arad"
+  },
+  {
+    "name_he": "ערוגות",
+    "slug": "arugot"
+  },
+  {
+    "name_he": "ערערה",
+    "slug": "arara"
+  },
+  {
+    "name_he": "ערערה-בנגב",
+    "slug": "arara-banegev"
+  },
+  {
+    "name_he": "עשרת",
+    "slug": "aseret"
+  },
+  {
+    "name_he": "עתלית",
+    "slug": "atlit"
+  },
+  {
+    "name_he": "עתניאל",
+    "slug": "otniel"
+  },
+  {
+    "name_he": "פארן",
+    "slug": "paran"
+  },
+  {
+    "name_he": "פדואל",
+    "slug": "peduel"
+  },
+  {
+    "name_he": "פדויים",
+    "slug": "peduyim"
+  },
+  {
+    "name_he": "פדיה",
+    "slug": "pedaya"
+  },
+  {
+    "name_he": "פוריידיס",
+    "slug": "fureidis"
+  },
+  {
+    "name_he": "פורייה - כפר עבודה",
+    "slug": "poriyya-kefar-avoda"
+  },
+  {
+    "name_he": "פורייה - נווה עובד",
+    "slug": "poriyya-newe-oved"
+  },
+  {
+    "name_he": "פורייה עילית",
+    "slug": "poriyya-illit"
+  },
+  {
+    "name_he": "פורת",
+    "slug": "porat"
+  },
+  {
+    "name_he": "פטיש",
+    "slug": "pattish"
+  },
+  {
+    "name_he": "פלך",
+    "slug": "pelekh"
+  },
+  {
+    "name_he": "פלמחים",
+    "slug": "palmahim"
+  },
+  {
+    "name_he": "פני חבר",
+    "slug": "pene-hever"
+  },
+  {
+    "name_he": "פסגות",
+    "slug": "pesagot"
+  },
+  {
+    "name_he": "פסוטה",
+    "slug": "fassuta"
+  },
+  {
+    "name_he": "פעמי תש\"ז",
+    "slug": "paame-tashaz"
+  },
+  {
+    "name_he": "פצאל",
+    "slug": "pezael"
+  },
+  {
+    "name_he": "פקיעין (בוקייעה)",
+    "slug": "peqiin-buqeia"
+  },
+  {
+    "name_he": "פקיעין חדשה",
+    "slug": "peqiin-hadasha"
+  },
+  {
+    "name_he": "פרדס חנה-כרכור",
+    "slug": "pardes-hanna-karkur"
+  },
+  {
+    "name_he": "פרדסייה",
+    "slug": "pardesiyya"
+  },
+  {
+    "name_he": "פרוד",
+    "slug": "parod"
+  },
+  {
+    "name_he": "פרזון",
+    "slug": "perazon"
+  },
+  {
+    "name_he": "פרי גן",
+    "slug": "peri-gan"
+  },
+  {
+    "name_he": "פתח תקווה",
+    "slug": "petah-tikva"
+  },
+  {
+    "name_he": "פתחיה",
+    "slug": "petahya"
+  },
+  {
+    "name_he": "צאלים",
+    "slug": "zeelim"
+  },
+  {
+    "name_he": "צביה",
+    "slug": "zviyya"
+  },
+  {
+    "name_he": "צבעון",
+    "slug": "zivon"
+  },
+  {
+    "name_he": "צובה",
+    "slug": "zova"
+  },
+  {
+    "name_he": "צוחר",
+    "slug": "zohar-1136"
+  },
+  {
+    "name_he": "צופים",
+    "slug": "zufim"
+  },
+  {
+    "name_he": "צופית",
+    "slug": "zofit"
+  },
+  {
+    "name_he": "צופר",
+    "slug": "zofar"
+  },
+  {
+    "name_he": "צוקי ים",
+    "slug": "zuqi-yam"
+  },
+  {
+    "name_he": "צור הדסה",
+    "slug": "zur-hadassa"
+  },
+  {
+    "name_he": "צור משה",
+    "slug": "zur-moshe"
+  },
+  {
+    "name_he": "צור נתן",
+    "slug": "zur-natan"
+  },
+  {
+    "name_he": "צוריאל",
+    "slug": "zuriel"
+  },
+  {
+    "name_he": "צורית",
+    "slug": "zurit"
+  },
+  {
+    "name_he": "צורן",
+    "slug": "zoran"
+  },
+  {
+    "name_he": "צורן-קדימה",
+    "slug": "zoran-qadima"
+  },
+  {
+    "name_he": "ציפורי",
+    "slug": "zippori"
+  },
+  {
+    "name_he": "צלפון",
+    "slug": "zelafon"
+  },
+  {
+    "name_he": "צנדלה",
+    "slug": "sandala"
+  },
+  {
+    "name_he": "צפרייה",
+    "slug": "zafriyya"
+  },
+  {
+    "name_he": "צפרירים",
+    "slug": "zafririm"
+  },
+  {
+    "name_he": "צפת",
+    "slug": "zefat"
+  },
+  {
+    "name_he": "צרופה",
+    "slug": "zerufa"
+  },
+  {
+    "name_he": "צרעה",
+    "slug": "zora"
+  },
+  {
+    "name_he": "קבוצת יבנה",
+    "slug": "qevuzat-yavne"
+  },
+  {
+    "name_he": "קדומים",
+    "slug": "qedumim"
+  },
+  {
+    "name_he": "קדמה",
+    "slug": "qedma"
+  },
+  {
+    "name_he": "קדמת צבי",
+    "slug": "qidmat-zevi"
+  },
+  {
+    "name_he": "קדר",
+    "slug": "qedar"
+  },
+  {
+    "name_he": "קדרון",
+    "slug": "qidron"
+  },
+  {
+    "name_he": "קדרים",
+    "slug": "qaddarim"
+  },
+  {
+    "name_he": "קוממיות",
+    "slug": "qomemiyyut"
+  },
+  {
+    "name_he": "קורנית",
+    "slug": "qoranit"
+  },
+  {
+    "name_he": "קטורה",
+    "slug": "qetura"
+  },
+  {
+    "name_he": "קיסריה",
+    "slug": "qesaryya"
+  },
+  {
+    "name_he": "קלחים",
+    "slug": "qelahim"
+  },
+  {
+    "name_he": "קליה",
+    "slug": "qalya"
+  },
+  {
+    "name_he": "קלנסווה",
+    "slug": "qalansawe"
+  },
+  {
+    "name_he": "קלע",
+    "slug": "qela"
+  },
+  {
+    "name_he": "קציר-חריש",
+    "slug": "qazir-harish"
+  },
+  {
+    "name_he": "קצרין",
+    "slug": "qazrin"
+  },
+  {
+    "name_he": "קריית אונו",
+    "slug": "qiryat-ono"
+  },
+  {
+    "name_he": "קריית ארבע",
+    "slug": "qiryat-arba"
+  },
+  {
+    "name_he": "קריית אתא",
+    "slug": "qiryat-atta"
+  },
+  {
+    "name_he": "קריית ביאליק",
+    "slug": "qiryat-bialik"
+  },
+  {
+    "name_he": "קריית גת",
+    "slug": "qiryat-gat"
+  },
+  {
+    "name_he": "קריית טבעון",
+    "slug": "qiryat-tivon"
+  },
+  {
+    "name_he": "קריית ים",
+    "slug": "qiryat-yam"
+  },
+  {
+    "name_he": "קריית יערים",
+    "slug": "qiryat-yearim"
+  },
+  {
+    "name_he": "קריית יערים (מוסד)",
+    "slug": "qiryat-yearim-institute"
+  },
+  {
+    "name_he": "קריית מוצקין",
+    "slug": "qiryat-motzkin"
+  },
+  {
+    "name_he": "קריית מלאכי",
+    "slug": "qiryat-malakhi"
+  },
+  {
+    "name_he": "קריית נטפים",
+    "slug": "qiryat-netafim"
+  },
+  {
+    "name_he": "קריית ענבים",
+    "slug": "qiryat-anavim"
+  },
+  {
+    "name_he": "קריית עקרון",
+    "slug": "qiryat-eqron"
+  },
+  {
+    "name_he": "קריית שמונה",
+    "slug": "qiryat-shemona"
+  },
+  {
+    "name_he": "קרני שומרון",
+    "slug": "qarne-shomeron"
+  },
+  {
+    "name_he": "קשת",
+    "slug": "qeshet"
+  },
+  {
+    "name_he": "ראמה",
+    "slug": "rame"
+  },
+  {
+    "name_he": "ראס אל-עין",
+    "slug": "ras-al-ein"
+  },
+  {
+    "name_he": "ראש העין",
+    "slug": "rosh-haayin"
+  },
+  {
+    "name_he": "ראש פינה",
+    "slug": "rosh-pinna"
+  },
+  {
+    "name_he": "ראש צורים",
+    "slug": "rosh-zurim"
+  },
+  {
+    "name_he": "ראשון לציון",
+    "slug": "rishon-lezion"
+  },
+  {
+    "name_he": "רבבה",
+    "slug": "revava"
+  },
+  {
+    "name_he": "רבדים",
+    "slug": "revadim"
+  },
+  {
+    "name_he": "רביבים",
+    "slug": "revivim"
+  },
+  {
+    "name_he": "רביד",
+    "slug": "ravid"
+  },
+  {
+    "name_he": "רגבים",
+    "slug": "regavim"
+  },
+  {
+    "name_he": "רהט",
+    "slug": "rahat"
+  },
+  {
+    "name_he": "רווחה",
+    "slug": "rewaha"
+  },
+  {
+    "name_he": "רוויה",
+    "slug": "rewaya"
+  },
+  {
+    "name_he": "רוחמה",
+    "slug": "ruhama"
+  },
+  {
+    "name_he": "רומאנה",
+    "slug": "rummane"
+  },
+  {
+    "name_he": "רומת הייב",
+    "slug": "rumat-heib"
+  },
+  {
+    "name_he": "רועי",
+    "slug": "roi"
+  },
+  {
+    "name_he": "רותם",
+    "slug": "rotem"
+  },
+  {
+    "name_he": "רחוב",
+    "slug": "rehov"
+  },
+  {
+    "name_he": "רחובות",
+    "slug": "rehovot"
+  },
+  {
+    "name_he": "ריחאנייה",
+    "slug": "reihaniyye"
+  },
+  {
+    "name_he": "ריחן",
+    "slug": "rehan"
+  },
+  {
+    "name_he": "ריינה",
+    "slug": "reine"
+  },
+  {
+    "name_he": "רימונים",
+    "slug": "rimmonim"
+  },
+  {
+    "name_he": "רינתיה",
+    "slug": "rinnatya"
+  },
+  {
+    "name_he": "רכסים",
+    "slug": "rekhasim"
+  },
+  {
+    "name_he": "רם-און",
+    "slug": "ram-on"
+  },
+  {
+    "name_he": "רמות",
+    "slug": "ramot"
+  },
+  {
+    "name_he": "רמות השבים",
+    "slug": "ramot-hashavim"
+  },
+  {
+    "name_he": "רמות מאיר",
+    "slug": "ramot-meir"
+  },
+  {
+    "name_he": "רמות מנשה",
+    "slug": "ramot-menashe"
+  },
+  {
+    "name_he": "רמות נפתלי",
+    "slug": "ramot-naftali"
+  },
+  {
+    "name_he": "רמלה",
+    "slug": "ramla"
+  },
+  {
+    "name_he": "רמת אפעל",
+    "slug": "ramat-efal"
+  },
+  {
+    "name_he": "רמת גן",
+    "slug": "ramat-gan"
+  },
+  {
+    "name_he": "רמת דוד",
+    "slug": "ramat-dawid"
+  },
+  {
+    "name_he": "רמת הכובש",
+    "slug": "ramat-hakovesh"
+  },
+  {
+    "name_he": "רמת השופט",
+    "slug": "ramat-hashofet"
+  },
+  {
+    "name_he": "רמת השרון",
+    "slug": "ramat-hasharon"
+  },
+  {
+    "name_he": "רמת יוחנן",
+    "slug": "ramat-yohanan"
+  },
+  {
+    "name_he": "רמת ישי",
+    "slug": "ramat-yishay"
+  },
+  {
+    "name_he": "רמת מגשימים",
+    "slug": "ramat-magshimim"
+  },
+  {
+    "name_he": "רמת פנקס",
+    "slug": "ramat-pinkas"
+  },
+  {
+    "name_he": "רמת צבי",
+    "slug": "ramat-zevi"
+  },
+  {
+    "name_he": "רמת רזיאל",
+    "slug": "ramat-raziel"
+  },
+  {
+    "name_he": "רמת רחל",
+    "slug": "ramat-rahel"
+  },
+  {
+    "name_he": "רנן",
+    "slug": "rannen"
+  },
+  {
+    "name_he": "רעים",
+    "slug": "reim"
+  },
+  {
+    "name_he": "רעננה",
+    "slug": "raannana"
+  },
+  {
+    "name_he": "רקפת",
+    "slug": "raqqefet"
+  },
+  {
+    "name_he": "רשפון",
+    "slug": "rishpon"
+  },
+  {
+    "name_he": "רשפים",
+    "slug": "reshafim"
+  },
+  {
+    "name_he": "רתמים",
+    "slug": "retamim"
+  },
+  {
+    "name_he": "שא-נור",
+    "slug": "sa-nur"
+  },
+  {
+    "name_he": "שאר ישוב",
+    "slug": "shear-yashuv"
+  },
+  {
+    "name_he": "שבי ציון",
+    "slug": "shave-ziyyon"
+  },
+  {
+    "name_he": "שבי שומרון",
+    "slug": "shave-shomeron"
+  },
+  {
+    "name_he": "שבלי - אום אל-גנם",
+    "slug": "shibli-umm-al-ghanam"
+  },
+  {
+    "name_he": "שגב",
+    "slug": "segev"
+  },
+  {
+    "name_he": "שגב-שלום",
+    "slug": "segev-shalom"
+  },
+  {
+    "name_he": "שגור",
+    "slug": "shaghor"
+  },
+  {
+    "name_he": "שדה אילן",
+    "slug": "sede-ilan"
+  },
+  {
+    "name_he": "שדה אליהו",
+    "slug": "sede-eliyyahu"
+  },
+  {
+    "name_he": "שדה אליעזר",
+    "slug": "sede-eliezer"
+  },
+  {
+    "name_he": "שדה בוקר",
+    "slug": "sede-boqer"
+  },
+  {
+    "name_he": "שדה דוד",
+    "slug": "sede-dawid"
+  },
+  {
+    "name_he": "שדה ורבורג",
+    "slug": "sede-warburg"
+  },
+  {
+    "name_he": "שדה יואב",
+    "slug": "sede-yoav"
+  },
+  {
+    "name_he": "שדה יעקב",
+    "slug": "sede-yaaqov"
+  },
+  {
+    "name_he": "שדה יצחק",
+    "slug": "sede-yizhaq"
+  },
+  {
+    "name_he": "שדה משה",
+    "slug": "sede-moshe"
+  },
+  {
+    "name_he": "שדה נחום",
+    "slug": "sede-nahum"
+  },
+  {
+    "name_he": "שדה נחמיה",
+    "slug": "sede-nehemya"
+  },
+  {
+    "name_he": "שדה ניצן",
+    "slug": "sede-nizzan"
+  },
+  {
+    "name_he": "שדה עוזיהו",
+    "slug": "sede-uzziyyahu"
+  },
+  {
+    "name_he": "שדה צבי",
+    "slug": "sede-zevi"
+  },
+  {
+    "name_he": "שדות ים",
+    "slug": "sedot-yam"
+  },
+  {
+    "name_he": "שדות מיכה",
+    "slug": "sedot-mikha"
+  },
+  {
+    "name_he": "שדי אברהם",
+    "slug": "sede-avraham"
+  },
+  {
+    "name_he": "שדי חמד",
+    "slug": "sede-hemed"
+  },
+  {
+    "name_he": "שדי תרומות",
+    "slug": "sede-terumot"
+  },
+  {
+    "name_he": "שדמה",
+    "slug": "shedema"
+  },
+  {
+    "name_he": "שדמות דבורה",
+    "slug": "shadmot-devora"
+  },
+  {
+    "name_he": "שדמות מחולה",
+    "slug": "shadmot-mehola"
+  },
+  {
+    "name_he": "שדרות",
+    "slug": "sederot"
+  },
+  {
+    "name_he": "שואבה",
+    "slug": "shoeva"
+  },
+  {
+    "name_he": "שובה",
+    "slug": "shuva"
+  },
+  {
+    "name_he": "שובל",
+    "slug": "shoval"
+  },
+  {
+    "name_he": "שוהם",
+    "slug": "shoham"
+  },
+  {
+    "name_he": "שומרה",
+    "slug": "shomera"
+  },
+  {
+    "name_he": "שומרייה",
+    "slug": "shomeriyya"
+  },
+  {
+    "name_he": "שוקדה",
+    "slug": "shoqeda"
+  },
+  {
+    "name_he": "שורש",
+    "slug": "shoresh"
+  },
+  {
+    "name_he": "שורשים",
+    "slug": "shorashim"
+  },
+  {
+    "name_he": "שושנת העמקים",
+    "slug": "shoshannat-haamaqim"
+  },
+  {
+    "name_he": "שזור",
+    "slug": "shezor"
+  },
+  {
+    "name_he": "שחר",
+    "slug": "shahar"
+  },
+  {
+    "name_he": "שחרות",
+    "slug": "shaharut"
+  },
+  {
+    "name_he": "שיבולים",
+    "slug": "shibbolim"
+  },
+  {
+    "name_he": "שייח' דנון",
+    "slug": "sheikh-dannun"
+  },
+  {
+    "name_he": "שילה",
+    "slug": "shilo"
+  },
+  {
+    "name_he": "שילת",
+    "slug": "shilat"
+  },
+  {
+    "name_he": "שכניה",
+    "slug": "shekhanya"
+  },
+  {
+    "name_he": "שלווה",
+    "slug": "shalwa"
+  },
+  {
+    "name_he": "שלוחות",
+    "slug": "sheluhot"
+  },
+  {
+    "name_he": "שלומי",
+    "slug": "shelomi"
+  },
+  {
+    "name_he": "שמיר",
+    "slug": "shamir"
+  },
+  {
+    "name_he": "שמעה",
+    "slug": "shima"
+  },
+  {
+    "name_he": "שמרת",
+    "slug": "shamerat"
+  },
+  {
+    "name_he": "שמשית",
+    "slug": "shimshit"
+  },
+  {
+    "name_he": "שניר",
+    "slug": "senir"
+  },
+  {
+    "name_he": "שעב",
+    "slug": "shaab"
+  },
+  {
+    "name_he": "שעל",
+    "slug": "shaal"
+  },
+  {
+    "name_he": "שעלבים",
+    "slug": "shaalvim"
+  },
+  {
+    "name_he": "שער אפרים",
+    "slug": "shaar-efrayim"
+  },
+  {
+    "name_he": "שער הגולן",
+    "slug": "shaar-hagolan"
+  },
+  {
+    "name_he": "שער העמקים",
+    "slug": "shaar-haamaqim"
+  },
+  {
+    "name_he": "שער מנשה",
+    "slug": "shaar-menashe"
+  },
+  {
+    "name_he": "שערי תקווה",
+    "slug": "shaare-tiqwa"
+  },
+  {
+    "name_he": "שפיים",
+    "slug": "shefayim"
+  },
+  {
+    "name_he": "שפיר",
+    "slug": "shafir"
+  },
+  {
+    "name_he": "שפר",
+    "slug": "shefer"
+  },
+  {
+    "name_he": "שפרעם",
+    "slug": "shefaram"
+  },
+  {
+    "name_he": "שקד",
+    "slug": "shaqed"
+  },
+  {
+    "name_he": "שקף",
+    "slug": "sheqef"
+  },
+  {
+    "name_he": "שרונה",
+    "slug": "sharona"
+  },
+  {
+    "name_he": "שריגים (לי-און)",
+    "slug": "srigim-li-on"
+  },
+  {
+    "name_he": "שריד",
+    "slug": "sarid"
+  },
+  {
+    "name_he": "שרשרת",
+    "slug": "sharsheret"
+  },
+  {
+    "name_he": "שתולה",
+    "slug": "shetula"
+  },
+  {
+    "name_he": "שתולים",
+    "slug": "shetulim"
+  },
+  {
+    "name_he": "תאשור",
+    "slug": "teashur"
+  },
+  {
+    "name_he": "תדהר",
+    "slug": "tidhar"
+  },
+  {
+    "name_he": "תובל",
+    "slug": "tuval"
+  },
+  {
+    "name_he": "תומר",
+    "slug": "tomer"
+  },
+  {
+    "name_he": "תושייה",
+    "slug": "tushiyya"
+  },
+  {
+    "name_he": "תימורים",
+    "slug": "timmorim"
+  },
+  {
+    "name_he": "תירוש",
+    "slug": "tirosh"
+  },
+  {
+    "name_he": "תל אביב-יפו",
+    "slug": "tel-aviv-yafo"
+  },
+  {
+    "name_he": "תל יוסף",
+    "slug": "tel-yosef"
+  },
+  {
+    "name_he": "תל יצחק",
+    "slug": "tel-yizhaq"
+  },
+  {
+    "name_he": "תל מונד",
+    "slug": "tel-mond"
+  },
+  {
+    "name_he": "תל עדשים",
+    "slug": "tel-adashim"
+  },
+  {
+    "name_he": "תל קציר",
+    "slug": "tel-qazir"
+  },
+  {
+    "name_he": "תל שבע",
+    "slug": "tel-sheva"
+  },
+  {
+    "name_he": "תל תאומים",
+    "slug": "tel-teomim"
+  },
+  {
+    "name_he": "תלם",
+    "slug": "telem"
+  },
+  {
+    "name_he": "תלמי אליהו",
+    "slug": "talme-eliyyahu"
+  },
+  {
+    "name_he": "תלמי אלעזר",
+    "slug": "talme-elazar"
+  },
+  {
+    "name_he": "תלמי ביל\"ו",
+    "slug": "talme-bilu"
+  },
+  {
+    "name_he": "תלמי יוסף",
+    "slug": "talme-yosef"
+  },
+  {
+    "name_he": "תלמי יחיאל",
+    "slug": "talme-yehiel"
+  },
+  {
+    "name_he": "תלמי יפה",
+    "slug": "talme-yafe"
+  },
+  {
+    "name_he": "תלמים",
+    "slug": "telamim"
+  },
+  {
+    "name_he": "תמרת",
+    "slug": "timrat"
+  },
+  {
+    "name_he": "תנובות",
+    "slug": "tenuvot"
+  },
+  {
+    "name_he": "תעוז",
+    "slug": "taoz"
+  },
+  {
+    "name_he": "תפרח",
+    "slug": "tifrah"
+  },
+  {
+    "name_he": "תקומה",
+    "slug": "tequma"
+  },
+  {
+    "name_he": "תקוע",
+    "slug": "teqoa"
+  },
+  {
+    "name_he": "תרום",
+    "slug": "tarum"
+  }
+]
