@@ -3,6 +3,14 @@
 Hebrew student/tutor product with manual teacher access: React 19, TypeScript 6, Vite 8,
 Clerk, TanStack Query, Tailwind 4, and existing shadcn/Radix components.
 Marketplace data goes through NestJS, never a browser service-role client.
+The browser does not use a Supabase client. `VITE_SUPABASE_URL` and
+`VITE_SUPABASE_PUBLISHABLE_KEY` are unused legacy settings and are not required
+locally or in the client Vercel project. Supabase runtime credentials belong to
+the backend project only.
+The Vite configuration exposes only `VITE_API_URL`,
+`VITE_CLERK_PUBLISHABLE_KEY`, and `VITE_ENABLE_QUERY_DEVTOOLS` to browser code,
+including SDKs that read the complete environment object. Other environment
+values, including the legacy Supabase settings, are not bundled.
 Pending requests do not reserve a slot. Teacher acceptance protects the selected
 time against other accepted awaiting lessons; attendance requires explicit confirmation.
 
@@ -32,7 +40,7 @@ Selectors display Hebrew and submit slugs. Never add server secrets to `VITE_*`.
 Query devtools are opt-in during development: set `VITE_ENABLE_QUERY_DEVTOOLS=true`
 to show their floating launcher. They are hidden by default and in production.
 
-## Production Deployment
+## Initial Vercel Deployment
 
 [.env.production](.env.production) supplies the public production API default:
 `https://more-li-backend.vercel.app/api`. Local development keeps the API from
@@ -42,10 +50,35 @@ variables override the committed defaults; remove or update any old production
 
 Connect this repository to a Vercel **Vite** project using Node 24.x,
 `npm run build`, and output directory `dist`. Set
-`VITE_CLERK_PUBLISHABLE_KEY` to the matching live Clerk publishable key in Vercel's
-production build environment. The production build guard rejects test keys.
+`VITE_CLERK_PUBLISHABLE_KEY` in Vercel to the existing `pk_test_...` value from
+your ignored local client environment. It must belong to the same Clerk instance
+as the backend. Do not copy the whole local environment into Vercel.
 Only public defaults belong in the committed production environment file; keep
 server secrets out of every `VITE_*` variable and out of this repository.
+
+For this initial deployment, `.env.production` explicitly sets the build-only
+`CLERK_ALLOW_DEVELOPMENT_INSTANCE=true`. A Vercel production build accepts a
+`pk_test_` key only with that opt-in and prints a warning. Missing/invalid keys
+and localhost/non-HTTPS API URLs still fail the build. The opt-in is not exposed
+to browser code and does not change backend validation.
+
+Deploy the client first to obtain its HTTPS URL. Then use that origin for backend
+`PUBLIC_APP_URL` and `CORS_ORIGIN` and configure Clerk as needed. This initial
+client deployment does not resolve the backend's production startup validation:
+the backend must also explicitly support the temporary development Clerk instance
+before API-dependent features can work. Changing CORS alone is not sufficient.
+
+### Switch To Production Clerk
+
+Create a production instance in Clerk and use its actual `pk_live_` publishable
+key here. Its matching `sk_live_` secret and production issuer belong in the
+backend environment, not the browser. Test keys cannot be converted by changing
+their prefixes. Clerk's [production guide](https://clerk.com/docs/guides/development/deployment/production)
+requires a domain you own and access to its DNS records; configure production
+domains and any OAuth providers before switching the deployed client.
+Set `CLERK_ALLOW_DEVELOPMENT_INSTANCE=false` in Vercel to override the temporary
+file default and require a live key, then redeploy both projects with matching
+Clerk settings.
 
 Before release, `GET https://more-li-backend.vercel.app/api/health` must succeed.
 Set the backend `PUBLIC_APP_URL` to the final client URL and include that exact

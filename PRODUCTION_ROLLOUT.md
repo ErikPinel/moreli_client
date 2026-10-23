@@ -32,14 +32,22 @@ reserved bookings. Code is prepared for staging, not certified for public launch
 2. [vercel.json](vercel.json) supplies SPA deep-link rewrites and security headers.
    Do not deploy the Vite dev server.
 3. [.env.production](.env.production) supplies
-   `VITE_API_URL=https://more-li-backend.vercel.app/api`. Configure matching
-   `VITE_CLERK_PUBLISHABLE_KEY=pk_live_...` in Vercel before build. Vercel environment
-   values override the file, so update/remove any stale API override. The file
-   contains public defaults only; no server keys belong in Vite.
-4. Vercel production builds reject localhost/non-HTTPS API URLs and test Clerk keys.
-   Local builds may use development settings; previews need staging API/Clerk/data.
-5. Set matching backend `PUBLIC_APP_URL`/`CORS_ORIGIN`, live Clerk allowed origins,
-   redirect/account URLs and verified-email requirements; rebuild after env changes.
+   `VITE_API_URL=https://more-li-backend.vercel.app/api` and the temporary build-only
+   `CLERK_ALLOW_DEVELOPMENT_INSTANCE=true`. For the initial client URL, configure
+   `VITE_CLERK_PUBLISHABLE_KEY` in Vercel using the current client's `pk_test_...`
+   key from the same Clerk instance as the backend. Vercel environment values
+   override the file, so update/remove stale API or opt-in overrides. The file
+   contains no server secrets; only the three supported public Vite settings are
+   exposed to browser code.
+4. Vercel production builds reject localhost/non-HTTPS API URLs and missing/invalid
+   Clerk keys. Test keys require the explicit opt-in and emit a build warning.
+   To switch to production Clerk, set `CLERK_ALLOW_DEVELOPMENT_INSTANCE=false`
+   and a genuine matching `pk_live_...` key in Vercel. Local development is unchanged.
+5. After obtaining the frontend URL, set backend `PUBLIC_APP_URL`/`CORS_ORIGIN` and
+   matching Clerk origin/redirect settings. Backend production validation must also
+   explicitly support development Clerk for the temporary MVP; changing CORS alone
+   does not fix startup. A later production Clerk switch needs matching backend live
+   secret/issuer settings. Rebuild/redeploy after environment changes.
 6. Verify direct links and refresh, signup, account switching, all roles and inboxes
    on deployed domains. Actual Vercel deployment has not been run here.
 7. Require a successful backend `/api/health` response before certifying integration.
