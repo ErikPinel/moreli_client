@@ -49,10 +49,12 @@ variables override the committed defaults; remove or update any old production
 `VITE_API_URL` value that still points to localhost or a previous API.
 
 Connect this repository to a Vercel **Vite** project using Node 24.x,
-`npm run build`, and output directory `dist`. Set
-`VITE_CLERK_PUBLISHABLE_KEY` in Vercel to the existing `pk_test_...` value from
-your ignored local client environment. It must belong to the same Clerk instance
-as the backend. Do not copy the whole local environment into Vercel.
+`npm run build`, and output directory `dist`. The committed `.env.production`
+includes the existing `VITE_CLERK_PUBLISHABLE_KEY=pk_test_...` for the initial
+deployment; this publishable key is public, not a server secret. No separate
+Vercel key variable is required initially. An existing Vercel override takes
+precedence, so remove it or use the same instance's correct publishable key.
+It must match the backend's Clerk instance. Do not copy the whole local environment.
 Only public defaults belong in the committed production environment file; keep
 server secrets out of every `VITE_*` variable and out of this repository.
 

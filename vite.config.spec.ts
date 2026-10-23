@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import configFactory from './vite.config.ts'
 
@@ -14,6 +15,13 @@ describe('Vercel client configuration', () => {
   afterEach(() => {
     vi.unstubAllEnvs()
     vi.restoreAllMocks()
+  })
+
+  it('includes a public Clerk key in the initial production build defaults', () => {
+    const defaults = readFileSync(new URL('./.env.production', import.meta.url), 'utf8')
+    const key = defaults.match(/^VITE_CLERK_PUBLISHABLE_KEY=(.+)$/m)?.[1].trim()
+
+    expect(key?.startsWith('pk_test_') || key?.startsWith('pk_live_')).toBe(true)
   })
 
   it('accepts a live Clerk key without the temporary opt-in', () => {

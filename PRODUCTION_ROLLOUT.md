@@ -33,9 +33,9 @@ reserved bookings. Code is prepared for staging, not certified for public launch
    Do not deploy the Vite dev server.
 3. [.env.production](.env.production) supplies
    `VITE_API_URL=https://more-li-backend.vercel.app/api` and the temporary build-only
-   `CLERK_ALLOW_DEVELOPMENT_INSTANCE=true`. For the initial client URL, configure
-   `VITE_CLERK_PUBLISHABLE_KEY` in Vercel using the current client's `pk_test_...`
-   key from the same Clerk instance as the backend. Vercel environment values
+   `CLERK_ALLOW_DEVELOPMENT_INSTANCE=true`. It also includes the client's existing
+   public `VITE_CLERK_PUBLISHABLE_KEY=pk_test_...` from the same Clerk instance
+   as the backend, so no separate Vercel key variable is needed initially. Vercel environment values
    override the file, so update/remove stale API or opt-in overrides. The file
    contains no server secrets; only the three supported public Vite settings are
    exposed to browser code.
