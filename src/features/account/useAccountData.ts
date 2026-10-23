@@ -38,20 +38,21 @@ export function useFavorites(enabled = true) {
   })
 }
 
-export function useInquiries(side: 'student' | 'teacher', status?: InquiryDto['status']) {
+export function useInquiries(side: 'student' | 'teacher', status?: InquiryDto['status'], view?: 'actionable') {
   return useInfiniteQuery({
-    queryKey: [...accountKeys.inquiries(side), 'inbox', status ?? 'all'],
+    queryKey: [...accountKeys.inquiries(side), 'inbox', status ?? 'all', view ?? 'all'],
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => apiRequest<PaginatedDto<InquiryDto>>(`${endpoints.inquiries}?side=${side}&limit=50&page=${pageParam}${status ? `&status=${status}` : ''}`),
+    queryFn: ({ pageParam }) => apiRequest<PaginatedDto<InquiryDto>>(`${endpoints.inquiries}?side=${side}&limit=50&page=${pageParam}${status ? `&status=${status}` : ''}${view ? `&view=${view}` : ''}`),
     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
     select: (data) => ({ items: data.pages.flatMap((page) => page.items) }),
   })
 }
 
-export function useMyReviews() {
+export function useMyReviews(enabled = true) {
   return useQuery({
     queryKey: accountKeys.reviews,
     queryFn: () => apiRequest<ReviewDto[]>(endpoints.currentReviews),
+    enabled,
   })
 }
 
@@ -85,9 +86,10 @@ export function useUnreadNotifications() {
   })
 }
 
-export function useAcceptedStudents() {
+export function useAcceptedStudents(enabled = true) {
   return useInfiniteQuery({
     queryKey: [...accountKeys.inquiries('teacher'), 'accepted'],
+    enabled,
     initialPageParam: 1,
     queryFn: ({ pageParam }) => apiRequest<PaginatedDto<InquiryDto>>(`${endpoints.inquiries}?side=teacher&status=accepted&limit=50&page=${pageParam}`),
     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,

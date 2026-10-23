@@ -3,12 +3,16 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { formatIsraeliDate, today } from "@/lib/lesson-time";
 import { LessonDateInput } from '@/features/account/LessonDateInput';
 import { useTeacherCalendar } from '@/features/account/useEngagementData';
+import { canLearn } from '@/features/account/account-view';
+import { accountKeys, useMyReviews, useTeacherProfile } from '@/features/account/useAccountData';
+import { ReviewEditor } from '@/features/account/ReviewEditor';
 import {
   BadgeCheck,
   CalendarDays,
   Clock3,
   Laptop,
   MapPin,
+  PencilLine,
   Search,
   Star,
 } from "lucide-react";
@@ -62,17 +66,24 @@ type PublicReview = {
 
 export function TeachersPage() {
   const search = useTeacherSearchParams();
-  const teachers = useTeachers(search.apiFilters, search.isReady);
+  const hasCity = Boolean(search.values.city);
+  const showPrimary = !hasCity || search.values.inPerson;
+  const teachers = useTeachers(
+    hasCity ? { ...search.apiFilters, onlineOk: false, inPersonOk: true } : search.apiFilters,
+    search.isReady && showPrimary,
+  );
+  const showOnline = hasCity && search.values.online;
+  const onlineTeachers = useTeachers(
+    { ...search.apiFilters, citySlug: undefined, onlineOk: true, inPersonOk: false, page: search.values.onlinePage },
+    search.isReady && showOnline,
+  );
   const total = teachers.data?.meta?.total ?? teachers.data?.items.length ?? 0;
-  const pageCount =
-    teachers.data?.meta?.pageCount ??
-    (teachers.data?.hasMore ? search.values.page + 1 : search.values.page);
   const activeFilters = buildActiveFilters(search);
   const heading = search.subject
-    ? `מורים פרטיים ל${search.subject.name_he}${search.city ? ` ב${search.city.name_he}` : !search.values.inPerson && search.values.online ? " אונליין" : ""}`
-    : search.city
+    ? `מורים פרטיים ל${search.subject.name_he}${search.city && search.values.inPerson ? ` ב${search.city.name_he}` : !search.values.inPerson && search.values.online ? " אונליין" : ""}`
+    : search.city && search.values.inPerson
       ? `מורים פרטיים ב${search.city.name_he}`
-      : "מורים פרטיים שמתאימים לכם";
+      : !search.values.inPerson && search.values.online ? "מורים פרטיים אונליין" : "מורים פרטיים שמתאימים לכם";
 
   return (
     <div className="directory-page" dir="rtl">
@@ -82,7 +93,9 @@ export function TeachersPage() {
           <div className="page-shell">
             <p>דף הבית / מציאת מורה</p>
             <h1>{heading}</h1>
-            {teachers.isSuccess ? <span><strong>{total}</strong> מורים מתאימים</span> : <span role="status">{teachers.isError ? 'ספירת המורים אינה זמינה כרגע' : 'טוען את תוצאות החיפוש...'}</span>}
+            {hasCity ? (
+              <span>{search.values.inPerson && search.values.online ? "פרונטלי בעיר שנבחרה, ואונליין מכל מקום — בתוצאות נפרדות." : search.values.inPerson ? "שיעורים פרונטליים בעיר שנבחרה." : "שיעורי אונליין מכל מקום, ללא הגבלת עיר."}</span>
+            ) : teachers.isSuccess ? <span><strong>{total}</strong> מורים מתאימים</span> : <span role="status">{teachers.isError ? 'ספירת המורים אינה זמינה כרגע' : 'טוען את תוצאות החיפוש...'}</span>}
           </div>
         </div>
         <div className="page-shell directory-content">
@@ -97,9 +110,7 @@ export function TeachersPage() {
             <FilterDrawer
               values={search.values}
               subjects={search.subjects}
-              levels={search.levels}
               cities={search.cities}
-              total={total}
               onApply={search.apply}
             />
             <SortSelect
@@ -117,57 +128,31 @@ export function TeachersPage() {
               <SearchFilters
                 values={search.values}
                 subjects={search.subjects}
-                levels={search.levels}
                 cities={search.cities}
                 onChange={(patch) => search.update(patch)}
               />
             </aside>
             <section className="search-results" aria-live="polite">
               <div className="search-results__toolbar">
-                <span>
-                  {teachers.isFetching
-                    ? "מעדכן תוצאות..."
-                    : `${total} מורים נמצאו`}
-                </span>
+                <span>{hasCity ? "תוצאות החיפוש" : teachers.isFetching ? "מעדכן תוצאות..." : `${total} מורים נמצאו`}</span>
                 <SortSelect
                   value={search.values.sort}
                   onChange={(sort) => search.update({ sort })}
                 />
               </div>
-              {teachers.isPending || !search.isReady ? (
-                <div className="teacher-result-list">
-                  {[1, 2, 3].map((item) => (
-                    <TeacherResultCardSkeleton key={item} />
-                  ))}
-                </div>
+              {showPrimary ? (
+                <section className="search-result-group" aria-label={hasCity ? "מורים פרונטליים" : "מורים מתאימים"}>
+                  {hasCity ? <header className="search-result-group__heading"><h2>שיעורים פרונטליים ב{search.city?.name_he ?? "עיר שנבחרה"}</h2><p>רק מורים שמציעים שיעורים פרונטליים בעיר זו.</p></header> : null}
+                  <DirectoryResults query={teachers} isReady={search.isReady} page={search.values.page} onPage={(page) => search.update({ page }, false)} onClear={search.clear} showCount={hasCity} lessonMode={hasCity ? 'inPerson' : undefined} citySlug={search.values.city} />
+                </section>
               ) : null}
-              {teachers.isError ? (
-                <WorkspaceState tone="error">
-                  <h2>לא הצלחנו לטעון את המורים</h2>
-                  <p>בדקו את החיבור ונסו שוב.</p>
-                  <button onClick={() => void teachers.refetch()}>
-                    נסו שוב
-                  </button>
-                </WorkspaceState>
+              {showOnline ? (
+                <section className="search-result-group" aria-label="מורים אונליין">
+                  <header className="search-result-group__heading"><h2>שיעורי אונליין — מכל מקום</h2><p>אותו תחום לימוד ואותו סינון, ללא הגבלת עיר.</p></header>
+                  <DirectoryResults query={onlineTeachers} isReady={search.isReady} page={search.values.onlinePage} onPage={(onlinePage) => search.update({ onlinePage }, false)} onClear={search.clear} showCount lessonMode="online" />
+                </section>
               ) : null}
-              {teachers.data?.items.length === 0 ? (
-                <SearchEmptyState onClear={search.clear} />
-              ) : null}
-              {teachers.data?.items.length ? (
-                <div className="teacher-result-list">
-                  {teachers.data.items.map((teacher, index) => (
-                    <div key={teacher.id}>
-                      <TeacherResultCard teacher={teacher} />
-                      {index === 2 ? <SmartMatchPrompt /> : null}
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-              <SearchPagination
-                page={search.values.page}
-                pageCount={pageCount}
-                onPage={(page) => search.update({ page }, false)}
-              />
+              {!search.values.online && !search.values.inPerson ? <p role="alert">בחרו לפחות סוג שיעור אחד כדי לחפש מורים.</p> : null}
             </section>
           </div>
         </div>
@@ -175,6 +160,29 @@ export function TeachersPage() {
       <Footer />
     </div>
   );
+}
+
+function DirectoryResults({ query, isReady, page, onPage, onClear, showCount, lessonMode, citySlug }: {
+  query: ReturnType<typeof useTeachers>;
+  isReady: boolean;
+  page: number;
+  onPage: (page: number) => void;
+  onClear: () => void;
+  showCount: boolean;
+  lessonMode?: 'online' | 'inPerson';
+  citySlug?: string;
+}) {
+  if (query.isPending || !isReady) {
+    return <div className="teacher-result-list" role="status" aria-label="טוען מורים">{[1, 2, 3].map((item) => <TeacherResultCardSkeleton key={item} />)}</div>;
+  }
+  if (query.isError) {
+    return <WorkspaceState tone="error"><h2>לא הצלחנו לטעון את המורים</h2><p>בדקו את החיבור ונסו שוב.</p><button onClick={() => void query.refetch()}>נסו שוב</button></WorkspaceState>;
+  }
+  return <>
+    {showCount ? <p className="search-result-group__count">{query.data.meta.total} מורים נמצאו</p> : null}
+    {query.data.items.length === 0 ? <SearchEmptyState onClear={onClear} lessonMode={lessonMode} /> : <div className="teacher-result-list">{query.data.items.map((teacher, index) => <div key={teacher.id}><TeacherResultCard teacher={teacher} lessonMode={lessonMode} citySlug={citySlug} />{index === 2 ? <SmartMatchPrompt /> : null}</div>)}</div>}
+    <SearchPagination page={page} pageCount={query.data.meta.pageCount} onPage={onPage} />
+  </>;
 }
 
 function SortSelect({
@@ -216,14 +224,13 @@ function SmartMatchPrompt() {
   );
 }
 
-function SearchEmptyState({ onClear }: { onClear: () => void }) {
+function SearchEmptyState({ onClear, lessonMode }: { onClear: () => void; lessonMode?: 'online' | 'inPerson' }) {
   return (
     <div className="search-empty">
       <Search />
-      <h2>לא מצאנו מורים שמתאימים בדיוק לחיפוש הזה</h2>
+      <h2>{lessonMode === 'inPerson' ? "לא מצאנו כרגע מורים פרונטליים שמתאימים לחיפוש בעיר הזו" : lessonMode === 'online' ? "לא מצאנו כרגע מורי אונליין שמתאימים לחיפוש הזה" : "לא מצאנו מורים שמתאימים בדיוק לחיפוש הזה"}</h2>
       <p>
-        נסו להרחיב את אזור החיפוש, לבחור גם שיעורים אונליין או להגדיל מעט את
-        טווח המחיר.
+        {lessonMode === 'inPerson' ? "נסו עיר אחרת, מקצוע קרוב או טווח מחיר רחב יותר." : lessonMode === 'online' ? "נסו מקצוע קרוב או טווח מחיר רחב יותר." : "נסו להרחיב את אזור החיפוש, לבחור גם שיעורים אונליין או להגדיל מעט את טווח המחיר."}
       </p>
       <div>
         <Button variant="outline" onClick={onClear}>
@@ -246,12 +253,6 @@ function buildActiveFilters(
       key: "subject",
       label: search.subject.name_he,
       patch: { subject: "" },
-    });
-  if (search.level)
-    filters.push({
-      key: "level",
-      label: search.level.name_he,
-      patch: { level: "" },
     });
   if (search.city)
     filters.push({
@@ -305,6 +306,9 @@ export function TeacherPublicProfilePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [contacting, setContacting] = useState(false);
   const [reviewsPage, setReviewsPage] = useState(1);
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const myReviews = useMyReviews(canLearn(profile?.role));
   const teacher = useQuery({
     queryKey: ["teachers", "detail", slug],
     queryFn: () => apiRequest<PublicTeacherDto>(endpoints.teacher(slug)),
@@ -326,9 +330,17 @@ export function TeacherPublicProfilePage() {
       ),
     enabled: Boolean(slug),
   });
+  const ownTeacher = useTeacherProfile(profile?.role === "teacher");
+  const isOwnProfile = Boolean(slug) && ownTeacher.data?.slug === slug;
+  const existingReview = myReviews.data?.find(review => review.teacher_id === teacher.data?.id);
+  const showRating = (ratingOpen || searchParams.get('review') === '1') && canLearn(profile?.role) && !isOwnProfile && myReviews.isSuccess && (profile?.role !== 'teacher' || ownTeacher.isSuccess);
+  const closeRating = () => {
+    setRatingOpen(false);
+    setSearchParams(previous => { const next = new URLSearchParams(previous); next.delete('review'); return next; }, { replace: true });
+  };
   const scheduleOpen =
     contacting ||
-    (searchParams.get("schedule") === "1" && profile?.role === "student");
+    (searchParams.get("schedule") === "1" && canLearn(profile?.role) && !isOwnProfile);
   if (teacher.isPending)
     return (
       <div dir="rtl">
@@ -359,8 +371,12 @@ export function TeacherPublicProfilePage() {
       navigate(`/login?redirect=${encodeURIComponent(redirect)}`);
       return;
     }
-    if (profile.role !== "student") {
-      toast.error("יש להתחבר מחשבון תלמיד כדי לבקש שיעור");
+    if (isOwnProfile) {
+      navigate("/teacher/onboarding");
+      return;
+    }
+    if (!canLearn(profile.role)) {
+      toast.error("יש להתחבר מחשבון תלמיד או מורה כדי לבקש שיעור");
       return;
     }
     setContacting(true);
@@ -378,42 +394,41 @@ export function TeacherPublicProfilePage() {
       <Header />
       <main id="main-content" tabIndex={-1}>
         <section className="teacher-public-hero">
-          <div className="page-shell">
-            <TeacherAvatar
+          <div className="page-shell teacher-public-hero__inner">
+            <div className="teacher-public-hero__portrait"><TeacherAvatar
               slug={item.slug}
               name={name}
               avatarPath={item.profile.avatar_path}
-            />
-            <div>
-              <p>
+            /></div>
+            <div className="teacher-public-hero__identity">
+              <p className="teacher-public-hero__subjects">
                 {item.subjects
                   .map((entry) => entry.subject.name_he)
                   .join(" · ")}
               </p>
               <h1>
-                {name}
+                <bdi>{name}</bdi>
                 {item.verification_status === "verified" ? (
                   <BadgeCheck aria-label="מורה מאומת" />
                 ) : null}
               </h1>
-              <h2>{item.headline}</h2>
-              <div>
+              <p className="teacher-public-hero__headline" dir="auto">{item.headline}</p>
+            </div>
+              <div className="teacher-public-hero__meta">
                 <span>
-                  <Star />
-                  {item.review_count > 0 ? `${Number(item.average_rating).toFixed(1)} (${item.review_count})` : 'עדיין אין ביקורות'}
+                  <Star aria-hidden="true" />
+                  {item.review_count > 0 ? <><bdi>{Number(item.average_rating).toFixed(1)}</bdi> · {item.review_count} {item.review_count === 1 ? 'ביקורת' : 'ביקורות'}</> : 'עדיין אין ביקורות'}
                 </span>
                 <span>
-                  <Clock3 />
+                  <Clock3 aria-hidden="true" />
                   {item.years_experience} שנות ניסיון
                 </span>
               </div>
-            </div>
-            <aside>
-              <strong>{formatMoney(item.hourly_price, item.currency)}</strong>
-              <span>לשעה</span>
-              <Button onClick={contact} disabled={availability.isPending || availability.isError}>
-                <CalendarDays />
-                בקשת שיעור
+            <aside className="teacher-public-booking" aria-label="מחיר ובקשת שיעור">
+              <div className="teacher-public-booking__price"><strong><bdi>{formatMoney(item.hourly_price, item.currency)}</bdi></strong><span>לשעה</span></div>
+              <Button onClick={contact} disabled={!isOwnProfile && (availability.isPending || availability.isError)}>
+                {isOwnProfile ? <PencilLine /> : <CalendarDays />}
+                {isOwnProfile ? "עריכת הפרופיל שלי" : "בקשת שיעור"}
               </Button>
             </aside>
           </div>
@@ -421,14 +436,11 @@ export function TeacherPublicProfilePage() {
         <div className="page-shell teacher-public-content">
           <article>
             <h2>קצת עליי</h2>
-            <p>{item.bio}</p>
-            <h2>מקצועות ורמות</h2>
+            <p dir="auto">{item.bio}</p>
+            <h2>מקצועות הוראה</h2>
             <div className="teacher-public-tags">
               {item.subjects.map((entry) => (
                 <span key={entry.subject_id}>{entry.subject.name_he}</span>
-              ))}
-              {item.levels.map((entry) => (
-                <span key={entry.level_id}>{entry.level.name_he}</span>
               ))}
             </div>
             <h2>אופן הלימוד</h2>
@@ -449,32 +461,41 @@ export function TeacherPublicProfilePage() {
               ) : null}
             </div>
           </article>
-          <aside>
+          <aside className="teacher-public-availability">
             <h2>
               <CalendarDays />
               זמינות שבועית
             </h2>
+            <p className="teacher-public-availability__hint">שעון ישראל · מועדים פנויים נבדקים בעת בקשת שיעור.</p>
             {availability.isPending ? <p role="status">טוען זמינות...</p> : availability.isError ? <div role="alert"><p>לא הצלחנו לטעון זמינות. יש לטעון אותה לפני שליחת בקשה.</p><Button variant="outline" onClick={() => void availability.refetch()}>ניסיון נוסף</Button></div> : availability.data?.slots.length ? (
               availability.data.slots.map((slot) => (
                 <div className="public-slot" key={slot.id}>
                   <strong>{days[slot.day_of_week]}</strong>
-                  <span>
+                  <bdi dir="ltr">
                     {slot.start_time.slice(0, 5)}–{slot.end_time.slice(0, 5)}
-                  </span>
+                  </bdi>
                 </div>
               ))
             ) : (
-              <p>הזמינות תתואם מול המורה.</p>
+              <p>לא פורסמו שעות זמינות כרגע.</p>
             )}
           </aside>
         </div>
         <section className="page-shell public-reviews">
+          <header className="public-reviews__header"><div>
           <h2>ביקורות תלמידים</h2>
-          <p className="text-sm text-muted-foreground mb-4">ביקורות מתלמידים שפנייתם למורה התקבלה. קבלת פנייה אינה אישור שהתקיים שיעור.</p>
+          <p className="text-sm text-muted-foreground mb-4">דירוגים של תלמידים רשומים. אין צורך בהזמנת שיעור באתר, והתגובה אינה חובה.</p>
+          </div><div className="public-reviews__actions">
+          {!profile ? <Button asChild variant="outline"><Link to={`/login?redirect=${encodeURIComponent(`/teachers/${slug}?review=1`)}`}>התחברות להוספת דירוג</Link></Button> : canLearn(profile.role) && !isOwnProfile ? <>
+            <Button variant="outline" disabled={!myReviews.isSuccess || profile.role === 'teacher' && !ownTeacher.isSuccess} onClick={() => setRatingOpen(true)}><Star aria-hidden="true" />{existingReview ? 'עריכת הדירוג שלי' : 'הוספת דירוג'}</Button>
+            {myReviews.isError ? <p role="alert">לא ניתן לבדוק את הדירוג שלכם. <button type="button" onClick={() => void myReviews.refetch()}>ניסיון נוסף</button></p> : null}
+            {profile.role === 'teacher' && ownTeacher.isError ? <p role="alert">לא ניתן לבדוק את פרופיל ההוראה שלכם. <button type="button" onClick={() => void ownTeacher.refetch()}>ניסיון נוסף</button></p> : null}
+          </> : null}
+          </div></header>
           {reviews.isPending ? <p role="status">טוען ביקורות...</p> : reviews.isError ? <div role="alert"><p>לא הצלחנו לטעון את הביקורות.</p><Button variant="outline" onClick={() => void reviews.refetch()}>ניסיון נוסף</Button></div> : reviews.data?.items.length ? (
             reviews.data.items.map((review) => (
-              <article key={review.id}>
-                <div role="img" aria-label={`${review.rating} מתוך 5`}>
+              <article className="public-review" key={review.id}>
+                <div className="public-review__rating" role="img" aria-label={`${review.rating} מתוך 5`}>
                   {Array.from({ length: 5 }, (_, index) => (
                     <Star
                       key={index}
@@ -482,14 +503,16 @@ export function TeacherPublicProfilePage() {
                       className={index < review.rating ? "is-filled" : ""}
                     />
                   ))}
+                  <span>{review.rating} מתוך 5</span>
                 </div>
-                <p className="whitespace-pre-wrap break-words">{review.body || "דירוג ללא טקסט"}</p>
                 <time dateTime={review.created_at}>
                   {new Intl.DateTimeFormat("he-IL", {
                     dateStyle: "medium",
                   }).format(new Date(review.created_at))}
                 </time>
+                <p className="public-review__body whitespace-pre-wrap break-words" dir="auto">{review.body}</p>
                 {review.teacher_reply ? <blockquote className="review-teacher-reply"><strong>תגובת המורה</strong><p>{review.teacher_reply}</p>{review.teacher_reply_at ? <time dateTime={review.teacher_reply_at}>{new Date(review.teacher_reply_at).toLocaleDateString('he-IL')}</time> : null}</blockquote> : null}
+                <Link className="text-link public-review__report" to={`/support?category=report&review=${encodeURIComponent(review.id)}`}>דיווח על הביקורת או התגובה</Link>
               </article>
             ))
           ) : (
@@ -499,6 +522,13 @@ export function TeacherPublicProfilePage() {
         </section>
       </main>
       <Footer />
+      {showRating ? <ReviewEditor key={existingReview?.id ?? item.id} review={existingReview} teacherId={item.id} name={name} onClose={closeRating} onSaved={() => {
+        closeRating();
+        setReviewsPage(1);
+        void queryClient.invalidateQueries({ queryKey: accountKeys.reviews });
+        void queryClient.invalidateQueries({ queryKey: accountKeys.favorites });
+        void queryClient.invalidateQueries({ queryKey: ['teachers'] });
+      }} /> : null}
       {scheduleOpen && availability.isSuccess ? (
         <LessonRequestDialog
           teacher={item}

@@ -1,5 +1,8 @@
 import { ArrowLeft, SlidersHorizontal } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { ScribbleArrow } from './Scribbles'
+
+const criteria = ['מקצוע', 'תקציב', 'זמינות'] as const
 
 export function SmartMatchSection() {
   return (
@@ -11,9 +14,16 @@ export function SmartMatchSection() {
             קצת יותר אישי.
           </h2>
           <p>
-            התאמה לפי המקצוע, הרמה, התקציב והזמינות שלכם.
+            התאמה לפי המקצוע, התקציב והזמינות שלכם.
           </p>
+          <ul className="smart-match-band__criteria" aria-hidden="true">
+            {criteria.map((item) => <li key={item}>{item}</li>)}
+          </ul>
         </div>
+        <p className="smart-match-band__note" aria-hidden="true">
+          לא בטוחים במי לבחור?
+          <ScribbleArrow className="smart-match-band__note-arrow" />
+        </p>
         <Link className="smart-match-band__cta" to="/match">
           לבקשת התאמה
           <ArrowLeft aria-hidden="true" />

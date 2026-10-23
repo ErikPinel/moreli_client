@@ -1,4 +1,5 @@
-import { BookOpenCheck, MessageSquareText, Search } from 'lucide-react'
+import { ArrowLeft, BookOpenCheck, MessageSquareText, Search } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const steps = [
   {
@@ -26,11 +27,14 @@ export function HowItWorksSection() {
     <section id="how-it-works" className="how-it-works" aria-labelledby="how-title">
       <div className="page-shell how-it-works__inner">
         <div className="how-it-works__heading">
+          <p className="section-kicker">איך זה עובד</p>
           <h2 id="how-title" className="section-title">מהחיפוש לשיעור הראשון.</h2>
+          <p className="how-it-works__lead">שלושה צעדים פשוטים. אתם מחליטים מתי ועם מי.</p>
         </div>
         <ol className="steps-list">
           {steps.map(({ number, icon: Icon, title, description }) => (
             <li key={number}>
+              <span className="step-number" aria-hidden="true">{number}</span>
               <span className="step-icon"><Icon aria-hidden="true" /></span>
               <div>
                 <h3>{title}</h3>
@@ -39,6 +43,13 @@ export function HowItWorksSection() {
             </li>
           ))}
         </ol>
+        <div className="how-it-works__actions">
+          <Link className="how-it-works__cta" to="/teachers">
+            מתחילים לחפש
+            <ArrowLeft aria-hidden="true" />
+          </Link>
+          <Link className="text-link" to="/match">או שנמצא מורה בשבילכם</Link>
+        </div>
       </div>
     </section>
   )

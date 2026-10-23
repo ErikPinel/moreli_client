@@ -7,7 +7,7 @@ export const onboardingDraftSchema = z.object({
   citySlug: z.string().max(200), avatarPath: z.string().max(1000).nullable(),
   headline: z.string().max(200), bio: z.string().max(5000), price: z.string().max(10), experience: z.string().max(3),
   online: z.boolean(), inPerson: z.boolean(), subjectSlugs: z.array(z.string().max(200)).max(1000),
-  levelIds: z.array(z.number().int()).max(100), citySlugs: z.array(z.string().max(200)).max(1200),
+  citySlugs: z.array(z.string().max(200)).max(1200),
   slots: z.array(slotSchema).max(100),
 })
 

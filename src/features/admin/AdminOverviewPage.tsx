@@ -18,12 +18,12 @@ function Overview() {
   const payments = useQuery({ queryKey: ['admin', 'overview', 'payments'], queryFn: () => apiRequest<PaginatedDto<ManualAccessPaymentDto>>('/admin/access-payments?status=pending&page=1&limit=5'), refetchInterval: 30_000 })
   const teachers = useQuery({ queryKey: ['admin', 'overview', 'teachers'], queryFn: () => apiRequest<PaginatedDto<ReviewTeacher>>('/admin/teachers?status=pending&page=1&limit=5'), refetchInterval: 30_000 })
   const reviews = useQuery({ queryKey: ['admin', 'overview', 'reviews'], queryFn: () => apiRequest<PaginatedDto<ReviewDto>>('/admin/reviews?status=pending&page=1&limit=5'), refetchInterval: 30_000 })
-  const support = useQuery({ queryKey: ['admin', 'overview', 'support'], queryFn: () => apiRequest<PaginatedDto<SupportTicketDto>>('/admin/support-tickets?page=1&limit=5'), refetchInterval: 30_000 })
+  const support = useQuery({ queryKey: ['admin', 'overview', 'support'], queryFn: () => apiRequest<PaginatedDto<SupportTicketDto>>('/admin/support-tickets?page=1&limit=5&view=actionable'), refetchInterval: 30_000 })
   const queues = [
     { path: '/admin/payments', title: 'דיווחי תשלום ממתינים', icon: CreditCard, query: payments },
     { path: '/admin/onboarding', title: 'מורים ממתינים לבדיקה', icon: ClipboardCheck, query: teachers },
     { path: '/admin/reviews', title: 'ביקורות ממתינות', icon: Star, query: reviews },
-    { path: '/admin/support', title: 'פניות תמיכה אחרונות', icon: LifeBuoy, query: support },
+    { path: '/admin/support', title: 'פניות שממתינות לצוות', icon: LifeBuoy, query: support },
   ]
   return <div className="admin-overview">
     <section className="admin-overview__queues" aria-labelledby="admin-queues-heading"><h2 id="admin-queues-heading">תורי עבודה</h2>

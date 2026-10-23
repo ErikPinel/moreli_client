@@ -11,16 +11,14 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import type { CityDto, LevelDto, SubjectDto } from '@/types/api'
+import type { CityDto, SubjectDto } from '@/types/api'
 import type { TeacherSearchValues } from '../hooks/useTeacherSearchParams'
 import { SearchFilters } from './SearchFilters'
 
-export function FilterDrawer({ values, subjects, levels, cities, total, onApply }: {
+export function FilterDrawer({ values, subjects, cities, onApply }: {
   values: TeacherSearchValues
   subjects: SubjectDto[]
-  levels: LevelDto[]
   cities: CityDto[]
-  total: number
   onApply: (values: TeacherSearchValues) => void
 }) {
   const [open, setOpen] = useState(false)
@@ -35,8 +33,8 @@ export function FilterDrawer({ values, subjects, levels, cities, total, onApply 
     <DrawerTrigger asChild><Button variant="outline"><SlidersHorizontal />סינון</Button></DrawerTrigger>
     <DrawerContent className="search-filter-drawer" dir="rtl">
       <DrawerHeader><DrawerTitle>סינון מורים</DrawerTitle><DrawerDescription>בחרו את הפרטים החשובים לכם והחילו את הסינון.</DrawerDescription></DrawerHeader>
-      <div className="search-filter-drawer__body"><SearchFilters values={draft} subjects={subjects} levels={levels} cities={cities} onChange={(patch) => setDraft((current) => ({ ...current, ...patch, page: 1 }))} /></div>
-      <DrawerFooter><DrawerClose asChild><Button onClick={() => onApply(draft)} disabled={!draft.online && !draft.inPerson}>הצגת {total} מורים</Button></DrawerClose><DrawerClose asChild><Button variant="ghost">ביטול</Button></DrawerClose></DrawerFooter>
+      <div className="search-filter-drawer__body"><SearchFilters values={draft} subjects={subjects} cities={cities} onChange={(patch) => setDraft((current) => ({ ...current, ...patch, page: 1, onlinePage: 1 }))} /></div>
+      <DrawerFooter><DrawerClose asChild><Button onClick={() => onApply(draft)} disabled={!draft.online && !draft.inPerson}>החלת הסינון</Button></DrawerClose><DrawerClose asChild><Button variant="ghost">ביטול</Button></DrawerClose></DrawerFooter>
     </DrawerContent>
   </Drawer>
 }

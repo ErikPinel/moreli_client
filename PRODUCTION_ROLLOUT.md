@@ -136,9 +136,10 @@ must never receive Supabase server keys, Brevo keys, or email-signing secrets.
 
 ### Tutor account workflow
 
-- Existing tutors visiting `/teach` are redirected to their tutor dashboard.
-- Existing tutor accounts see dashboard navigation rather than another
-  create-profile action in the header.
+- Existing tutors visiting `/teach/start` are redirected to their tutor
+  dashboard; the public `/teach` explainer offers them the mode switch instead.
+- Existing tutor accounts see the "תלמיד | מורה" mode switch in the header
+  rather than another create-profile action.
 - The homepage tutor-acquisition section is hidden for tutor accounts.
 - Tutor onboarding separates `draft`, `pending`, and `published` states.
 - Tutor onboarding and account settings collect required first name, last name,

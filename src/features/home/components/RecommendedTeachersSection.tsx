@@ -15,7 +15,7 @@ export function RecommendedTeachersSection() {
       <div className="recommended-section__header">
         <div className="recommended-section__heading">
           <h2 id="recommended-title" className="section-title">מורים שכדאי להכיר</h2>
-          <p>מגוון מקצועות, רמות לימוד ודרכי למידה.</p>
+          <p>מגוון מקצועות ודרכי למידה.</p>
         </div>
         <Link className="text-link" to="/teachers">
           הצגת הכל

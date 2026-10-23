@@ -4,8 +4,8 @@ import { HeroSection } from '@/features/home/components/HeroSection'
 import { HowItWorksSection } from '@/features/home/components/HowItWorksSection'
 import { RecommendedTeachersSection } from '@/features/home/components/RecommendedTeachersSection'
 import { SmartMatchSection } from '@/features/home/components/SmartMatchSection'
+import { SubjectsSection } from '@/features/home/components/SubjectsSection'
 import { TeacherAcquisitionSection } from '@/features/home/components/TeacherAcquisitionSection'
-import { TrustStrip } from '@/features/home/components/TrustStrip'
 import { HomeInquiryAlert } from '@/features/account/HomeInquiryAlert'
 
 export function HomePage() {
@@ -15,10 +15,10 @@ export function HomePage() {
       <main id="main-content" tabIndex={-1}>
         <HomeInquiryAlert />
         <HeroSection />
-        <TrustStrip />
-        <SmartMatchSection />
+        <SubjectsSection />
         <RecommendedTeachersSection />
         <HowItWorksSection />
+        <SmartMatchSection />
         <TeacherAcquisitionSection />
       </main>
       <Footer />

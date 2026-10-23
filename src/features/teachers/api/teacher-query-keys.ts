@@ -1,6 +1,5 @@
 export type TeacherFilters = {
   subjectSlug?: string
-  levelId?: number
   citySlug?: string
   budgetMin?: number
   budgetMax?: number

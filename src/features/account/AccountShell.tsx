@@ -1,21 +1,27 @@
 import {
+  ArrowLeft,
   Bell,
   CalendarDays,
   CreditCard,
   ClipboardList,
+  GraduationCap,
   Heart,
   LifeBuoy,
   LayoutDashboard,
   MessageCircle,
+  Presentation,
   Star,
   UserRound,
+  UserRoundPlus,
   UsersRound,
 } from 'lucide-react'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
 import { useAuth } from '@/auth/useAuth'
+import { useAccountView } from './account-view'
+import { AccountViewSwitch } from './AccountViewSwitch'
 import { useTeacherProfile } from './useAccountData'
 import { useUnreadNotifications } from './useAccountData'
 import type { InquiryDto } from '@/types/api'
@@ -27,6 +33,8 @@ type AccountShellProps = PropsWithChildren<{
 }>
 
 const studentLinks = [
+  { to: '/student/dashboard', label: 'הלמידה שלי', icon: LayoutDashboard },
+  { to: '/student/lessons', label: 'לוח השיעורים', icon: CalendarDays },
   { to: '/student/profile', label: 'הפרופיל שלי', icon: UserRound },
   { to: '/student/requests', label: 'בקשות והתאמות', icon: ClipboardList },
   { to: '/student/favorites', label: 'מורים שמורים', icon: Heart },
@@ -36,6 +44,7 @@ const studentLinks = [
 
 const teacherLinks = [
   { to: '/teacher/dashboard', label: 'לוח הבקרה', icon: LayoutDashboard },
+  { to: '/teacher/lessons', label: 'לוח השיעורים', icon: CalendarDays },
   { to: '/teacher/onboarding', label: 'השלמת הפרופיל', icon: ClipboardList },
   { to: '/teacher/inquiries', label: 'פניות מתלמידים', icon: MessageCircle },
   { to: '/teacher/students', label: 'התלמידים שלי', icon: UsersRound },
@@ -46,17 +55,19 @@ const teacherLinks = [
 
 export function AccountShell({ title, description, actions, children }: AccountShellProps) {
   const { profile } = useAuth()
+  const { pathname } = useLocation()
   const unreadQuery = useUnreadNotifications()
-  const role = profile?.role === 'teacher' ? 'teacher' : 'student'
-  const teacherQuery = useTeacherProfile(role === 'teacher')
+  const { view: role, canTeach } = useAccountView()
+  const teacherQuery = useTeacherProfile(canTeach)
   const links = role === 'teacher'
     ? teacherLinks.map((link) => link.to === '/teacher/onboarding'
       ? { ...link, label: teacherQuery.data?.profile_status === 'draft' ? 'השלמת הפרופיל' : 'פרטי ההוראה' }
       : link)
     : studentLinks
+  const ModeIcon = role === 'teacher' ? Presentation : GraduationCap
 
   return (
-    <div className="workspace-page" dir="rtl">
+    <div className="workspace-page" data-view={role} dir="rtl">
       <Header />
       <main id="main-content" tabIndex={-1} className="page-shell workspace-layout">
         <aside className="workspace-sidebar">
@@ -64,9 +75,10 @@ export function AccountShell({ title, description, actions, children }: AccountS
             <span>{profile?.first_name.trim().charAt(0) || 'מ'}</span>
             <div>
               <strong>{[profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'החשבון שלי'}</strong>
-              <small>{role === 'teacher' ? 'חשבון מורה' : 'חשבון תלמיד'}</small>
+              <small>{canTeach ? (role === 'teacher' ? 'מצב מורה' : 'מצב תלמיד') : 'חשבון תלמיד'}</small>
             </div>
           </div>
+          {canTeach ? <div className="workspace-sidebar__views"><AccountViewSwitch /></div> : null}
           <nav aria-label="אזור אישי">
             {links.map(({ to, label, icon: Icon }) => (
               <NavLink key={to} to={to} className={({ isActive }) => isActive ? 'is-active' : undefined}>
@@ -79,11 +91,18 @@ export function AccountShell({ title, description, actions, children }: AccountS
             </NavLink>
             <NavLink to="/support" className={({ isActive }) => isActive ? 'is-active' : undefined}><LifeBuoy aria-hidden="true" />עזרה ותמיכה</NavLink>
           </nav>
+          {!canTeach && profile?.role === 'student' && pathname !== '/teach/start' ? (
+            <Link className="workspace-teach-cta" to="/teach">
+              <UserRoundPlus aria-hidden="true" />
+              <span><strong>רוצים גם ללמד?</strong><small>מוסיפים פרופיל מורה לאותו החשבון</small></span>
+              <ArrowLeft aria-hidden="true" />
+            </Link>
+          ) : null}
         </aside>
 
         <section className="workspace-main">
           <header className="workspace-heading">
-            <div><p>{role === 'teacher' ? 'מרחב המורה' : 'האזור האישי'}</p><h1>{title}</h1><span>{description}</span></div>
+            <div><p className="workspace-mode"><ModeIcon aria-hidden="true" />{role === 'teacher' ? 'מצב מורה · מרחב המורה' : canTeach ? 'מצב תלמיד · האזור האישי' : 'האזור האישי'}</p><h1>{title}</h1><span>{description}</span></div>
             {actions ? <div className="workspace-heading__actions">{actions}</div> : null}
           </header>
           {children}

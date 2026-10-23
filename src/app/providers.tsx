@@ -23,7 +23,7 @@ function SessionProviders({ children }: PropsWithChildren) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>{children}</AuthProvider>
       <Toaster position="top-center" richColors />
-      {import.meta.env.DEV ? <ReactQueryDevtools initialIsOpen={false} /> : null}
+      {import.meta.env.DEV && import.meta.env.VITE_ENABLE_QUERY_DEVTOOLS === 'true' ? <ReactQueryDevtools initialIsOpen={false} /> : null}
     </QueryClientProvider>
   )
 }

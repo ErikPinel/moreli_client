@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
+import type { ManualAccessPaymentDto, SupportTicketDto } from '../src/types/api'
 
 test.beforeEach(async ({ page }) => {
   await setupClerkTestingToken({ page })
@@ -18,7 +19,7 @@ test.afterEach(async ({ page }) => { await page.unrouteAll({ behavior: 'ignoreEr
 test('public pages have a main landmark, working navigation and no horizontal overflow', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.name))
-  for (const path of ['/', '/teachers', '/support', '/teacher-access-terms', '/does-not-exist']) {
+  for (const path of ['/', '/teachers', '/teach', '/support', '/teacher-access-terms', '/does-not-exist']) {
     await page.goto(path)
     await expect(page.getByRole('main')).toBeVisible()
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
@@ -26,6 +27,16 @@ test('public pages have a main landmark, working navigation and no horizontal ov
     await expect(page.locator('#main-content')).toHaveCount(1)
   }
   expect(errors).toEqual([])
+})
+
+test('the teach page explains the shared account and sends visitors to sign up first', async ({ page }) => {
+  await page.goto('/teach')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('מאותו החשבון')
+  await expect(page.getByRole('heading', { name: 'שני מצבים, חשבון אחד' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'הרשמה ופתיחת פרופיל מורה' }).first()).toHaveAttribute('href', '/signup?redirect=%2Fteach%2Fstart')
+  await expect(page.getByRole('link', { name: 'כבר רשומים? התחברות' }).first()).toHaveAttribute('href', '/login?redirect=%2Fteach%2Fstart')
+  await page.goto('/teach/start')
+  await expect(page).toHaveURL(/\/login/)
 })
 
 test('public support offers real contacts and requires authentication for private tickets', async ({ page }) => {
@@ -181,6 +192,7 @@ test('unverified email recovery sends a code, handles failures and verifies befo
 test('payment email deep link shows review details and requires explicit admin confirmation', async ({ page }, testInfo) => {
   const payment = {
     id: 'payment-review-preview', status: 'pending', amount_ils: 60, reference: 'BIT-REVIEW-123',
+    support_ticket_id: 'ticket-review-preview',
     created_at: '2026-10-22T19:48:19Z', reviewed_at: null, review_note: null, period_end_at: null,
     teacher: { id: 'preview-teacher', slug: 'preview-teacher', profile: { first_name: 'Review', last_name: 'Teacher', contact_email: 'teacher@example.com', phone: '0500000000' } },
   }
@@ -225,7 +237,7 @@ test('payment email deep link shows review details and requires explicit admin c
     const React = react.default ?? react
     const ReactDOM = dom.default ?? dom
     ReactDOM.createRoot(document.getElementById('preview')!).render(React.createElement(query.QueryClientProvider, { client: queryClient },
-      React.createElement(router.MemoryRouter, { initialEntries: [`/admin?payment=${paymentId}#payments`] }, React.createElement(panel.AdminEngagementPanel))))
+      React.createElement(router.MemoryRouter, { initialEntries: [`/admin/payments?payment=${paymentId}#payments`] }, React.createElement(panel.AdminEngagementPanel))))
   }, { modules, paymentId: payment.id })
   const review = page.getByRole('article', { name: 'בדיקת דיווח תשלום' })
   await expect(review).toBeFocused()
@@ -233,6 +245,8 @@ test('payment email deep link shows review details and requires explicit admin c
     await expect(review).toContainText(detail)
   }
   await expect(review.getByRole('link', { name: 'פרופיל המורה' })).toHaveAttribute('href', '/teachers/preview-teacher')
+  await expect(review.getByRole('link', { name: 'צפייה בפניית התמיכה' })).toHaveAttribute('href', `/admin/support?ticket=${payment.support_ticket_id}#support`)
+  await expect(review.locator(`a[href="/admin/payments?payment=${payment.id}#payments"]`)).toHaveCount(0)
   const approve = review.getByRole('button', { name: 'אישור חודש גישה' })
   const reject = review.getByRole('button', { name: 'דחיית הדיווח' })
   await expect(approve).toBeDisabled()
@@ -260,6 +274,163 @@ test('payment email deep link shows review details and requires explicit admin c
   expect(errors).toEqual([])
   await page.screenshot({ path: testInfo.outputPath('payment-review.png'), fullPage: true })
 })
+
+for (const scenario of ['pending', 'appeal-approved', 'appeal-rejected', 'missing-profile', 'missing-field', 'no-report', 'different-case', 'unlinked-report'] as const) {
+test(`billing support ticket ${scenario} handles payment review without losing prior decisions`, async ({ page }, testInfo) => {
+  const teacherId = 'teacher-billing-preview'
+  const appealing = scenario.startsWith('appeal')
+  const payment: ManualAccessPaymentDto = { id: 'payment-billing-preview', status: appealing ? 'rejected' : 'pending', amount_ils: 60, reference: 'BIT-TICKET-456', teacher_id: teacherId, created_at: '2026-10-23T12:52:45Z', reviewed_at: appealing ? '2026-10-23T12:55:00Z' : null, review_note: appealing ? 'האסמכתא לא נמצאה בבדיקה הראשונה' : null, period_start_at: null, period_end_at: null, reconsideration_of: null, support_ticket_id: scenario === 'different-case' ? 'canonical-billing-case' : scenario === 'unlinked-report' ? null : 'ticket-billing-preview', teacher: { id: teacherId, slug: 'billing-teacher', profile: { first_name: 'Billing', last_name: 'Teacher', contact_email: 'billing@example.com', phone: '0500000001' } } }
+  const ticket: SupportTicketDto = { id: 'ticket-billing-preview', user_id: 'user-billing-preview', category: 'billing', subject: 'שילמתי ואין לי גישה', message: 'העברתי 60 ש״ח ב-Bit ועדיין לא ניתן לאשר תלמידים', status: 'open', created_at: '2026-10-23T12:52:45Z', updated_at: '2026-10-23T12:52:45Z', teacher_id: null, inquiry_id: null, workflow: scenario === 'different-case' || scenario === 'no-report' ? null : 'payment', payment_id: scenario === 'different-case' || scenario === 'no-report' ? null : payment.id, messages: [], requester_teacher: { id: teacherId, slug: 'billing-teacher' } }
+  let reports = scenario === 'no-report' ? [] : [payment]
+  let ticketReads = 0
+  const paymentQueries: string[] = []
+  const decisions: unknown[] = []
+  const reopenRequests: string[] = []
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.route('http://localhost:5146/api/**', async route => {
+    const request = route.request()
+    const url = new URL(request.url())
+    const path = url.pathname.replace('/api', '')
+    const headers = { 'access-control-allow-origin': 'http://localhost:5176', 'access-control-allow-methods': 'GET,POST,PATCH,OPTIONS', 'access-control-allow-headers': 'content-type,authorization' }
+    if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers })
+    if (request.method() === 'POST' && path === `/admin/support-tickets/${ticket.id}/payments/${payment.id}/reopen`) {
+      reopenRequests.push(path)
+      const reopened: ManualAccessPaymentDto = { ...payment, id: 'reconsidered-payment-preview', status: 'pending', created_at: '2026-10-23T13:00:00Z', reviewed_at: null, review_note: null, reconsideration_of: payment.id, support_ticket_id: ticket.id }
+      reports = [reopened, payment]
+      ticket.payment_id = reopened.id
+      ticket.status = 'in_progress'
+      return route.fulfill({ headers, json: reopened })
+    }
+    if (request.method() === 'PATCH' && reports.some(report => path === `/admin/access-payments/${report.id}`)) {
+      const decision = request.postDataJSON()
+      decisions.push(decision)
+      reports = reports.map<ManualAccessPaymentDto>(report => path === `/admin/access-payments/${report.id}` ? { ...report, status: decision.approve ? 'approved' : 'rejected', reviewed_at: '2026-10-23T13:05:00Z', review_note: decision.note } : report)
+      ticket.status = decision.approve ? 'resolved' : 'waiting_customer'
+      ticket.messages!.push({ id: 'automatic-decision', author_role: 'system', body: decision.approve ? 'התשלום אושר. הפנייה נסגרה אוטומטית.' : `דיווח התשלום לא אושר. הסיבה: ${decision.note}`, created_at: '2026-10-23T13:05:00Z' })
+      return route.fulfill({ headers, json: reports.find(report => path === `/admin/access-payments/${report.id}`) })
+    }
+    if (request.method() !== 'GET') return route.abort()
+    const pagination = (items: unknown[]) => ({ items, page: 1, limit: 10, hasMore: false })
+    if (path === '/admin/access-payments') {
+      paymentQueries.push(url.search)
+      return route.fulfill({ headers, json: pagination(reports.filter(report => !url.searchParams.has('paymentId') || url.searchParams.get('paymentId') === report.id)) })
+    }
+    if (path === '/admin/support-tickets') return route.fulfill({ headers, json: pagination(url.searchParams.get('view') === 'actionable' && !['open', 'in_progress'].includes(ticket.status) ? [] : [ticket]) })
+    if (path === `/admin/support-tickets/${ticket.id}`) {
+      ticketReads++
+      const { requester_teacher, ...withoutRequester } = ticket
+      return route.fulfill({ headers, json: scenario === 'missing-field' && ticketReads === 1 ? withoutRequester : { ...ticket, requester_teacher: scenario === 'missing-profile' ? null : requester_teacher } })
+    }
+    return route.fulfill({ headers, status: 404, json: null })
+  })
+  const panelSource = await (await page.request.get('/src/features/account/AdminEngagementPanel.tsx')).text()
+  const mainSource = await (await page.request.get('/src/main.tsx')).text()
+  const dependency = (source: string, name: string) => {
+    const path = [...source.matchAll(/from\s+["']([^"']+)["']/g)].map(match => match[1]).find(value => value.includes(`/${name}.js`))
+    if (!path) throw new Error(`Missing preview dependency: ${name}`)
+    return path
+  }
+  const modules = { react: dependency(panelSource, 'react'), dom: dependency(mainSource, 'react-dom_client'), query: dependency(panelSource, '@tanstack_react-query'), router: dependency(panelSource, 'react-router-dom') }
+  await page.route('http://localhost:5176/billing-ticket-preview', route => route.fulfill({ contentType: 'text/html', body: '<!doctype html><html dir="rtl" lang="he"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/src/index.css"></head><body><main id="preview" class="page-shell py-8"></main></body></html>' }))
+  await page.goto('/billing-ticket-preview')
+  await page.evaluate(async ({ modules, ticketId }) => {
+    const refresh = await import('/@react-refresh')
+    refresh.default.injectIntoGlobalHook(window)
+    Object.assign(window, { $RefreshReg$: () => {}, $RefreshSig$: () => (type: unknown) => type, __vite_plugin_react_preamble_installed__: true })
+    const [react, dom, query, router, panel] = await Promise.all([
+      import(/* @vite-ignore */ modules.react), import(/* @vite-ignore */ modules.dom), import(/* @vite-ignore */ modules.query), import(/* @vite-ignore */ modules.router),
+      import('/src/features/account/AdminEngagementPanel.tsx'),
+    ])
+    const React = react.default ?? react
+    const ReactDOM = dom.default ?? dom
+    const client = new query.QueryClient({ defaultOptions: { queries: { retry: false } } })
+    ReactDOM.createRoot(document.getElementById('preview')!).render(React.createElement(query.QueryClientProvider, { client },
+      React.createElement(router.MemoryRouter, { initialEntries: [`/admin/support?ticket=${ticketId}#support`] }, React.createElement(panel.AdminSupportPage))))
+  }, { modules, ticketId: ticket.id })
+
+  await expect(page.getByRole('link', { name: /כולל בדיקת תשלום/ })).toBeVisible()
+  const panel = page.getByRole('region', { name: 'בדיקת התשלום של הפונה' })
+  await expect(panel).toBeVisible()
+  if (scenario === 'missing-profile') {
+    await expect(panel).toContainText('לא נמצא פרופיל מורה המקושר לחשבון ששלח את הפנייה')
+    expect(paymentQueries).toEqual([])
+    expect(errors).toEqual([])
+    return
+  }
+  if (scenario === 'missing-field') {
+    await expect(panel).toContainText('פרטי המורה חסרים בתשובת השרת')
+    await expect(panel).not.toContainText('הפונה אינו מורה')
+    expect(paymentQueries).toEqual([])
+    await panel.getByRole('button', { name: 'טעינת פרטי הפונה מחדש' }).click()
+    await expect(panel.getByRole('article', { name: 'בדיקת דיווח תשלום' })).toContainText('Billing Teacher')
+    expect(ticketReads).toBe(2)
+    expect(errors).toEqual([])
+    return
+  }
+  await expect.poll(() => paymentQueries.length).toBeGreaterThan(0)
+  expect(paymentQueries[0]).toContain(`teacherId=${teacherId}`)
+  if (scenario === 'different-case' || scenario === 'unlinked-report') {
+    await expect(panel).toContainText(scenario === 'different-case' ? 'דיווח התשלום מנוהל בפנייה המקושרת שלו' : 'דיווח ממתין אינו מקושר לפניית בדיקה')
+    await expect(panel.getByRole('button', { name: 'אישור חודש גישה' })).toHaveCount(0)
+    if (scenario === 'different-case') await expect(panel.getByRole('link', { name: 'מעבר לפניית בדיקת התשלום' })).toHaveAttribute('href', '/admin/support?ticket=canonical-billing-case#support')
+    expect(decisions).toEqual([])
+    expect(errors).toEqual([])
+    return
+  }
+  if (scenario === 'no-report') {
+    await expect(panel).toContainText('לא נמצא דיווח תשלום בחשבון המורה')
+    await expect(panel.getByRole('button', { name: 'פתיחת בדיקה מחדש' })).toHaveCount(0)
+    await panel.getByRole('button', { name: 'הכנסת בקשה לשליחת דיווח' }).click()
+    await expect(page.getByRole('textbox', { name: 'מענה למשתמש' })).toHaveValue(/אסמכתת/)
+    expect(decisions).toEqual([])
+    expect(reopenRequests).toEqual([])
+    expect(errors).toEqual([])
+    return
+  }
+  const review = panel.getByRole('article', { name: 'בדיקת דיווח תשלום' })
+  for (const detail of ['Billing Teacher', 'BIT-TICKET-456', '60 ₪']) await expect(review).toContainText(detail)
+  if (appealing) {
+    await expect(review).toContainText('האסמכתא לא נמצאה בבדיקה הראשונה')
+    await expect(review.getByRole('button', { name: 'אישור חודש גישה' })).toHaveCount(0)
+    await panel.getByRole('button', { name: 'פתיחת בדיקה מחדש' }).click()
+    await expect(page.getByRole('dialog')).toContainText('פעולה זו אינה מפעילה גישה')
+    expect(reopenRequests).toEqual([])
+    await page.getByRole('button', { name: 'פתיחת הדיווח לבדיקה' }).click()
+    await expect(review).toContainText('בדיקה מחדש של אותה העברה')
+    await expect(review.getByRole('link', { name: 'ההחלטה הקודמת' })).toHaveAttribute('href', `/admin/payments?payment=${payment.id}#payments`)
+    await expect(review.locator(`a[href="/admin/support?ticket=${ticket.id}#support"]`)).toHaveCount(0)
+    await expect(panel.locator(`a[href="/admin/history?source=payments&teacher=${teacherId}"]`)).toHaveCount(1)
+    await expect(review.getByRole('link', { name: 'פתיחה במסך התשלומים' })).toHaveAttribute('href', '/admin/payments?payment=reconsidered-payment-preview#payments')
+    expect(reopenRequests).toHaveLength(1)
+    expect(decisions).toEqual([])
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.screenshot({ path: testInfo.outputPath('billing-appeal-pending.png'), fullPage: true })
+  }
+  await expect(review.getByRole('button', { name: 'אישור חודש גישה' })).toBeDisabled()
+  const approve = scenario === 'appeal-approved'
+  if (approve) {
+    await review.getByRole('checkbox').check()
+    await review.getByRole('button', { name: 'אישור חודש גישה' }).click()
+  } else {
+    await review.getByRole('textbox').fill('לא נמצאה העברה')
+    await review.getByRole('button', { name: 'דחיית הדיווח' }).click()
+  }
+  await page.getByRole('button', { name: 'אישור ההחלטה' }).click()
+  await expect.poll(() => decisions.length).toBe(1)
+  expect(decisions[0]).toEqual({ approve, note: approve ? '' : 'לא נמצאה העברה' })
+  await expect(panel.getByRole('status')).toContainText(approve ? 'התשלום אושר והגישה הופעלה' : 'דיווח התשלום נדחה')
+  if (appealing) expect(reports.find(report => report.id === payment.id)).toMatchObject({ status: 'rejected', review_note: 'האסמכתא לא נמצאה בבדיקה הראשונה' })
+  const reply = page.getByRole('textbox', { name: 'מענה למשתמש' })
+  await expect(reply).toHaveValue('')
+  await expect(page.getByRole('combobox', { name: 'מצב לאחר שליחת המענה' })).toHaveValue(approve ? 'resolved' : 'waiting_customer')
+  await expect(page.locator('.support-message').filter({ hasText: 'עדכון אוטומטי של מורהלי' })).toContainText(approve ? 'הפנייה נסגרה אוטומטית' : 'הסיבה: לא נמצאה העברה')
+  await expect(page.getByRole('link', { name: /כולל בדיקת תשלום/ })).toHaveCount(0)
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  expect(errors).toEqual([])
+  await page.screenshot({ path: testInfo.outputPath('billing-ticket-review.png'), fullPage: true })
+})
+}
 
 test('admin workspace isolates queues, preserves email links and filters delivery history', async ({ page }, testInfo) => {
   const paymentId = 'payment-admin-preview'
@@ -409,7 +580,7 @@ test('saved admin history and teacher rejection notification explain the exact p
   const reviewer = { id: '00000000-0000-4000-8000-000000000003', first_name: 'Admin', last_name: 'Reviewer', contact_email: 'reviewer@example.com' }
   const teacher = { id: teacherId, slug: 'preview-teacher', headline: 'מורה לבדיקה', profile: { first_name: 'Preview', last_name: 'Teacher', contact_email: 'teacher@example.com' } }
   const rejected = { id: paymentId, teacher_id: teacherId, status: 'rejected', amount_ils: 60, reference: 'BIT-HISTORY-001', created_at: '2026-10-21T08:00:00Z', reviewed_at: '2026-10-22T09:00:00Z', reviewed_by: reviewer.id, reviewer, review_note: 'לא נמצאה העברה התואמת לאסמכתא', period_start_at: null, period_end_at: null, teacher }
-  const approved = { ...rejected, id: '00000000-0000-4000-8000-000000000004', status: 'approved', reference: 'BIT-HISTORY-002', created_at: '2026-10-23T08:00:00Z', reviewed_at: '2026-10-23T09:00:00Z', review_note: 'התשלום נבדק', period_start_at: '2026-10-23T09:00:00Z', period_end_at: '2026-11-23T09:00:00Z' }
+  const approved = { ...rejected, id: '00000000-0000-4000-8000-000000000004', reconsideration_of: paymentId, status: 'approved', created_at: '2026-10-23T08:00:00Z', reviewed_at: '2026-10-23T09:00:00Z', review_note: 'התשלום נבדק', period_start_at: '2026-10-23T09:00:00Z', period_end_at: '2026-11-23T09:00:00Z' }
   const profileEvent = { id: 'profile-history-preview', teacher_id: teacherId, actor_id: reviewer.id, actor: reviewer, teacher, previous_status: 'pending', next_status: 'draft', reason: 'יש להשלים את פרטי ההוראה', created_at: '2026-10-22T09:00:00Z' }
   let accessActive = true
   let freeContactUsed = true
@@ -436,6 +607,7 @@ test('saved admin history and teacher rejection notification explain the exact p
                 : { items: [], count: 0 }
     await route.fulfill({ headers, json: result })
   })
+
   const panelSource = await (await page.request.get('/src/features/account/AdminEngagementPanel.tsx')).text()
   const mainSource = await (await page.request.get('/src/main.tsx')).text()
   const dependency = (source: string, filename: string) => {
@@ -481,6 +653,8 @@ test('saved admin history and teacher rejection notification explain the exact p
   await expect(page.locator('.admin-history-list')).toContainText('reviewer@example.com')
   await page.getByRole('button', { name: 'העמוד הבא', exact: true }).click()
   await expect(page.locator('.admin-history-list')).toContainText('תשלום אושר')
+  await expect(page.locator('.admin-history-list')).toContainText('החלטה בבדיקה מחדש של אותה העברה')
+  await expect(page.locator('.admin-history-list').getByRole('link', { name: 'ההחלטה הקודמת' })).toHaveAttribute('href', `/admin/payments?payment=${paymentId}#payments`)
   await page.getByRole('combobox', { name: 'החלטה', exact: true }).selectOption('rejected')
   await expect(page.locator('.admin-history-list')).toContainText('דיווח תשלום נדחה')
   await expect.poll(() => reads.some(path => path.includes('status=rejected'))).toBe(true)
@@ -509,6 +683,9 @@ test('saved admin history and teacher rejection notification explain the exact p
   await expect(notice).toContainText('פניות תלמידים לא נדחות אוטומטית')
   await expect(notice.getByRole('link', { name: 'בירור התשלום עם התמיכה' })).toHaveAttribute('href', '/support?category=billing')
   await expect(page.getByRole('article', { name: 'דיווח תשלום' }).filter({ hasText: paymentId })).toBeFocused()
+  const reconsidered = page.getByRole('article', { name: 'דיווח תשלום' }).filter({ hasText: approved.id })
+  await expect(reconsidered).toContainText('בדיקה מחדש של אותה העברה')
+  await expect(reconsidered.getByRole('link', { name: 'הדיווח הקודם' })).toHaveAttribute('href', `/teacher/access?payment=${paymentId}`)
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.screenshot({ path: testInfo.outputPath('teacher-rejected-payment.png'), fullPage: true })
   const refreshAccess = () => page.evaluate(() => (window as unknown as { refreshTeacherAccessPreview: () => Promise<void> }).refreshTeacherAccessPreview())

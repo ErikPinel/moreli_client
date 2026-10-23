@@ -98,12 +98,11 @@ export const test = base.extend<object, { run: Run }>({
       const applicant = await account('applicant')
       const subjects = await db.from('subjects').select('slug').eq('is_active', true).order('id').limit(1).single()
       const cities = await db.from('cities').select('slug').eq('is_active', true).order('id').limit(1).single()
-      const levels = await db.from('levels').select('id').order('id').limit(1).single()
-      if (!subjects.data || !cities.data || !levels.data) throw new Error('Acceptance requires existing catalogs')
+      if (!subjects.data || !cities.data) throw new Error('Acceptance requires existing catalogs')
       avatarPath = `${teacherAccount.id}/ux-${id}.png`
       const uploaded = await db.storage.from('teacher-avatars').upload(avatarPath, Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z4h8AAAAASUVORK5CYII=', 'base64'), { contentType: 'image/png' })
       if (uploaded.error) throw new Error('Disposable avatar upload failed')
-      const form = { acceptTerms: true, firstName: 'UX', lastName: 'teacher', phone: '0500000000', citySlug: cities.data.slug, avatarPath, headline: `מורה לבדיקת קבלה ${id.slice(0, 6)}`, bio: 'פרופיל זמני לבדיקת חוויית המשתמש. נמחק בסיום הבדיקה.', hourlyPrice: 120, yearsExperience: 5, teachesOnline: true, teachesInPerson: false, subjectSlugs: [subjects.data.slug], levelIds: [levels.data.id], citySlugs: [], slots: Array.from({ length: 7 }, (_, dayOfWeek) => ({ dayOfWeek, startTime: '09:00', endTime: '21:00', timezone: 'Asia/Jerusalem', isActive: true })) }
+      const form = { acceptTerms: true, firstName: 'UX', lastName: 'teacher', phone: '0500000000', citySlug: cities.data.slug, avatarPath, headline: `מורה לבדיקת קבלה ${id.slice(0, 6)}`, bio: 'פרופיל זמני לבדיקת חוויית המשתמש. נמחק בסיום הבדיקה.', hourlyPrice: 120, yearsExperience: 5, teachesOnline: true, teachesInPerson: false, subjectSlugs: [subjects.data.slug], citySlugs: [], slots: Array.from({ length: 7 }, (_, dayOfWeek) => ({ dayOfWeek, startTime: '09:00', endTime: '21:00', timezone: 'Asia/Jerusalem', isActive: true })) }
       const submitted = await db.rpc('submit_teacher_onboarding', { p_user_id: teacherAccount.id, p_form: form })
       if (submitted.error || !submitted.data?.[0]) throw new Error('Disposable teacher onboarding failed')
       await provide({ id, db, admin, teacherAccount, student, secondStudent, applicant, teacher: submitted.data[0], form })

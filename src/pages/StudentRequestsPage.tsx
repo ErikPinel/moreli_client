@@ -9,7 +9,7 @@ import { apiRequest } from '@/api/api-client'
 import { endpoints } from '@/api/endpoints'
 import { AccountShell, WorkspaceState } from '@/features/account/AccountShell'
 import { accountKeys, useStudentRequests } from '@/features/account/useAccountData'
-import { useCities, useLevels, useSubjects } from '@/features/search/hooks/useTaxonomies'
+import { useCities, useSubjects } from '@/features/search/hooks/useTaxonomies'
 import { CatalogCombobox } from '@/features/search/components/CatalogCombobox'
 import { TeacherCard } from '@/features/teachers/components/TeacherCard'
 import { Button } from '@/components/ui/button'
@@ -20,7 +20,6 @@ import type { RankedTeacherDto, StudentRequestDto } from '@/types/api'
 
 type RequestPayload = {
   subjectSlug: string
-  levelId?: number
   citySlug?: string
   onlineOk: boolean
   inPersonOk: boolean
@@ -35,7 +34,6 @@ export function StudentRequestsPage() {
   const queryClient = useQueryClient()
   const requestsQuery = useStudentRequests()
   const subjectsQuery = useSubjects()
-  const levelsQuery = useLevels()
   const citiesQuery = useCities()
   const [formRequest, setFormRequest] = useState<StudentRequestDto | 'new' | null>(null)
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null)
@@ -73,7 +71,6 @@ export function StudentRequestsPage() {
   })
 
   const subjectName = (id: number) => subjectsQuery.data?.find((item) => item.id === id)?.name_he ?? 'תחום לימוד'
-  const levelName = (id: number | null) => levelsQuery.data?.find((item) => item.id === id)?.name_he
   const cityName = (id: number | null) => citiesQuery.data?.find((item) => item.id === id)?.name_he
 
   return (
@@ -95,7 +92,6 @@ export function StudentRequestsPage() {
             </div>
             <p>{request.goal}</p>
             <div className="request-item__meta">
-              {levelName(request.level_id) ? <span>{levelName(request.level_id)}</span> : null}
               {cityName(request.city_id) ? <span>{cityName(request.city_id)}</span> : null}
               <span>{[request.online_ok ? 'אונליין' : null, request.in_person_ok ? 'פרונטלי' : null].filter(Boolean).join(' + ')}</span>
               {request.budget_max ? <span>עד ₪{request.budget_max}</span> : null}
@@ -133,11 +129,9 @@ export function StudentRequestsPage() {
 
 function RequestForm({ initial, onDone, onCancel }: { initial?: StudentRequestDto; onDone: (request: StudentRequestDto) => void; onCancel: () => void }) {
   const subjects = useSubjects()
-  const levels = useLevels()
   const cities = useCities()
   const [selectedSubject, setSelectedSubject] = useState<string>()
   const subjectSlug = selectedSubject ?? subjects.data?.find((item) => item.id === initial?.subject_id)?.slug ?? ''
-  const [levelId, setLevelId] = useState(initial?.level_id ? String(initial.level_id) : '')
   const [selectedCity, setSelectedCity] = useState<string>()
   const citySlug = selectedCity ?? cities.data?.find((item) => item.id === initial?.city_id)?.slug ?? ''
   const [goal, setGoal] = useState(initial?.goal ?? '')
@@ -170,7 +164,6 @@ function RequestForm({ initial, onDone, onCancel }: { initial?: StudentRequestDt
     }
     mutation.mutate({
       subjectSlug,
-      ...(levelId ? { levelId: Number(levelId) } : {}),
       ...(citySlug && inPersonOk ? { citySlug } : {}),
       onlineOk, inPersonOk,
       ...(budgetMin ? { budgetMin: Number(budgetMin) } : {}),
@@ -184,7 +177,6 @@ function RequestForm({ initial, onDone, onCancel }: { initial?: StudentRequestDt
       <div className="workspace-form__heading"><div>{initial ? <Pencil /> : <Plus />}<h2>{initial ? 'עריכת בקשת לימוד' : 'בקשת לימוד חדשה'}</h2></div><p>הפרטים ישמשו את מנגנון ההתאמה בלבד.</p></div>
       <div className="workspace-form__grid">
         <CatalogCombobox catalog="professions" value={subjectSlug} onChange={setSelectedSubject} label="תחום לימוד" placeholder="בחרו תחום" />
-        <label><span>רמה</span><select value={levelId} onChange={(event) => setLevelId(event.target.value)}><option value="">כל רמה</option>{levels.data?.map((item) => <option key={item.id} value={item.id}>{item.name_he}</option>)}</select></label>
         <label><span>תקציב מינימלי לשעה</span><Input type="number" min="0" max="100000" value={budgetMin} onChange={(event) => setBudgetMin(event.target.value)} /></label>
         <label><span>תקציב מקסימלי לשעה</span><Input type="number" min="0" max="100000" value={budgetMax} onChange={(event) => setBudgetMax(event.target.value)} /></label>
         <label><span>מועד רצוי · שעון ישראל · לא חובה</span><Input type="datetime-local" value={desiredAt} onChange={(event) => setDesiredAt(event.target.value)} /></label>

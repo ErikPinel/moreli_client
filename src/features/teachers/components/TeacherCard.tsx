@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { apiRequest } from '@/api/api-client'
 import { endpoints } from '@/api/endpoints'
-import { useAuth } from '@/auth/useAuth'
+import { useCanSaveTeacher } from '@/features/account/account-view'
 import { accountKeys, useFavorites } from '@/features/account/useAccountData'
 import type { PublicTeacherDto } from '@/types/api'
 import { TeacherAvatar } from './TeacherAvatar'
@@ -16,9 +16,9 @@ type TeacherCardProps = {
 }
 
 export function TeacherCard({ teacher, profilePath, availabilityLabel }: TeacherCardProps) {
-  const { profile } = useAuth()
   const queryClient = useQueryClient()
-  const favorites = useFavorites(profile?.role === 'student')
+  const canSave = useCanSaveTeacher(teacher.slug)
+  const favorites = useFavorites(canSave)
   const isSaved = Boolean(favorites.data?.some(item => item.id === teacher.id))
   const favorite = useMutation({
     mutationFn: () => apiRequest(endpoints.favorite(teacher.id), { method: isSaved ? 'DELETE' : 'POST' }),
@@ -30,7 +30,6 @@ export function TeacherCard({ teacher, profilePath, availabilityLabel }: Teacher
   })
   const name = `${teacher.profile.first_name} ${teacher.profile.last_name}`.trim()
   const subject = teacher.subjects[0]?.subject.name_he
-  const level = teacher.levels[0]?.level.name_he
   const city = teacher.service_areas[0]?.city.name_he
   const availability = availabilityLabel
   const teacherPath = profilePath ?? `/teachers/${teacher.slug}`
@@ -44,7 +43,7 @@ export function TeacherCard({ teacher, profilePath, availabilityLabel }: Teacher
           name={name}
           avatarPath={teacher.profile.avatar_path}
         />
-        {profile?.role === 'student' ? <button
+        {canSave ? <button
           className={`teacher-card__favorite ${isSaved ? 'is-saved' : ''}`}
           type="button"
           onClick={() => favorite.mutate()}
@@ -77,7 +76,7 @@ export function TeacherCard({ teacher, profilePath, availabilityLabel }: Teacher
         </div>
 
         <p className="teacher-card__subject">
-          {[subject, level].filter(Boolean).join(' · ') || teacher.headline}
+          {subject || teacher.headline}
         </p>
         <p className="teacher-card__location">
           {city ? <MapPin aria-hidden="true" /> : <Laptop aria-hidden="true" />}

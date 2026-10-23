@@ -4,7 +4,7 @@ test.describe.configure({ mode: 'serial' })
 
 test('restores an applicant draft without changing role and guards unsaved navigation', async ({ page, run }) => {
   await signIn(page, run.applicant)
-  await page.goto('/teach')
+  await page.goto('/teach/start')
   await expect(page.getByRole('heading', { name: 'השלמת פרופיל המורה' })).toBeVisible()
   await page.getByLabel('שם פרטי', { exact: true }).fill('טיוטת קבלה')
   await page.getByRole('button', { name: 'שמירה ושליחה לבדיקה', exact: true }).click()
@@ -42,7 +42,7 @@ test('saves teacher sections atomically and retains edits after a failed save', 
   await page.unroute('**/api/teachers/me/profile')
   await page.getByRole('button', { name: 'שמירת שינויים', exact: true }).click()
   await expect(page.getByText('השינויים נשמרו.', { exact: true })).toBeVisible()
-  const invalid = await api(page, 'PUT', '/teachers/me/profile', { ...run.form, firstName: 'Must not persist', levelIds: [99999999], submitForReview: false })
+  const invalid = await api(page, 'PUT', '/teachers/me/profile', { ...run.form, firstName: 'Must not persist', subjectSlugs: ['missing-subject'], submitForReview: false })
   expect(invalid.status).toBe(400)
   expect((await run.db.from('profiles').select('first_name').eq('id', run.teacherAccount.id).single()).data?.first_name).toBe('UX')
 })

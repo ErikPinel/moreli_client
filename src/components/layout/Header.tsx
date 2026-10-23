@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/auth/useAuth'
+import { useAccountView } from '@/features/account/account-view'
+import { AccountViewSwitch } from '@/features/account/AccountViewSwitch'
 import { Logo } from './Logo'
 
 const publicNavigation = [
@@ -25,18 +27,17 @@ export function Header() {
   }, [isOpen])
   const navigate = useNavigate()
   const { profile, signOut, user } = useAuth()
+  const { canTeach, home } = useAccountView()
   const accountPath = profile
-    ? profile.role === 'teacher'
-      ? '/teacher/profile'
-      : profile.role === 'admin'
-        ? '/admin'
-        : '/student/profile'
+    ? profile.role === 'admin'
+      ? '/admin'
+      : home
     : user
       ? '/'
       : '/login'
   const accountLabel = profile?.first_name.trim() || 'החשבון שלי'
-  const navigation = profile?.role === 'teacher'
-    ? publicNavigation.map((item) => item.to === '/teach' ? { label: 'לוח המורה', to: '/teacher/dashboard' } : item)
+  const navigation = canTeach
+    ? publicNavigation.filter((item) => item.to !== '/teach')
     : publicNavigation
 
   async function handleSignOut() {
@@ -52,6 +53,7 @@ export function Header() {
         <Logo />
 
         <nav className="site-nav" aria-label="ניווט ראשי">
+          {canTeach ? <Link className="nav-link" to="/teacher/dashboard">לוח הבקרה למורה</Link> : null}
           {navigation.map((item) => (
             <Link className="nav-link" key={item.to} to={item.to}>
               {item.label}
@@ -74,10 +76,12 @@ export function Header() {
           {user ? (
             <UserButton />
           ) : null}
-          <Link className="site-actions__teach" to={profile?.role === 'teacher' ? '/teacher/dashboard' : '/teach'}>
-            {profile?.role === 'teacher' ? 'לוח המורה' : 'הצטרפות כמורה'}
-            <UserRoundPlus className="size-4" aria-hidden="true" />
-          </Link>
+          {canTeach ? <AccountViewSwitch compact /> : (
+            <Link className="site-actions__teach" to="/teach">
+              הצטרפות כמורה
+              <UserRoundPlus className="size-4" aria-hidden="true" />
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
@@ -102,6 +106,7 @@ export function Header() {
 
       {isOpen ? (
         <nav id="mobile-navigation" className="mobile-nav" aria-label="ניווט למובייל">
+          {canTeach ? <Link to="/teacher/dashboard" onClick={() => setIsOpen(false)}>לוח הבקרה למורה</Link> : null}
           {navigation.map((item) => (
             <Link key={item.to} to={item.to} onClick={() => setIsOpen(false)}>
               {item.label}
@@ -126,9 +131,16 @@ export function Header() {
               </Link>
             </>
           )}
-          <Link className="text-primary" to={profile?.role === 'teacher' ? '/teacher/dashboard' : '/teach'} onClick={() => setIsOpen(false)}>
-            {profile?.role === 'teacher' ? 'לוח המורה' : 'הצטרפות כמורה'}
-          </Link>
+          {canTeach ? (
+            <div className="mobile-nav__views">
+              <span>מצב החשבון</span>
+              <AccountViewSwitch onNavigate={() => setIsOpen(false)} />
+            </div>
+          ) : (
+            <Link className="text-primary" to="/teach" onClick={() => setIsOpen(false)}>
+              הצטרפות כמורה
+            </Link>
+          )}
         </nav>
       ) : null}
     </header>

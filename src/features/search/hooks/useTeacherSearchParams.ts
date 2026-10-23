@@ -1,12 +1,11 @@
 import { useSearchParams } from 'react-router-dom'
 import type { TeacherFilters } from '@/features/teachers/api/teacher-query-keys'
-import { useCities, useLevels, useSubjects } from './useTaxonomies'
+import { useCities, useSubjects } from './useTaxonomies'
 
 export type TeacherSort = NonNullable<TeacherFilters['sort']>
 
 export type TeacherSearchValues = {
   subject: string
-  level: string
   city: string
   online: boolean
   inPerson: boolean
@@ -16,6 +15,7 @@ export type TeacherSearchValues = {
   ratingMin: string
   sort: TeacherSort
   page: number
+  onlinePage: number
 }
 
 const validSorts = new Set<TeacherSort>([
@@ -28,12 +28,10 @@ const validSorts = new Set<TeacherSort>([
 export function useTeacherSearchParams() {
   const [params, setParams] = useSearchParams()
   const subjectsQuery = useSubjects()
-  const levelsQuery = useLevels()
   const citiesQuery = useCities()
   const rawSort = params.get('sort') as TeacherSort | null
   const values: TeacherSearchValues = {
     subject: params.get('subject') ?? '',
-    level: params.get('level') ?? '',
     city: params.get('city') ?? '',
     online: parseBoolean(params.get('online'), true),
     inPerson: parseBoolean(params.get('inPerson'), true),
@@ -43,15 +41,14 @@ export function useTeacherSearchParams() {
     ratingMin: params.get('ratingMin') ?? '',
     sort: rawSort && validSorts.has(rawSort) ? rawSort : 'recommended',
     page: pageNumber(params.get('page')),
+    onlinePage: pageNumber(params.get('onlinePage')),
   }
 
   const subject = subjectsQuery.data?.find((item) => item.slug === values.subject)
-  const level = levelsQuery.data?.find((item) => item.slug === values.level)
   const city = citiesQuery.data?.find((item) => item.slug === values.city)
-  const isReady = !subjectsQuery.isPending && !levelsQuery.isPending && !citiesQuery.isPending
+  const isReady = !subjectsQuery.isPending && !citiesQuery.isPending
   const apiFilters: TeacherFilters = {
     subjectSlug: values.subject || undefined,
-    levelId: level?.id,
     citySlug: values.city || undefined,
     onlineOk: values.online,
     inPersonOk: values.inPerson,
@@ -67,7 +64,6 @@ export function useTeacherSearchParams() {
   function apply(next: TeacherSearchValues) {
     const search = new URLSearchParams()
     setText(search, 'subject', next.subject)
-    setText(search, 'level', next.level)
     setText(search, 'city', next.city)
     if (!next.online || !next.inPerson) {
       search.set('online', String(next.online))
@@ -79,11 +75,17 @@ export function useTeacherSearchParams() {
     setText(search, 'ratingMin', next.ratingMin)
     if (next.sort !== 'recommended') search.set('sort', next.sort)
     if (next.page > 1) search.set('page', String(next.page))
+    if (next.city && next.onlinePage > 1) search.set('onlinePage', String(next.onlinePage))
     setParams(search)
   }
 
   function update(patch: Partial<TeacherSearchValues>, resetPage = true) {
-    apply({ ...values, ...patch, page: resetPage ? 1 : (patch.page ?? values.page) })
+    apply({
+      ...values,
+      ...patch,
+      page: resetPage ? 1 : (patch.page ?? values.page),
+      onlinePage: resetPage ? 1 : (patch.onlinePage ?? values.onlinePage),
+    })
   }
 
   return {
@@ -91,16 +93,13 @@ export function useTeacherSearchParams() {
     apiFilters,
     isReady,
     subject,
-    level,
     city,
     subjects: subjectsQuery.data ?? [],
-    levels: levelsQuery.data ?? [],
     cities: citiesQuery.data ?? [],
     update,
     apply,
     clear: () => apply({
       subject: '',
-      level: '',
       city: '',
       online: true,
       inPerson: true,
@@ -110,6 +109,7 @@ export function useTeacherSearchParams() {
       ratingMin: '',
       sort: 'recommended',
       page: 1,
+      onlinePage: 1,
     }),
   }
 }

@@ -21,8 +21,10 @@ import { AdminActivityPage, AdminPaymentsPage, AdminSupportPage } from '@/featur
 import { TeacherReviewsPage } from '@/pages/TeacherReviewsPage'
 import { TeacherAccessPage } from '@/pages/TeacherAccessPage'
 import { TeacherAccessTermsPage } from '@/pages/TeacherAccessTermsPage'
+import { TeachIntroPage } from '@/pages/TeachIntroPage'
 import { InquiryDetailPage } from '@/pages/InquiryDetailPage'
 import { SupportPage } from '@/pages/SupportPage'
+import { LessonDetailPage, LessonsPage, StudentDashboardPage, TeacherStudentLessonsPage } from '@/pages/LessonPages'
 
 export function AppRouter() {
   return (
@@ -37,13 +39,17 @@ export function AppRouter() {
       <Route path="/support" element={<SupportPage />} />
       <Route path="/support/:id" element={<SupportPage />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      <Route path="/teach" element={<TeachIntroPage />} />
       <Route element={<RequireAuth />}>
-        <Route path="/teach" element={<TeachClaimPage />} />
+        <Route path="/teach/start" element={<TeachClaimPage />} />
       </Route>
 
       <Route element={<RequireAuth />}>
-        <Route element={<RequireRole roles={['student']} />}>
-          <Route path="/student" element={<Navigate replace to="/student/profile" />} />
+        <Route element={<RequireRole roles={['student', 'teacher']} />}>
+          <Route path="/student" element={<Navigate replace to="/student/dashboard" />} />
+          <Route path="/student/dashboard" element={<StudentDashboardPage />} />
+          <Route path="/student/lessons" element={<LessonsPage />} />
+          <Route path="/student/lessons/:id" element={<LessonDetailPage />} />
           <Route path="/student/profile" element={<ProfilePage kind="student" />} />
           <Route path="/student/requests" element={<StudentRequestsPage />} />
           <Route path="/student/favorites" element={<StudentFavoritesPage />} />
@@ -60,6 +66,9 @@ export function AppRouter() {
           <Route path="/teacher/inquiries" element={<TeacherInquiriesPage />} />
           <Route path="/teacher/inquiries/:id" element={<InquiryDetailPage />} />
           <Route path="/teacher/students" element={<TeacherStudentsPage />} />
+          <Route path="/teacher/students/:id" element={<TeacherStudentLessonsPage />} />
+          <Route path="/teacher/lessons" element={<LessonsPage />} />
+          <Route path="/teacher/lessons/:id" element={<LessonDetailPage />} />
           <Route path="/teacher/reviews" element={<TeacherReviewsPage />} />
           <Route path="/teacher/access" element={<TeacherAccessPage />} />
           <Route path="/teacher/schedule" element={<TeacherSchedulePage />} />

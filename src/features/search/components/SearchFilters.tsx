@@ -1,17 +1,16 @@
 import { SlidersHorizontal } from 'lucide-react'
-import type { CityDto, LevelDto, SubjectDto } from '@/types/api'
+import type { CityDto, SubjectDto } from '@/types/api'
 import type { TeacherSearchValues } from '../hooks/useTeacherSearchParams'
 import { CatalogCombobox } from './CatalogCombobox'
 
 type SearchFiltersProps = {
   values: TeacherSearchValues
   subjects: SubjectDto[]
-  levels: LevelDto[]
   cities: CityDto[]
   onChange: (patch: Partial<TeacherSearchValues>) => void
 }
 
-export function SearchFilters({ values, levels, onChange }: SearchFiltersProps) {
+export function SearchFilters({ values, onChange }: SearchFiltersProps) {
   return (
     <div className="search-filters">
       <h2><SlidersHorizontal />סינון תוצאות</h2>
@@ -22,17 +21,11 @@ export function SearchFilters({ values, levels, onChange }: SearchFiltersProps) 
         label="מקצוע"
         placeholder="כל המקצועות"
       />
-      <label>
-        <span>רמה</span>
-        <select value={values.level} onChange={(event) => onChange({ level: event.target.value })}>
-          <option value="">כל הרמות</option>
-          {levels.map((item) => <option value={item.slug} key={item.id}>{item.name_he}</option>)}
-        </select>
-      </label>
       <fieldset>
         <legend>סוג שיעור</legend>
         <label className="search-filter-check"><input type="checkbox" checked={values.online} onChange={(event) => onChange({ online: event.target.checked })} />אונליין</label>
         <label className="search-filter-check"><input type="checkbox" checked={values.inPerson} onChange={(event) => onChange({ inPerson: event.target.checked })} />פרונטלי</label>
+        {values.city && values.online ? <small>שיעורי אונליין מוצגים בנפרד, ללא הגבלת עיר.</small> : null}
         {!values.online && !values.inPerson ? <small>בחרו לפחות סוג שיעור אחד.</small> : null}
       </fieldset>
       <div className="search-price-fields">

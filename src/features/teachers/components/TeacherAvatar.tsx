@@ -14,7 +14,7 @@ export function TeacherAvatar({ slug, name, avatarPath }: TeacherAvatarProps) {
   const imageUrl = directAvatar ?? avatarQuery.data?.signedUrl
 
   return (
-    <div className="relative grid h-full w-full place-items-center overflow-hidden bg-[#edf3ee] text-2xl font-bold text-[#244331]">
+    <div className="teacher-avatar relative grid h-full w-full place-items-center overflow-hidden bg-[#edf3ee] text-2xl font-bold text-[#244331]">
       <span aria-hidden="true">{name.trim().charAt(0) || 'מ'}</span>
       {imageUrl ? (
       <img

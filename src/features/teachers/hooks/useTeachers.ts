@@ -7,7 +7,6 @@ export function useTeachers(filters: TeacherFilters, enabled = true) {
     queryKey: teacherQueryKeys.list(filters),
     queryFn: () => getTeachers(filters),
     enabled,
-    placeholderData: (previousData) => previousData,
   })
 }
 

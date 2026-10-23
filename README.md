@@ -29,6 +29,30 @@ other systems use Playwright Chromium. Reports/screenshots are ignored by Git;
 auth traces and videos are disabled.
 Catalog generation: `npm run catalogs:build`, using local files only, no scraping.
 Selectors display Hebrew and submit slugs. Never add server secrets to `VITE_*`.
+Query devtools are opt-in during development: set `VITE_ENABLE_QUERY_DEVTOOLS=true`
+to show their floating launcher. They are hidden by default and in production.
+
+## Teacher Search
+
+- A subject ending in ` - הכל` includes its entire category. Specific subsubjects
+  remain specific; results and counts use the same backend matching rules.
+- With a city selected, in-person teachers serving that city appear first.
+  Online teachers appear in a separate section below and are not restricted by city.
+  Subject, price, verification, rating and sort apply to both sections. Each section
+  has independent pagination (`page` and `onlinePage`); mode checkboxes hide the
+  corresponding section. Teachers offering both modes can appear in both sections.
+- Separate educational levels have been retired from search, requests, teacher
+  onboarding, public profiles and admin review. Existing `level` URL parameters
+  are ignored and omitted when filters are changed. Existing tab drafts still
+  restore their other fields, discarding the retired level selection.
+- Search regression coverage: `npx playwright test e2e/search.pw.ts`.
+- Results use bounded square portraits, wrapping names, two-line subject summaries
+  (full subjects remain in the profile), visible prices and 44px action targets.
+  Profiles separate portrait, identity, metadata and booking into responsive grid
+  areas; availability times keep LTR direction inside the Hebrew interface.
+  Geometry checks cover 320, 390, 768, 1024 and 1280px viewports, with real image
+  elements, long names/subjects and optional-comment ratings. The floating support
+  shortcut is a compact, labeled 44px icon on both mobile and desktop.
 
 For Vercel, current features, and remaining launch gates read
 [client rollout](PRODUCTION_ROLLOUT.md) and [the current product plan](../PRODUCTION_MVP_PLAN.md).
@@ -36,13 +60,46 @@ The React Compiler is not enabled; follow the existing code style.
 
 ## Student And Tutor Workflows
 
+- `/student/dashboard` is the student home; `/student/profile` remains the profile
+  editor. Both account dashboards show the next five persisted lessons in server
+  chronological order and separate lessons requiring the viewer's attendance update.
+- `/student/lessons` and `/teacher/lessons` provide Sunday–Saturday, Israel-local
+  weekly calendars, week navigation, paginated history and an action queue. Cancelled
+  and off-hours lessons remain accessible; historical overlaps are shown side by side.
+- Accepting an inquiry creates its first lesson atomically. Teachers can schedule
+  additional lessons for accepted students, without another inquiry/contact charge
+  or student acceptance. The student receives an in-app notification and queued email.
+  Each student's card links to their upcoming lessons, history and scheduling action.
+  A separate per-student action section also preserves older undated lessons instead
+  of losing them between future and past lists.
+- Canonical lesson detail supports reasoned cancellation/no-show reporting and
+  separate post-end attendance confirmations. Teachers can change an unstarted,
+  unconfirmed lesson's time; students receive the updated appointment. Existing
+  inquiry links continue to update the same first lesson. Attendance confirmation is
+  separate from rating eligibility.
+- Any signed-in student account (including a teacher's student view) can rate another
+  published teacher from their public profile, without an inquiry or completed lesson.
+  An explicit integer rating from 1–5 is required; comments are optional. Empty comments
+  render blank, with the score still visible. One rating per student/teacher remains;
+  editing returns it to moderation as before. `/student/reviews` manages existing ratings.
+- Teachers have a dashboard link in desktop/mobile navigation and a new-lesson action
+  in `/teacher/dashboard`, using the same accepted-student scheduling dialog as the calendar.
+- New/unconfigured availability defaults to Sunday–Thursday, 09:00–21:00. Existing
+  custom and explicitly closed schedules are preserved. Onboarding and availability
+  editing share a synchronized **7 days × 12 one-hour cells** grid; exact/off-grid
+  times stay editable. Green indicates selected recurring hours, not booked slots or
+  a promise of availability during Shabbat. Changes only persist after saving.
+- Lesson support links preserve the exact lesson ID, including additional lessons.
+  Admins see its schedule and both attendance confirmations; support closure never
+  changes attendance. No retrospective lesson emails are sent by the migration.
+
 - `/teacher/access` explains one lifetime free new-student contact, then ILS 60
   monthly access through manual Bit payment and administrator verification. No card
   collection, automatic renewal, or automatic charge is implemented. The versioned
   `/teacher-access-terms` page is linked before a payment claim is submitted.
 - Student and teacher inquiry-detail routes reveal accepted contacts, show the
   selected lesson date and support completion/cancellation/no-show reporting. Both
-  participants must confirm completion before a new review can be published.
+  participants must confirm completion to mark a lesson completed, not to publish a rating.
 - The student date picker uses server-calculated availability and exact slots only,
   including local Shabbat entry/exit and already accepted lessons. There is no
   arbitrary-time fallback. Missing location coordinates are disclosed.
@@ -51,12 +108,40 @@ The React Compiler is not enabled; follow the existing code style.
 - `/support` supports help, bugs, billing, content reports and onboarding issues,
   with owned ticket conversations and admin replies. The public helper/contact
   controls link to support, not a fabricated external chat service.
+- Submitting a teacher profile opens one customer-visible onboarding case; correction
+  and resubmission reuse it. Bit reports also open linked cases automatically.
+  The profile editor and access page link to those conversations instead of asking
+  customers to open duplicate tickets.
+- Admins can approve profiles and review payments from either their dedicated queue
+  or the linked case. The domain decision automatically records a system message:
+  approval resolves the case; rejection/correction sets `waiting_customer`. Existing
+  decision notifications/emails are reused, with no extra manual reply needed.
+  Customer replies reopen the same case; profile resubmission returns it to review.
+  Manually closing a conversation never publishes a profile or activates access.
+- Billing appeals also show the latest reviewed report and its reason. For a
+  rejected report, "פתיחת בדיקה מחדש" creates a linked pending review using the
+  original reference and consent; it does not activate access or overwrite the
+  rejection. Admins can then approve or reject with a new reason. Both admin and
+  teacher histories distinguish reconsideration from an additional payment.
+  Missing requester data is a server-update error, not evidence of a non-teacher.
+  Review navigation omits links back to the current ticket or exact payment and
+  shows the teacher-history link only once per payment card.
+- Lesson reports show the participants, requested time and lesson state, with an
+  exact investigation link. Review/reply reports link the exact moderated item and
+  expose the existing moderation controls inside the case. Removing content does
+  not automatically resolve a complaint: the admin still replies and closes it.
+  Normal lessons and reviews do not generate support cases.
 - Resend is backend-only. Never add a Resend API key or webhook secret to `VITE_*`;
   production sender/domain/webhook setup is documented in the backend README.
 
 - Tutor editing has one destination: `/teacher/onboarding`; `/teacher/profile`
-  redirects there. New applicants use `/teach` while remaining students until
-  complete final submission succeeds. The four-section Hebrew accordion reports
+  redirects there. `/teach` is a public explainer; signed-in students open the
+  form at `/teach/start`. Every account starts as a student account. Final
+  submission adds a tutor profile and flips the role to `teacher`, but tutors
+  keep all student routes and abilities. Tutors switch between `/student/*`
+  (student mode) and `/teacher/*` (tutor mode) with the "תלמיד | מורה" switch in
+  the header, sidebar and mobile menu; the last mode is remembered per user in
+  `localStorage`, and student mode is the default. The four-section Hebrew accordion reports
   missing fields on submit and uses 24-hour Israel-time selectors. Creation and
   role conversion use the atomic `POST /teachers/me/onboarding` endpoint.
   Existing teacher drafts retain separate save and review actions. All profile
@@ -91,10 +176,10 @@ converted accounts are not automatically reverted.
 Admin routes remain behind the existing authenticated admin-role guard. The
 workspace has persistent navigation on desktop and scrollable tabs on mobile:
 
-- `/admin`: pending payment, teacher and review queues, recent support tickets,
+- `/admin`: pending payment, teacher and review queues, actionable support cases,
   and direct links to items awaiting a decision. Counts are bounded snapshots;
-  `5+` means there are more results, not an exact total. Support is recent activity,
-  not a claim that every listed ticket is open.
+  `5+` means there are more results, not an exact total. Support counts only `open`
+  and `in_progress`, not cases waiting for the customer or already closed.
 - `/admin/payments`: filtered Bit reports with teacher contact details. Approval
   still requires checking receipt and confirming the decision; rejection requires
   a reason and confirmation. Navigation never approves a payment.
@@ -106,7 +191,9 @@ workspace has persistent navigation on desktop and scrollable tabs on mobile:
   own records on their existing pages. No migration/backfill is required.
 - `/admin/onboarding` and `/admin/reviews`: separate teacher/profile and
   review/reply moderation queues with their existing approval controls.
-- `/admin/support`: ticket queue and selected conversation with admin replies.
+- `/admin/support`: contextual quick actions and conversation; defaults to cases
+  waiting for staff, with separate waiting-customer and closed-case filters.
+  Apply `20261023160000_connected_support_cases.sql` and restart the rebuilt API.
 - `/admin/emails`: sender readiness, latest 100 delivery jobs, search, status
   filtering and pagination. Provider acceptance is distinct from delivery.
   Processing/retry require explicit confirmation and are disabled when sending is
