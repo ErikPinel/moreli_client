@@ -150,6 +150,11 @@ export type RankedTeacherDto = {
 export type InquiryStatus = 'sent' | 'viewed' | 'accepted' | 'declined' | 'expired'
 
 export type InquiryDto = {
+  lesson_status?: 'needs_scheduling' | 'awaiting' | 'completed' | 'cancelled' | 'no_show_reported' | null
+  student_completed_at?: string | null
+  teacher_completed_at?: string | null
+  lesson_updated_at?: string | null
+  lesson_note?: string | null
   id: string
   student_id: string
   teacher_id: string
@@ -178,7 +183,18 @@ export type ReviewDto = {
   status: 'pending' | 'published' | 'hidden' | 'rejected'
   created_at: string
   updated_at: string
+  teacher_reply: string | null
+  teacher_reply_status: 'pending' | 'published' | 'rejected' | null
+  teacher_reply_at: string | null
 }
+
+export type ReceivedReviewDto = Pick<ReviewDto, 'id' | 'rating' | 'body' | 'created_at' | 'updated_at' | 'teacher_reply' | 'teacher_reply_status' | 'teacher_reply_at'>
+
+export type SupportContactDto = { email: string; phone: string; monthlyPriceIls: number; automaticPaymentsAvailable: boolean }
+export type ManualAccessPaymentDto = { id: string; status: 'pending' | 'approved' | 'rejected'; amount_ils: number; created_at: string; reviewed_at: string | null; review_note: string | null; period_start_at: string | null; period_end_at: string | null; reference?: string; teacher_id?: string; reviewed_by?: string | null; reviewer?: { id: string; first_name: string; last_name: string; contact_email: string | null } | null; teacher?: { id: string; slug: string; profile: { first_name: string; last_name: string; contact_email: string | null; phone?: string | null } } | null }
+export type TeacherAccessDto = { freeContactUsed: boolean; paidUntil: string | null; active: boolean; canAcceptNewContact: boolean; priceIls: number; period: 'month'; paymentMethod: 'Bit'; payments: ManualAccessPaymentDto[] }
+export type LessonCalendarDto = { timezone: string; locationName: string; locationFallback: boolean; usesDefault: boolean; duration: number; shabbat: { startAt: string; endAt: string }[]; days: { date: string; label: string; times: { time: string; startAt: string; endAt: string }[] }[] }
+export type SupportTicketDto = { id: string; user_id: string; category: 'support' | 'bug' | 'billing' | 'report' | 'onboarding'; subject: string; message: string; status: 'open' | 'in_progress' | 'resolved' | 'rejected'; created_at: string; updated_at: string; teacher_id: string | null; inquiry_id: string | null; messages?: { id: string; body: string; author_role: 'user' | 'admin'; created_at: string }[] }
 
 export type NotificationDto = {
   id: string

@@ -1,13 +1,19 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { type PropsWithChildren, useState } from 'react'
+import { type PropsWithChildren, useEffect, useState } from 'react'
 import { useAuth } from '@clerk/react'
 import { AuthProvider } from '@/auth/AuthProvider'
 import { Toaster } from '@/components/ui/sonner'
 import { createQueryClient } from './query-client'
+import { clearAccountDrafts } from '@/features/account/onboarding-draft'
 
 export function AppProviders({ children }: PropsWithChildren) {
-  const { userId, sessionId } = useAuth()
+  const { userId, sessionId, isLoaded } = useAuth()
+  useEffect(() => {
+    if (isLoaded && !userId) {
+      try { clearAccountDrafts(sessionStorage) } catch { return }
+    }
+  }, [isLoaded, userId])
   return <SessionProviders key={`${userId ?? 'anonymous'}:${sessionId ?? ''}`}>{children}</SessionProviders>
 }
 

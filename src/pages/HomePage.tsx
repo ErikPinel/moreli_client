@@ -6,12 +6,14 @@ import { RecommendedTeachersSection } from '@/features/home/components/Recommend
 import { SmartMatchSection } from '@/features/home/components/SmartMatchSection'
 import { TeacherAcquisitionSection } from '@/features/home/components/TeacherAcquisitionSection'
 import { TrustStrip } from '@/features/home/components/TrustStrip'
+import { HomeInquiryAlert } from '@/features/account/HomeInquiryAlert'
 
 export function HomePage() {
   return (
     <div dir="rtl">
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
+        <HomeInquiryAlert />
         <HeroSection />
         <TrustStrip />
         <SmartMatchSection />

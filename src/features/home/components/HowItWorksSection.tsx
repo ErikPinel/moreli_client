@@ -26,12 +26,11 @@ export function HowItWorksSection() {
     <section id="how-it-works" className="how-it-works" aria-labelledby="how-title">
       <div className="page-shell how-it-works__inner">
         <div className="how-it-works__heading">
-          <h2 id="how-title" className="section-title">איך זה עובד?</h2>
+          <h2 id="how-title" className="section-title">מהחיפוש לשיעור הראשון.</h2>
         </div>
         <ol className="steps-list">
           {steps.map(({ number, icon: Icon, title, description }) => (
             <li key={number}>
-              <span className="step-number">{number}</span>
               <span className="step-icon"><Icon aria-hidden="true" /></span>
               <div>
                 <h3>{title}</h3>

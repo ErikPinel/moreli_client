@@ -23,7 +23,7 @@ export function LoginPage({ mode = 'signin' }: LoginPageProps) {
   return (
     <div dir="rtl">
       <Header />
-      <main className="auth-page">
+      <main id="main-content" tabIndex={-1} className="auth-page">
         <div className="auth-shell">
           <section className="auth-visual" aria-label="לימוד אישי במורהלי">
             <img src={heroImage} alt="תלמידה לומדת בשיעור פרטי" />
@@ -68,7 +68,7 @@ export function AuthCallbackPage() {
 
 function AuthPageLoader() {
   return (
-    <main className="auth-page auth-page--loading" dir="rtl" role="status">
+    <main id="main-content" tabIndex={-1} className="auth-page auth-page--loading" dir="rtl" role="status">
       <Spinner className="size-7 text-primary" />
       <span className="sr-only">מתחברים...</span>
     </main>

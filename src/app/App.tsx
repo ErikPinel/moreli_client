@@ -1,13 +1,9 @@
-import { BrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AppProviders } from './providers'
 import { AppRouter } from './router'
 
+const router = createBrowserRouter([{ path: '*', element: <AppProviders><AppRouter /></AppProviders> }])
+
 export default function App() {
-  return (
-    <BrowserRouter>
-      <AppProviders>
-        <AppRouter />
-      </AppProviders>
-    </BrowserRouter>
-  )
+  return <RouterProvider router={router} />
 }

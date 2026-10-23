@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, CalendarDays, Check, CheckCircle2, Clock3, MessageCircle, XCircle } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { apiRequest } from '@/api/api-client'
+import { ApiError } from '@/api/api-error'
+import { TeacherAccessNotice } from './TeacherAccessPage'
 import { endpoints } from '@/api/endpoints'
 import { Button } from '@/components/ui/button'
 import { TimeSelect } from '@/features/account/TimeSelect'
@@ -24,6 +26,7 @@ export function TeacherDashboardPage() {
   const accepted = inquiriesQuery.isSuccess ? inquiriesQuery.data.items.filter((item) => item.status === 'accepted').length : null
   const teacher = profileQuery.data
   return <AccountShell title="לוח הבקרה" description="תמונת מצב עדכנית של פרופיל ההוראה והפניות שלכם.">
+    <TeacherAccessNotice />
     <div className="dashboard-stats"><article><MessageCircle /><div><strong>{newInquiries ?? '?'}</strong><span>ממתינות למענה</span></div></article><article><CheckCircle2 /><div><strong>{accepted ?? '?'}</strong><span>פניות שהתקבלו</span></div></article><article><CalendarDays /><div><strong>{scheduleQuery.isSuccess ? scheduleQuery.data.length : '?'}</strong><span>חלונות זמינות</span></div></article><article><Clock3 /><div><strong>{unreadQuery.isSuccess ? unreadQuery.data.count : '?'}</strong><span>התראות שלא נקראו</span></div></article></div>
     {inquiriesQuery.hasNextPage ? <p>ספירת הפניות מתייחסת ל-{inquiriesQuery.data?.items.length} הפניות האחרונות שנטענו. <Link to="/teacher/inquiries">לכל הפניות</Link></p> : null}
     {profileQuery.isError || scheduleQuery.isError || unreadQuery.isError ? <WorkspaceState tone="error"><p>חלק מנתוני לוח הבקרה לא נטענו.</p><Button variant="outline" onClick={() => { void profileQuery.refetch(); void scheduleQuery.refetch(); void unreadQuery.refetch() }}>ניסיון נוסף</Button></WorkspaceState> : null}
@@ -33,6 +36,7 @@ export function TeacherDashboardPage() {
 }
 
 export function TeacherInquiriesPage() {
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [status, setStatus] = useState<InquiryDto['status'] | ''>('')
   const [decision, setDecision] = useState<{ inquiry: InquiryDto; status: 'accepted' | 'declined' } | null>(null)
@@ -46,13 +50,14 @@ export function TeacherInquiriesPage() {
   const respond = useMutation({
     mutationFn: ({ id, status }: { id: string; status: 'accepted' | 'declined' }) => apiRequest(endpoints.respondInquiry(id), { method: 'PATCH', body: { status } }),
     onSuccess: (_, variables) => { refresh(); setDecision(null); toast.success(variables.status === 'accepted' ? 'הפנייה התקבלה. פרטי הקשר זמינים כעת.' : 'הפנייה נדחתה והתלמיד יקבל עדכון.') },
-    onError: () => { refresh(); toast.error('לא הצלחנו לעדכן. ייתכן שהפנייה כבר נענתה או פגה; רעננו ובדקו את המצב.') },
+    onError: (error) => { refresh(); if (error instanceof ApiError && error.status === 402) { setDecision(null); toast.error('לקבלת תלמיד חדש נוסף נדרשת גישה חודשית מאושרת ב־60 ש״ח.', { action: { label: 'פרטי הגישה', onClick: () => navigate('/teacher/access') } }); return } toast.error('לא הצלחנו לעדכן. ייתכן שהפנייה כבר נענתה, המועד נתפס או שהפנייה פגה; בדקו את המצב.') },
   })
   function chooseDecision(inquiry: InquiryDto, nextStatus: 'accepted' | 'declined') {
     respond.reset()
     setDecision({ inquiry, status: nextStatus })
   }
   return <AccountShell title="פניות מתלמידים" description="קראו את מטרת הלימוד ואשרו פניות שמתאימות לכם." actions={inquiriesQuery.hasNextPage ? <Button variant="outline" disabled={inquiriesQuery.isFetchingNextPage} onClick={() => void inquiriesQuery.fetchNextPage()}>פניות נוספות</Button> : undefined}>
+    <TeacherAccessNotice />
     <InquiryStatusFilter value={status} onChange={setStatus} />
     {inquiriesQuery.isPending ? <WorkspaceState>טוען פניות...</WorkspaceState> : null}
     {inquiriesQuery.isError ? <WorkspaceState tone="error"><p>לא הצלחנו לטעון פניות.</p><Button onClick={() => void inquiriesQuery.refetch()}>ניסיון נוסף</Button></WorkspaceState> : null}
@@ -61,6 +66,7 @@ export function TeacherInquiriesPage() {
       <header><div><span className={`status-pill status-pill--${inquiry.status}`}>{inquiryStatus(inquiry.status)}</span><h2>{studentName(inquiry)}</h2></div><time>{formatDate(inquiry.created_at)}</time></header>
       {inquiry.requested_start_at ? <p className="inquiry-card__schedule"><CalendarDays />{formatLessonTime(inquiry.requested_start_at)} · {inquiry.lesson_mode === 'in_person' ? 'פרונטלי' : 'אונליין'} · שעון ישראל{inquiry.requested_end_at ? ` · ${Math.round((Date.parse(inquiry.requested_end_at) - Date.parse(inquiry.requested_start_at)) / 60000)} דקות` : ''}</p> : null}
       <blockquote>{inquiry.message}</blockquote>
+      <Link className="text-link" to={`/teacher/inquiries/${inquiry.id}`}>פרטי הפנייה, השיעור ופרטי הקשר<ArrowLeft aria-hidden="true" /></Link>
       {['sent', 'viewed'].includes(inquiry.status) ? <div className="inquiry-card__actions"><Button disabled={respond.isPending || view.isPending} onClick={() => chooseDecision(inquiry, 'accepted')}><Check />קבלת הפנייה</Button><Button variant="outline" disabled={respond.isPending || view.isPending} onClick={() => chooseDecision(inquiry, 'declined')}><XCircle />דחייה</Button>{inquiry.status === 'sent' ? <Button variant="ghost" disabled={view.isPending || respond.isPending} onClick={() => view.mutate(inquiry.id)}>סימון כנקראה</Button> : null}</div> : null}
       {inquiry.status === 'accepted' ? <><p>הפנייה התקבלה. יש ליצור קשר ולסכם את מועד השיעור.</p><div className="inquiry-contact"><strong>פרטי התלמיד/ה</strong>{inquiry.student?.contact_email ? <a href={`mailto:${inquiry.student.contact_email}`}>{inquiry.student.contact_email}</a> : null}{inquiry.student?.phone ? <a href={`tel:${inquiry.student.phone}`}>{inquiry.student.phone}</a> : null}<Link to="/teacher/students">התלמידים שלי</Link></div></> : null}
     </article>)}</div>
@@ -73,7 +79,7 @@ export function TeacherSchedulePage() {
   const scheduleQuery = useTeacherSchedule()
   if (scheduleQuery.isPending) return <AccountShell title="זמינות שבועית" description=""><WorkspaceState>טוען זמינות...</WorkspaceState></AccountShell>
   if (scheduleQuery.isError) return <AccountShell title="זמינות שבועית" description=""><WorkspaceState tone="error">לא הצלחנו לטעון את הזמינות.</WorkspaceState></AccountShell>
-  return <ScheduleForm initial={scheduleQuery.data ?? []} onSaved={() => void queryClient.invalidateQueries({ queryKey: accountKeys.schedule })} />
+  return <ScheduleForm initial={scheduleQuery.data ?? []} onSaved={() => { void queryClient.invalidateQueries({ queryKey: accountKeys.schedule }); void queryClient.invalidateQueries({ queryKey: ['teachers', 'calendar'] }) }} />
 }
 
 export function TeacherStudentsPage() {
@@ -110,7 +116,7 @@ function ScheduleForm({ initial, onSaved }: { initial: AvailabilitySlotDto[]; on
     onError: () => toast.error('לא הצלחנו לשמור. ודאו שאין שעות חופפות.'),
   })
   const update = (index: number, field: keyof EditableSlot, value: number | string) => setSlots((current) => current.map((slot, slotIndex) => slotIndex === index ? { ...slot, [field]: value } : slot))
-  return <AccountShell title="זמינות שבועית" description="הגדירו חלונות קבועים שבהם תלמידים יכולים לבקש שיעור." actions={<Button onClick={() => mutation.mutate()} disabled={mutation.isPending}><Check />שמירת זמינות</Button>}>
+  return <AccountShell title="זמינות שבועית" description="הגדירו חלונות קבועים לשיעורים. שעות שבת מחושבות לפי המיקום ומוסרות מלוח התלמיד." actions={<Button onClick={() => mutation.mutate()} disabled={mutation.isPending}><Check />שמירת זמינות</Button>}>
     <section className="schedule-page"><header><CalendarDays /><div><h2>מערכת שבועית</h2><p>השעות לפי שעון ישראל · תצוגת 24 שעות</p></div></header><fieldset disabled={mutation.isPending}><div className="onboarding-schedule">{slots.map((slot, index) => <div className="onboarding-slot" key={index}><label><span>יום בשבוע</span><select value={slot.day_of_week} onChange={(event) => update(index, 'day_of_week', Number(event.target.value))}>{days.map((day, dayIndex) => <option key={day} value={dayIndex}>{day}</option>)}</select></label><TimeSelect label="שעת התחלה" value={slot.start_time} onChange={(value) => update(index, 'start_time', value)} /><TimeSelect label="שעת סיום" value={slot.end_time} onChange={(value) => update(index, 'end_time', value)} /><Button variant="ghost" aria-label={`הסרת חלון ${index + 1}`} onClick={() => setSlots((current) => current.filter((_, slotIndex) => slotIndex !== index))}>הסרה</Button></div>)}</div><Button variant="outline" onClick={() => setSlots((current) => [...current, { day_of_week: 0, start_time: '16:00', end_time: '18:00' }])}><CalendarDays />הוספת חלון</Button></fieldset>{mutation.isError ? <p role="alert">הזמינות לא נשמרה. ודאו ששעת הסיום אחרי שעת ההתחלה ושאין חפיפות.</p> : null}{slots.length === 0 ? <WorkspaceState>לא הוגדרה זמינות. הוסיפו חלון כדי שתלמידים ידעו מתי אפשר לפנות לשיעור.</WorkspaceState> : null}</section>
   </AccountShell>
 }

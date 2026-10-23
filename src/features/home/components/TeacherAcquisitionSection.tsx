@@ -8,18 +8,18 @@ export function TeacherAcquisitionSection() {
   if (profile?.role === 'teacher') return null
 
   return (
-    <section className="page-shell teacher-acquisition-section" aria-labelledby="teach-title">
-      <div className="teacher-acquisition">
+    <section className="teacher-acquisition-section" aria-labelledby="teach-title">
+      <div className="page-shell teacher-acquisition">
         <img className="teacher-acquisition__portrait" src={teacherPortrait} alt="" loading="lazy" />
         <div className="teacher-acquisition__copy">
-          <h2 id="teach-title">יודעים ללמד? בואו ללמד במורהלי</h2>
+          <h2 id="teach-title">הידע שלכם. ההתקדמות של מישהו אחר.</h2>
           <p>
             צרו פרופיל בחינם והתחילו לקבל פניות מתלמידים.
           </p>
         </div>
         <Link className="teacher-acquisition__cta" to="/teach">
           <UserRoundPlus aria-hidden="true" />
-          התחילו ללמד במורהלי
+          הצטרפות כמורה
           <ArrowLeft aria-hidden="true" />
         </Link>
         <ul className="teacher-acquisition__benefits">

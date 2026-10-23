@@ -1,12 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { BadgeCheck, Heart, Laptop, MapPin, Star } from 'lucide-react'
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { apiRequest } from '@/api/api-client'
 import { endpoints } from '@/api/endpoints'
 import { useAuth } from '@/auth/useAuth'
-import { accountKeys } from '@/features/account/useAccountData'
+import { accountKeys, useFavorites } from '@/features/account/useAccountData'
 import type { PublicTeacherDto } from '@/types/api'
 import { TeacherAvatar } from './TeacherAvatar'
 
@@ -19,13 +18,13 @@ type TeacherCardProps = {
 export function TeacherCard({ teacher, profilePath, availabilityLabel }: TeacherCardProps) {
   const { profile } = useAuth()
   const queryClient = useQueryClient()
-  const [isSaved, setIsSaved] = useState(false)
+  const favorites = useFavorites(profile?.role === 'student')
+  const isSaved = Boolean(favorites.data?.some(item => item.id === teacher.id))
   const favorite = useMutation({
-    mutationFn: () => apiRequest(endpoints.favorite(teacher.id), { method: 'POST' }),
+    mutationFn: () => apiRequest(endpoints.favorite(teacher.id), { method: isSaved ? 'DELETE' : 'POST' }),
     onSuccess: () => {
-      setIsSaved(true)
       void queryClient.invalidateQueries({ queryKey: accountKeys.favorites })
-      toast.success('המורה נשמר במועדפים')
+      toast.success(isSaved ? 'המורה הוסר מהמועדפים' : 'המורה נשמר במועדפים')
     },
     onError: () => toast.error('לא הצלחנו לשמור את המורה'),
   })
@@ -33,7 +32,7 @@ export function TeacherCard({ teacher, profilePath, availabilityLabel }: Teacher
   const subject = teacher.subjects[0]?.subject.name_he
   const level = teacher.levels[0]?.level.name_he
   const city = teacher.service_areas[0]?.city.name_he
-  const availability = availabilityLabel ?? (teacher.teaches_online ? 'זמינות השבוע' : null)
+  const availability = availabilityLabel
   const teacherPath = profilePath ?? `/teachers/${teacher.slug}`
 
   return (
@@ -49,9 +48,10 @@ export function TeacherCard({ teacher, profilePath, availabilityLabel }: Teacher
           className={`teacher-card__favorite ${isSaved ? 'is-saved' : ''}`}
           type="button"
           onClick={() => favorite.mutate()}
-          disabled={favorite.isPending || isSaved}
-          aria-label={`שמירת ${name} למועדפים`}
-          title="שמירה למועדפים"
+          disabled={favorite.isPending || favorites.isPending || favorites.isError}
+          aria-pressed={isSaved}
+          aria-label={isSaved ? `הסרת ${name} מהמועדפים` : `שמירת ${name} למועדפים`}
+          title={isSaved ? 'הסרה מהמועדפים' : 'שמירה למועדפים'}
         >
           <Heart className="size-4" aria-hidden="true" />
         </button> : <Link className="teacher-card__favorite" to="/login?intent=student" aria-label={`שמירת ${name} למועדפים`} title="שמירה למועדפים"><Heart className="size-4" aria-hidden="true" /></Link>}
@@ -72,8 +72,7 @@ export function TeacherCard({ teacher, profilePath, availabilityLabel }: Teacher
           </div>
           <span className="teacher-card__rating">
             <Star aria-hidden="true" />
-            {Number(teacher.average_rating).toFixed(1)}
-            <span>({teacher.review_count})</span>
+            {teacher.review_count > 0 ? <>{Number(teacher.average_rating).toFixed(1)}<span>({teacher.review_count})</span></> : 'ללא ביקורות עדיין'}
           </span>
         </div>
 

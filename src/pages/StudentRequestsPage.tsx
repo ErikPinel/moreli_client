@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, CheckCircle2, Pencil, Plus, Search, Send, XCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Pencil, Plus, RotateCcw, Search, Send, XCircle } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
 import { DateTime } from 'luxon'
 import { lessonStart } from '@/lib/lesson-time'
@@ -13,6 +13,7 @@ import { useCities, useLevels, useSubjects } from '@/features/search/hooks/useTa
 import { CatalogCombobox } from '@/features/search/components/CatalogCombobox'
 import { TeacherCard } from '@/features/teachers/components/TeacherCard'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import type { RankedTeacherDto, StudentRequestDto } from '@/types/api'
@@ -38,6 +39,7 @@ export function StudentRequestsPage() {
   const citiesQuery = useCities()
   const [formRequest, setFormRequest] = useState<StudentRequestDto | 'new' | null>(null)
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null)
+  const [closing, setClosing] = useState<StudentRequestDto | null>(null)
 
   const matchesQuery = useQuery({
     queryKey: ['account', 'matches', selectedRequest],
@@ -48,9 +50,16 @@ export function StudentRequestsPage() {
     mutationFn: (id: string) => apiRequest<StudentRequestDto>(endpoints.closeRequest(id), { method: 'POST' }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: accountKeys.requests })
+      setSelectedRequest(null)
+      setClosing(null)
       toast.success('הבקשה נסגרה')
     },
     onError: () => toast.error('לא הצלחנו לסגור את הבקשה'),
+  })
+  const reopenRequest = useMutation({
+    mutationFn: (id: string) => apiRequest<StudentRequestDto>(endpoints.reopenRequest(id), { method: 'POST' }),
+    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: accountKeys.requests }); setSelectedRequest(null); toast.success('הבקשה נפתחה מחדש. ניתן לערוך ולחשב התאמות עדכניות.') },
+    onError: () => toast.error('הבקשה לא נפתחה. רעננו ובדקו את המצב לפני ניסיון נוסף.'),
   })
   const runMatches = useMutation({
     mutationFn: (id: string) => apiRequest<RankedTeacherDto[]>(endpoints.requestMatches(id), { method: 'POST' }),
@@ -92,21 +101,23 @@ export function StudentRequestsPage() {
               {request.budget_max ? <span>עד ₪{request.budget_max}</span> : null}
             </div>
             <div className="request-item__actions">
-              {request.status !== 'closed' ? <Button onClick={() => runMatches.mutate(request.id)} disabled={runMatches.isPending}><Search />מציאת התאמות</Button> : null}
+              {['open', 'matched'].includes(request.status) ? <Button onClick={() => runMatches.mutate(request.id)} disabled={runMatches.isPending || closeRequest.isPending}><Search />מציאת התאמות</Button> : null}
               <Button variant="outline" onClick={() => setSelectedRequest(selectedRequest === request.id ? null : request.id)}>צפייה בהתאמות<ArrowLeft /></Button>
-              {request.status === 'open' ? <Button variant="outline" onClick={() => setFormRequest(request)}><Pencil />עריכת בקשה</Button> : null}
-              {request.status !== 'closed' ? <Button variant="ghost" onClick={() => closeRequest.mutate(request.id)}><XCircle />סגירת בקשה</Button> : null}
+              {['open', 'matched'].includes(request.status) ? <Button variant="outline" onClick={() => setFormRequest(request)}><Pencil />עריכת בקשה</Button> : null}
+              {['open', 'matched'].includes(request.status) ? <Button variant="ghost" disabled={closeRequest.isPending || runMatches.isPending} onClick={() => { closeRequest.reset(); setClosing(request) }}><XCircle />סגירת בקשה</Button> : null}
+              {request.status === 'closed' ? <Button variant="outline" disabled={reopenRequest.isPending} onClick={() => reopenRequest.mutate(request.id)}><RotateCcw />פתיחה מחדש</Button> : null}
             </div>
             {selectedRequest === request.id ? (
               <div className="matches-panel">
                 {matchesQuery.isPending ? <WorkspaceState>טוען התאמות...</WorkspaceState> : null}
+                {matchesQuery.isError ? <WorkspaceState tone="error"><p>לא הצלחנו לטעון את ההתאמות.</p><Button variant="outline" onClick={() => void matchesQuery.refetch()}>ניסיון נוסף</Button></WorkspaceState> : null}
                 {matchesQuery.data?.length === 0 ? <p>אין התאמות שמורות. לחצו על ״מציאת התאמות״ לחישוב חדש.</p> : null}
                 <div className="teacher-grid">
                   {matchesQuery.data?.map((match) => (
                     <div className="matched-teacher" key={match.teacher_id}>
                       <div className="matched-teacher__score"><strong>{Math.round(match.score)}%</strong><span>התאמה #{match.rank}</span></div>
                       <TeacherCard teacher={match.teacher} />
-                      <Link className="button-link" to={`/teachers/${match.teacher.slug}?schedule=1&requestId=${request.id}`}><Send />בקשת שיעור</Link>
+                      {['open', 'matched'].includes(request.status) ? <Link className="button-link" to={`/teachers/${match.teacher.slug}?schedule=1&requestId=${request.id}`}><Send />בקשת שיעור</Link> : null}
                     </div>
                   ))}
                 </div>
@@ -115,6 +126,7 @@ export function StudentRequestsPage() {
           </article>
         ))}
       </div>
+      <Dialog open={Boolean(closing)} onOpenChange={(open) => { if (!open && !closeRequest.isPending) setClosing(null) }}><DialogContent dir="rtl" showCloseButton={!closeRequest.isPending}><DialogHeader><DialogTitle>לסגור את בקשת הלימוד?</DialogTitle><DialogDescription>הבקשה תישמר ואפשר יהיה לפתוח אותה מחדש. סגירת בקשת ההתאמה אינה מבטלת פניות שכבר נשלחו למורים.</DialogDescription></DialogHeader>{closeRequest.isError ? <p role="alert" className="form-error">הסגירה לא הושלמה. רעננו ובדקו את מצב הבקשה.</p> : null}<DialogFooter><Button variant="outline" disabled={closeRequest.isPending} onClick={() => setClosing(null)}>ביטול</Button><Button disabled={closeRequest.isPending} onClick={() => { if (closing) closeRequest.mutate(closing.id) }}><XCircle />{closeRequest.isPending ? 'סוגר...' : 'סגירת הבקשה'}</Button></DialogFooter></DialogContent></Dialog>
     </AccountShell>
   )
 }

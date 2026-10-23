@@ -30,10 +30,11 @@ export function useStudentRequests() {
   })
 }
 
-export function useFavorites() {
+export function useFavorites(enabled = true) {
   return useQuery({
     queryKey: accountKeys.favorites,
     queryFn: () => apiRequest<PublicTeacherDto[]>(endpoints.favorites),
+    enabled,
   })
 }
 

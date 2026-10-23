@@ -67,7 +67,7 @@ export function ProfilePage({ kind }: ProfilePageProps) {
   return (
     <div className="profile-page" dir="rtl">
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <header className="profile-hero">
           <div className="page-shell profile-hero__inner">
             <div className="profile-avatar" aria-hidden="true">

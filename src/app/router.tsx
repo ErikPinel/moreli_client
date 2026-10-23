@@ -12,7 +12,17 @@ import { TeacherDashboardPage, TeacherInquiriesPage, TeacherSchedulePage, Teache
 import { TeachClaimPage, TeacherOnboardingPage } from '@/pages/TeacherOnboardingPage'
 import { TeacherPublicProfilePage, TeachersPage } from '@/pages/TeachersPage'
 import { TeacherApprovalPage } from '@/pages/TeacherApprovalPage'
-import { AdminPage } from '@/pages/AdminPage'
+import { AdminOnboardingPage, AdminReviewsPage } from '@/pages/AdminPage'
+import { AdminLayout } from '@/features/admin/AdminLayout'
+import { AdminOverviewPage } from '@/features/admin/AdminOverviewPage'
+import { AdminEmailPage } from '@/features/admin/AdminEmailPage'
+import { AdminHistoryPage } from '@/features/admin/AdminHistoryPage'
+import { AdminActivityPage, AdminPaymentsPage, AdminSupportPage } from '@/features/account/AdminEngagementPanel'
+import { TeacherReviewsPage } from '@/pages/TeacherReviewsPage'
+import { TeacherAccessPage } from '@/pages/TeacherAccessPage'
+import { TeacherAccessTermsPage } from '@/pages/TeacherAccessTermsPage'
+import { InquiryDetailPage } from '@/pages/InquiryDetailPage'
+import { SupportPage } from '@/pages/SupportPage'
 
 export function AppRouter() {
   return (
@@ -23,6 +33,9 @@ export function AppRouter() {
       <Route path="/match" element={<Navigate replace to="/student/requests" />} />
       <Route path="/login/*" element={<LoginPage />} />
       <Route path="/signup/*" element={<LoginPage mode="signup" />} />
+      <Route path="/teacher-access-terms" element={<TeacherAccessTermsPage />} />
+      <Route path="/support" element={<SupportPage />} />
+      <Route path="/support/:id" element={<SupportPage />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
       <Route element={<RequireAuth />}>
         <Route path="/teach" element={<TeachClaimPage />} />
@@ -35,6 +48,7 @@ export function AppRouter() {
           <Route path="/student/requests" element={<StudentRequestsPage />} />
           <Route path="/student/favorites" element={<StudentFavoritesPage />} />
           <Route path="/student/inquiries" element={<StudentInquiriesPage />} />
+          <Route path="/student/inquiries/:id" element={<InquiryDetailPage />} />
           <Route path="/student/reviews" element={<StudentReviewsPage />} />
           <Route path="/student/notifications" element={<NotificationsPage />} />
         </Route>
@@ -44,14 +58,27 @@ export function AppRouter() {
           <Route path="/teacher/onboarding" element={<TeacherOnboardingPage />} />
           <Route path="/teacher/dashboard" element={<TeacherDashboardPage />} />
           <Route path="/teacher/inquiries" element={<TeacherInquiriesPage />} />
+          <Route path="/teacher/inquiries/:id" element={<InquiryDetailPage />} />
           <Route path="/teacher/students" element={<TeacherStudentsPage />} />
+          <Route path="/teacher/reviews" element={<TeacherReviewsPage />} />
+          <Route path="/teacher/access" element={<TeacherAccessPage />} />
           <Route path="/teacher/schedule" element={<TeacherSchedulePage />} />
           <Route path="/teacher/notifications" element={<NotificationsPage />} />
           <Route path="/teacher/profile" element={<Navigate replace to="/teacher/onboarding" />} />
         </Route>
 
         <Route element={<RequireRole roles={['admin']} />}>
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverviewPage />} />
+            <Route path="payments" element={<AdminPaymentsPage />} />
+            <Route path="onboarding" element={<AdminOnboardingPage />} />
+            <Route path="reviews" element={<AdminReviewsPage />} />
+            <Route path="emails" element={<AdminEmailPage />} />
+            <Route path="history" element={<AdminHistoryPage />} />
+            <Route path="support" element={<AdminSupportPage />} />
+            <Route path="activity" element={<AdminActivityPage />} />
+            <Route path="*" element={<Navigate replace to="/admin" />} />
+          </Route>
           <Route path="/teacher-approval" element={<TeacherApprovalPage />} />
         </Route>
       </Route>

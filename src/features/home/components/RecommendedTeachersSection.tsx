@@ -14,8 +14,8 @@ export function RecommendedTeachersSection() {
     <section className="page-shell recommended-section" aria-labelledby="recommended-title">
       <div className="recommended-section__header">
         <div className="recommended-section__heading">
-          <h2 id="recommended-title" className="section-title">מורים מומלצים עבורך</h2>
-          <p>מורים מעולים שנבחרו בהתאמה להעדפות שלך</p>
+          <h2 id="recommended-title" className="section-title">מורים שכדאי להכיר</h2>
+          <p>מגוון מקצועות, רמות לימוד ודרכי למידה.</p>
         </div>
         <Link className="text-link" to="/teachers">
           הצגת הכל

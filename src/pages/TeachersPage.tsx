@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { formatIsraeliDate, lessonStart, upcomingDates, startTimesForDate, tomorrow } from "@/lib/lesson-time";
+import { formatIsraeliDate, today } from "@/lib/lesson-time";
 import { LessonDateInput } from '@/features/account/LessonDateInput';
+import { useTeacherCalendar } from '@/features/account/useEngagementData';
 import {
   BadgeCheck,
   CalendarDays,
@@ -54,6 +55,9 @@ type PublicReview = {
   rating: number;
   body: string | null;
   created_at: string;
+  updated_at: string;
+  teacher_reply: string | null;
+  teacher_reply_at: string | null;
 };
 
 export function TeachersPage() {
@@ -73,14 +77,12 @@ export function TeachersPage() {
   return (
     <div className="directory-page" dir="rtl">
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <div className="directory-context">
           <div className="page-shell">
             <p>דף הבית / מציאת מורה</p>
             <h1>{heading}</h1>
-            <span>
-              <strong>{total}</strong> מורים מתאימים
-            </span>
+            {teachers.isSuccess ? <span><strong>{total}</strong> מורים מתאימים</span> : <span role="status">{teachers.isError ? 'ספירת המורים אינה זמינה כרגע' : 'טוען את תוצאות החיפוש...'}</span>}
           </div>
         </div>
         <div className="page-shell directory-content">
@@ -302,6 +304,7 @@ export function TeacherPublicProfilePage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [contacting, setContacting] = useState(false);
+  const [reviewsPage, setReviewsPage] = useState(1);
   const teacher = useQuery({
     queryKey: ["teachers", "detail", slug],
     queryFn: () => apiRequest<PublicTeacherDto>(endpoints.teacher(slug)),
@@ -316,10 +319,10 @@ export function TeacherPublicProfilePage() {
     enabled: Boolean(slug),
   });
   const reviews = useQuery({
-    queryKey: ["teachers", "reviews", slug],
+    queryKey: ["teachers", "reviews", slug, reviewsPage],
     queryFn: () =>
       apiRequest<PaginatedDto<PublicReview>>(
-        `${endpoints.teacherReviews(slug)}?page=1&limit=20`,
+        `${endpoints.teacherReviews(slug)}?page=${reviewsPage}&limit=20`,
       ),
     enabled: Boolean(slug),
   });
@@ -330,7 +333,7 @@ export function TeacherPublicProfilePage() {
     return (
       <div dir="rtl">
         <Header />
-        <main className="page-shell teacher-public">
+        <main id="main-content" tabIndex={-1} className="page-shell teacher-public">
           <WorkspaceState>טוען פרופיל מורה...</WorkspaceState>
         </main>
         <Footer />
@@ -340,7 +343,7 @@ export function TeacherPublicProfilePage() {
     return (
       <div dir="rtl">
         <Header />
-        <main className="page-shell teacher-public">
+        <main id="main-content" tabIndex={-1} className="page-shell teacher-public">
           <WorkspaceState tone="error">
             הפרופיל לא נמצא או שעדיין לא פורסם.
           </WorkspaceState>
@@ -373,7 +376,7 @@ export function TeacherPublicProfilePage() {
   return (
     <div className="teacher-public-page" dir="rtl">
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="teacher-public-hero">
           <div className="page-shell">
             <TeacherAvatar
@@ -397,7 +400,7 @@ export function TeacherPublicProfilePage() {
               <div>
                 <span>
                   <Star />
-                  {Number(item.average_rating).toFixed(1)} ({item.review_count})
+                  {item.review_count > 0 ? `${Number(item.average_rating).toFixed(1)} (${item.review_count})` : 'עדיין אין ביקורות'}
                 </span>
                 <span>
                   <Clock3 />
@@ -408,7 +411,7 @@ export function TeacherPublicProfilePage() {
             <aside>
               <strong>{formatMoney(item.hourly_price, item.currency)}</strong>
               <span>לשעה</span>
-              <Button onClick={contact}>
+              <Button onClick={contact} disabled={availability.isPending || availability.isError}>
                 <CalendarDays />
                 בקשת שיעור
               </Button>
@@ -451,7 +454,7 @@ export function TeacherPublicProfilePage() {
               <CalendarDays />
               זמינות שבועית
             </h2>
-            {availability.data?.slots.length ? (
+            {availability.isPending ? <p role="status">טוען זמינות...</p> : availability.isError ? <div role="alert"><p>לא הצלחנו לטעון זמינות. יש לטעון אותה לפני שליחת בקשה.</p><Button variant="outline" onClick={() => void availability.refetch()}>ניסיון נוסף</Button></div> : availability.data?.slots.length ? (
               availability.data.slots.map((slot) => (
                 <div className="public-slot" key={slot.id}>
                   <strong>{days[slot.day_of_week]}</strong>
@@ -467,35 +470,38 @@ export function TeacherPublicProfilePage() {
         </div>
         <section className="page-shell public-reviews">
           <h2>ביקורות תלמידים</h2>
-          {reviews.data?.items.length ? (
+          <p className="text-sm text-muted-foreground mb-4">ביקורות מתלמידים שפנייתם למורה התקבלה. קבלת פנייה אינה אישור שהתקיים שיעור.</p>
+          {reviews.isPending ? <p role="status">טוען ביקורות...</p> : reviews.isError ? <div role="alert"><p>לא הצלחנו לטעון את הביקורות.</p><Button variant="outline" onClick={() => void reviews.refetch()}>ניסיון נוסף</Button></div> : reviews.data?.items.length ? (
             reviews.data.items.map((review) => (
               <article key={review.id}>
-                <div>
+                <div role="img" aria-label={`${review.rating} מתוך 5`}>
                   {Array.from({ length: 5 }, (_, index) => (
                     <Star
                       key={index}
+                      aria-hidden="true"
                       className={index < review.rating ? "is-filled" : ""}
                     />
                   ))}
                 </div>
-                <p>{review.body || "דירוג ללא טקסט"}</p>
-                <time>
+                <p className="whitespace-pre-wrap break-words">{review.body || "דירוג ללא טקסט"}</p>
+                <time dateTime={review.created_at}>
                   {new Intl.DateTimeFormat("he-IL", {
                     dateStyle: "medium",
                   }).format(new Date(review.created_at))}
                 </time>
+                {review.teacher_reply ? <blockquote className="review-teacher-reply"><strong>תגובת המורה</strong><p>{review.teacher_reply}</p>{review.teacher_reply_at ? <time dateTime={review.teacher_reply_at}>{new Date(review.teacher_reply_at).toLocaleDateString('he-IL')}</time> : null}</blockquote> : null}
               </article>
             ))
           ) : (
             <p>עדיין אין ביקורות על המורה.</p>
           )}
+          {reviewsPage > 1 || reviews.data?.hasMore ? <nav className="review-actions" aria-label="עמודי ביקורות"><Button variant="outline" disabled={reviewsPage === 1 || reviews.isFetching} onClick={() => setReviewsPage(reviewsPage - 1)}>הקודם</Button><span>עמוד {reviewsPage}</span><Button variant="outline" disabled={!reviews.data?.hasMore || reviews.isFetching} onClick={() => setReviewsPage(reviewsPage + 1)}>הבא</Button></nav> : null}
         </section>
       </main>
       <Footer />
-      {scheduleOpen ? (
+      {scheduleOpen && availability.isSuccess ? (
         <LessonRequestDialog
           teacher={item}
-          slots={availability.data?.slots ?? []}
           onClose={closeSchedule}
         />
       ) : null}
@@ -505,11 +511,9 @@ export function TeacherPublicProfilePage() {
 
 function LessonRequestDialog({
   teacher,
-  slots,
   onClose,
 }: {
   teacher: PublicTeacherDto;
-  slots: AvailabilitySlotDto[];
   onClose: () => void;
 }) {
   const { profile } = useAuth();
@@ -520,12 +524,14 @@ function LessonRequestDialog({
   const [phone, setPhone] = useState(profile?.phone ?? '');
   const [consent, setConsent] = useState(false);
   const [sent, setSent] = useState(false);
-  const dates = upcomingDates(slots);
-  const [date, setDate] = useState(() => dates[0]?.value ?? tomorrow());
+  const [chosenDate, setChosenDate] = useState<string | null>(null);
   const [duration, setDuration] = useState(60);
-  const times = startTimesForDate(slots, date, duration);
-  const [time, setTime] = useState(() => times[0] ?? "16:00");
-  const selectedTime = times.length && !times.includes(time) ? times[0] : time;
+  const calendar = useTeacherCalendar(teacher.slug, duration);
+  const date = chosenDate ?? calendar.data?.days.find((day) => day.times.length > 0)?.date ?? '';
+  const times = calendar.data?.days.find((day) => day.date === date)?.times ?? [];
+  const [time, setTime] = useState('');
+  const selectedSlot = times.find((slot) => slot.time === time) ?? times[0];
+  const selectedTime = selectedSlot?.time ?? '';
   const [lessonMode, setLessonMode] = useState<"online" | "in_person">(
     teacher.teaches_online ? "online" : "in_person",
   );
@@ -535,9 +541,7 @@ function LessonRequestDialog({
   const mutation = useMutation({
     mutationFn: async () => {
       if (!consent || !profile?.contact_email) throw new Error('Verified contact details and consent are required');
-      if (!date || date < tomorrow() || (slots.length > 0 && !times.includes(selectedTime))) throw new Error('Invalid requested date or availability');
-      const requestedStart = lessonStart(date, selectedTime);
-      const requestedEnd = new Date(requestedStart.getTime() + duration * 60_000);
+      if (!date || !selectedSlot || calendar.isFetching || Date.parse(selectedSlot.startAt) <= calendar.dataUpdatedAt) throw new Error('Invalid requested date or availability');
       await apiRequest(endpoints.currentUser, { method: 'PATCH', body: { firstName, lastName, phone } });
       return apiRequest(endpoints.inquiries, {
         method: "POST",
@@ -546,8 +550,8 @@ function LessonRequestDialog({
           contactSharingConsent: consent,
           ...(requestParams.get('requestId') ? { requestId: requestParams.get('requestId') } : {}),
           message,
-          requestedStartAt: requestedStart.toISOString(),
-          requestedEndAt: requestedEnd.toISOString(),
+          requestedStartAt: selectedSlot.startAt,
+          requestedEndAt: selectedSlot.endAt,
           lessonMode,
         },
       });
@@ -592,19 +596,13 @@ function LessonRequestDialog({
           <label><span>טלפון</span><Input required type="tel" dir="ltr" minLength={7} maxLength={30} value={phone} onChange={(event) => setPhone(event.target.value)} /></label>
           <label><span>אימייל מאומת</span><Input disabled dir="ltr" value={profile?.contact_email ?? ''} /></label>
         </div>
-        {slots.length > 0 && times.length === 0 ? <p role="status">אין חלון פנוי באורך שנבחר ביום הזה. בחרו תאריך אחר או משך קצר יותר.</p> : null}
+        {calendar.isPending ? <p role="status">טוען את לוח המורה...</p> : calendar.isError ? <div role="alert"><p>לא ניתן לטעון את לוח המורה. לא תישלח בקשה ללא בדיקת זמינות.</p><Button type="button" variant="outline" onClick={() => void calendar.refetch()}>ניסיון נוסף</Button></div> : <div className="lesson-calendar-summary"><p><CalendarDays aria-hidden="true" />{calendar.data?.usesDefault ? 'ברירת מחדל 09:00–21:00' : 'לפי הזמינות שהמורה הגדיר/ה'} · שעון ישראל</p><p>מועדי שבת מחושבים לפי {calendar.data?.locationName}. {calendar.data?.locationFallback ? 'לא נמצאו קואורדינטות לעיר; נעשה שימוש בירושלים עד להשלמת הפרטים.' : ''}</p>{!times.length ? <p role="status">אין חלון פנוי באורך שנבחר ביום הזה. בחרו תאריך אחר או משך קצר יותר.</p> : null}</div>}
         {mutation.isError ? <p role="alert">הבקשה לא נשלחה. בדקו שהמועד עתידי ושפרטי הקשר מלאים. אם החיבור נקטע, בדקו בפניות שלי לפני שליחה חוזרת.</p> : null}
         <div className="lesson-request-form__grid">
-          <LessonDateInput value={date} onChange={setDate} min={tomorrow()} isAvailable={(candidate) => !slots.length || startTimesForDate(slots, candidate, duration).length > 0} />
+          {calendar.data ? <LessonDateInput value={date} onChange={setChosenDate} min={today()} isAvailable={(candidate) => Boolean(calendar.data?.days.some((day) => day.date === candidate && day.times.length > 0))} /> : <div><span>תאריך</span><p>ממתינים ללוח המורה.</p></div>}
           <label>
             <span>שעה</span>
-            {times.length ? (
-              <select value={selectedTime} onChange={(event) => setTime(event.target.value)}>
-                {times.map((option) => <option value={option} key={option}>{option}</option>)}
-              </select>
-            ) : (
-              <Input type="time" value={time} onChange={(event) => setTime(event.target.value)} required />
-            )}
+            <select dir="ltr" value={selectedTime} disabled={!times.length || calendar.isFetching} onChange={(event) => setTime(event.target.value)} required><option value="" disabled>אין שעה זמינה</option>{times.map((option) => <option value={option.time} key={option.startAt}>{option.time}</option>)}</select>
           </label>
           <label>
             <span>משך</span>
@@ -634,7 +632,7 @@ function LessonRequestDialog({
         />
         </label>
         <label className="lesson-request-form__privacy"><input required type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} /> אני מסכים/ה לשיתוף האימייל והטלפון עם המורה לאחר קבלת הבקשה.</label>
-        <Button type="submit" disabled={mutation.isPending || !date || date < tomorrow() || !selectedTime || !consent || !profile?.contact_email || (slots.length > 0 && times.length === 0)}>
+        <Button type="submit" disabled={mutation.isPending || calendar.isFetching || calendar.isError || !date || date < today() || !selectedSlot || !consent || !profile?.contact_email}>
           <CalendarDays />
           {mutation.isPending ? "שולח בקשה..." : "שליחת בקשת שיעור"}
         </Button>

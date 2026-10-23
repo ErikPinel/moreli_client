@@ -30,7 +30,7 @@ export function TeacherApprovalPage() {
     mutationFn: () => apiRequest<{ approved: boolean }>(endpoints.approveTeacher, { method: 'POST', body: { token } }),
   })
 
-  return <div className="approval-page" dir="rtl"><Header /><main className="page-shell approval-page__main">
+  return <div className="approval-page" dir="rtl"><Header /><main id="main-content" tabIndex={-1} className="page-shell approval-page__main">
     {token && preview.isPending ? <WorkspaceState>בודקים את קישור האישור...</WorkspaceState> : null}
     {preview.isError || !token ? <WorkspaceState tone="error">קישור האישור אינו תקין או שפג תוקפו.</WorkspaceState> : null}
     {preview.data && !approval.isSuccess ? <section><ShieldCheck /><p>בדיקת פרופיל מורה</p><h1>{preview.data.name}</h1><h2>{preview.data.headline}</h2><dl><div><dt>סטטוס פרופיל</dt><dd>{preview.data.profileStatus}</dd></div><div><dt>סטטוס אימות</dt><dd>{preview.data.verificationStatus}</dd></div></dl>{preview.data.profileStatus === 'pending' ? <Button onClick={() => approval.mutate()} disabled={approval.isPending}><BadgeCheck />{approval.isPending ? 'מאשר...' : 'אישור ופרסום המורה'}</Button> : <p>הפרופיל אינו ממתין לאישור.</p>}{approval.isError ? <p role="alert">האישור נכשל. ייתכן שהקישור כבר נוצל או שהפרופיל השתנה.</p> : null}</section> : null}

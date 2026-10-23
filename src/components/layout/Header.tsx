@@ -1,6 +1,6 @@
 import { UserButton } from '@clerk/react'
 import { Menu, UserRound, UserRoundPlus, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/auth/useAuth'
@@ -14,6 +14,15 @@ const publicNavigation = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const menuButton = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (!isOpen) return
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { setIsOpen(false); menuButton.current?.focus() }
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [isOpen])
   const navigate = useNavigate()
   const { profile, signOut, user } = useAuth()
   const accountPath = profile
@@ -38,6 +47,7 @@ export function Header() {
 
   return (
     <header className="site-header" dir="rtl">
+      <a className="skip-link" href="#main-content">דילוג לתוכן</a>
       <div className="page-shell site-header__inner">
         <Logo />
 
@@ -65,7 +75,7 @@ export function Header() {
             <UserButton />
           ) : null}
           <Link className="site-actions__teach" to={profile?.role === 'teacher' ? '/teacher/dashboard' : '/teach'}>
-            {profile?.role === 'teacher' ? 'לוח המורה' : 'התחילו ללמד במורהלי'}
+            {profile?.role === 'teacher' ? 'לוח המורה' : 'הצטרפות כמורה'}
             <UserRoundPlus className="size-4" aria-hidden="true" />
           </Link>
         </div>
@@ -77,10 +87,12 @@ export function Header() {
             </Link>
           </Button>
           <Button
+            ref={menuButton}
             size="icon"
             variant="ghost"
             aria-label={isOpen ? 'סגירת תפריט' : 'פתיחת תפריט'}
             aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
             onClick={() => setIsOpen((open) => !open)}
           >
             {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -89,7 +101,7 @@ export function Header() {
       </div>
 
       {isOpen ? (
-        <nav className="mobile-nav" aria-label="ניווט למובייל">
+        <nav id="mobile-navigation" className="mobile-nav" aria-label="ניווט למובייל">
           {navigation.map((item) => (
             <Link key={item.to} to={item.to} onClick={() => setIsOpen(false)}>
               {item.label}
@@ -115,7 +127,7 @@ export function Header() {
             </>
           )}
           <Link className="text-primary" to={profile?.role === 'teacher' ? '/teacher/dashboard' : '/teach'} onClick={() => setIsOpen(false)}>
-            {profile?.role === 'teacher' ? 'לוח המורה' : 'התחילו ללמד במורהלי'}
+            {profile?.role === 'teacher' ? 'לוח המורה' : 'הצטרפות כמורה'}
           </Link>
         </nav>
       ) : null}

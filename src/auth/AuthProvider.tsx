@@ -1,11 +1,14 @@
 import { useAuth as useClerkAuth, useClerk, useUser } from '@clerk/react'
 import { useQuery } from '@tanstack/react-query'
+import { LogOut, MailCheck, RefreshCw, Settings } from 'lucide-react'
 import { type PropsWithChildren, useEffect } from 'react'
 import { apiRequest, setAccessTokenProvider } from '@/api/api-client'
 import { ApiError } from '@/api/api-error'
 import { endpoints } from '@/api/endpoints'
+import { Button } from '@/components/ui/button'
 import type { ProfileDto } from '@/types/api'
 import { AuthContext } from './auth-context'
+import { EmailVerificationForm } from './EmailVerificationForm'
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const clerk = useClerk()
@@ -70,7 +73,26 @@ export function AuthProvider({ children }: PropsWithChildren) {
         signOut,
       }}
     >
-      {isSignedIn && profileQuery.isError ? <main dir="rtl" className="page-shell py-12 space-y-4" role="alert"><h1>{needsEmailVerification ? 'נדרש אימות כתובת המייל' : 'לא הצלחנו לטעון את החשבון'}</h1><p>{needsEmailVerification ? 'יש להוסיף ולאמת כתובת מייל ראשית בחשבון כדי להמשיך.' : 'נסו שוב בעוד רגע. אם הבעיה נמשכת, פנו לתמיכה.'}</p>{needsEmailVerification ? <button type="button" className="button-link" onClick={() => clerk.openUserProfile()}>ניהול החשבון ואימות המייל</button> : null}<button type="button" className="button-link" disabled={profileQuery.isFetching} onClick={() => void profileQuery.refetch()}>{needsEmailVerification ? 'אימתתי את המייל, בדיקה מחדש' : 'ניסיון נוסף'}</button><button type="button" className="button-link" onClick={() => void signOut()}>התנתקות</button></main> : children}
+      {isSignedIn && profileQuery.isError ? (
+        <main id="main-content" tabIndex={-1} dir="rtl" className="page-shell auth-recovery">
+          <div className="auth-recovery__content">
+            <MailCheck aria-hidden="true" className="auth-recovery__mark" />
+            <h1>{needsEmailVerification ? 'נדרש אימות כתובת המייל' : 'לא הצלחנו לטעון את החשבון'}</h1>
+            <p>{needsEmailVerification ? 'יש להוסיף ולאמת כתובת מייל ראשית בחשבון כדי להמשיך.' : 'נסו שוב בעוד רגע. אם הבעיה נמשכת, פנו לתמיכה.'}</p>
+            {needsEmailVerification && user?.primaryEmailAddress ? (
+              <EmailVerificationForm key={user.primaryEmailAddress.id} email={user.primaryEmailAddress} onVerified={async () => {
+                await user.reload()
+                await profileQuery.refetch()
+              }} />
+            ) : null}
+            <div className="auth-recovery__secondary">
+              {needsEmailVerification ? <Button type="button" variant="ghost" onClick={() => clerk.openUserProfile()}><Settings aria-hidden="true" />ניהול החשבון ואימות המייל</Button> : null}
+              <Button type="button" variant={needsEmailVerification ? 'ghost' : 'default'} disabled={profileQuery.isFetching} onClick={() => void profileQuery.refetch()}><RefreshCw aria-hidden="true" />{needsEmailVerification ? 'אימתתי את המייל, בדיקה מחדש' : 'ניסיון נוסף'}</Button>
+              <Button type="button" variant="ghost" onClick={() => void signOut()}><LogOut aria-hidden="true" />התנתקות</Button>
+            </div>
+          </div>
+        </main>
+      ) : children}
     </AuthContext.Provider>
   )
 }

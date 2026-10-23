@@ -26,6 +26,8 @@ export function tomorrow() {
   return DateTime.now().setZone(zone).plus({ days: 1 }).toISODate()!
 }
 
+export function today() { return DateTime.now().setZone(zone).toISODate()! }
+
 export function upcomingDates(slots: AvailabilitySlotDto[]) {
   if (!slots.length) return []
   return Array.from({ length: 28 }, (_, index) => DateTime.now().setZone(zone).startOf('day').plus({ days: index + 1 }))

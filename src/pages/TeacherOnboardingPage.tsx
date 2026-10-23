@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BadgeCheck, CalendarDays, Camera, Check, ChevronDown, Clock3, GraduationCap, MapPin, Save } from 'lucide-react'
-import { type ChangeEvent, type FormEvent, type ReactNode, useRef, useState } from 'react'
+import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link, Navigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -14,6 +14,8 @@ import { AccountShell, WorkspaceState } from '@/features/account/AccountShell'
 import { AvatarCropDialog } from '@/features/account/AvatarCropDialog'
 import { TimeSelect } from '@/features/account/TimeSelect'
 import { accountKeys, useTeacherProfile } from '@/features/account/useAccountData'
+import { clearOnboardingDraft, readOnboardingDraft, writeOnboardingDraft, type OnboardingDraft } from '@/features/account/onboarding-draft'
+import { UnsavedChangesDialog } from '@/features/account/UnsavedChangesDialog'
 import { useCities, useLevels, useSubjects } from '@/features/search/hooks/useTaxonomies'
 import { CatalogCombobox } from '@/features/search/components/CatalogCombobox'
 import { catalogs } from '@/data/catalogs'
@@ -43,40 +45,59 @@ type FormTeacher = Pick<TeacherOnboardingDto, 'profile' | 'profile_status' | 'he
 function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeacher; isNew?: boolean }) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const draftOwner = user ? `${user.id}:${isNew ? 'new' : 'edit'}` : null
+  const [restoredDraft] = useState(() => {
+    try { return draftOwner ? readOnboardingDraft(sessionStorage, draftOwner) : null } catch { return null }
+  })
+  const [savedDraft, setSavedDraft] = useState<OnboardingDraft | null>(null)
   const [activeStep, setActiveStep] = useState(0)
   const [acceptedTerms, setAcceptedTerms] = useState(false)
-  const [avatarPath, setAvatarPath] = useState(teacher.profile.avatar_path)
+  const [avatarPath, setAvatarPath] = useState(restoredDraft?.avatarPath ?? teacher.profile.avatar_path)
   const [avatarPending, setAvatarPending] = useState(false)
   const alertRef = useRef<HTMLDivElement>(null)
   const subjectsQuery = useSubjects()
   const levelsQuery = useLevels()
   const citiesQuery = useCities()
-  const [firstName, setFirstName] = useState(teacher.profile.first_name)
-  const [lastName, setLastName] = useState(teacher.profile.last_name)
-  const [phone, setPhone] = useState(teacher.profile.phone ?? '')
-  const [selectedCity, setSelectedCity] = useState<string>()
+  const [firstName, setFirstName] = useState(restoredDraft?.firstName ?? teacher.profile.first_name)
+  const [lastName, setLastName] = useState(restoredDraft?.lastName ?? teacher.profile.last_name)
+  const [phone, setPhone] = useState(restoredDraft?.phone ?? teacher.profile.phone ?? '')
+  const [selectedCity, setSelectedCity] = useState<string | undefined>(restoredDraft?.citySlug)
   const citySlug = selectedCity ?? citiesQuery.data?.find((item) => item.id === teacher.profile.city_id)?.slug ?? ''
-  const [headline, setHeadline] = useState(teacher.headline)
-  const [bio, setBio] = useState(teacher.bio)
-  const [price, setPrice] = useState(String(teacher.hourly_price || ''))
-  const [experience, setExperience] = useState(isNew ? '' : String(teacher.years_experience))
-  const [online, setOnline] = useState(teacher.teaches_online)
-  const [inPerson, setInPerson] = useState(teacher.teaches_in_person)
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>()
+  const [headline, setHeadline] = useState(restoredDraft?.headline ?? teacher.headline)
+  const [bio, setBio] = useState(restoredDraft?.bio ?? teacher.bio)
+  const [price, setPrice] = useState(restoredDraft?.price ?? String(teacher.hourly_price || ''))
+  const [experience, setExperience] = useState(restoredDraft?.experience ?? (isNew ? '' : String(teacher.years_experience)))
+  const [online, setOnline] = useState(restoredDraft?.online ?? teacher.teaches_online)
+  const [inPerson, setInPerson] = useState(restoredDraft?.inPerson ?? teacher.teaches_in_person)
+  const [selectedSubjects, setSelectedSubjects] = useState<string[] | undefined>(restoredDraft?.subjectSlugs)
   const subjectSlugs = selectedSubjects ?? teacher.subjects.flatMap((item) => {
     const subject = subjectsQuery.data?.find((subject) => subject.id === item.subject_id)
     return subject ? [subject.slug] : []
   })
-  const [levelIds, setLevelIds] = useState(() => teacher.levels.map((item) => item.level_id))
-  const [selectedAreas, setSelectedAreas] = useState<string[]>()
+  const [levelIds, setLevelIds] = useState(() => restoredDraft?.levelIds ?? teacher.levels.map((item) => item.level_id))
+  const [selectedAreas, setSelectedAreas] = useState<string[] | undefined>(restoredDraft?.citySlugs)
   const citySlugs = selectedAreas ?? teacher.service_areas.flatMap((item) => {
     const city = citiesQuery.data?.find((city) => city.id === item.city_id)
     return city ? [city.slug] : []
   })
-  const [slots, setSlots] = useState<EditableSlot[]>(() => teacher.availability.map(({ day_of_week, start_time, end_time }) => ({ day_of_week, start_time: start_time.slice(0, 5), end_time: end_time.slice(0, 5) })))
+  const [slots, setSlots] = useState<EditableSlot[]>(() => restoredDraft?.slots ?? (isNew ? Array.from({ length: 7 }, (_, day_of_week) => ({ day_of_week, start_time: '09:00', end_time: '21:00' })) : teacher.availability.map(({ day_of_week, start_time, end_time }) => ({ day_of_week, start_time: start_time.slice(0, 5), end_time: end_time.slice(0, 5) }))))
   const [saveError, setSaveError] = useState('')
   const [savedMessage, setSavedMessage] = useState('')
   const catalogsReady = subjectsQuery.isSuccess && citiesQuery.isSuccess && levelsQuery.isSuccess
+  const currentDraft: OnboardingDraft = { firstName, lastName, phone, citySlug, avatarPath, headline, bio, price, experience, online, inPerson, subjectSlugs, levelIds, citySlugs, slots }
+  const serverDraft: OnboardingDraft = {
+    firstName: teacher.profile.first_name, lastName: teacher.profile.last_name, phone: teacher.profile.phone ?? '', citySlug: citiesQuery.data?.find(item => item.id === teacher.profile.city_id)?.slug ?? '', avatarPath: teacher.profile.avatar_path,
+    headline: teacher.headline, bio: teacher.bio, price: String(teacher.hourly_price || ''), experience: isNew ? '' : String(teacher.years_experience), online: teacher.teaches_online, inPerson: teacher.teaches_in_person,
+    subjectSlugs: teacher.subjects.flatMap(item => subjectsQuery.data?.find(subject => subject.id === item.subject_id)?.slug ?? []), levelIds: teacher.levels.map(item => item.level_id), citySlugs: teacher.service_areas.flatMap(item => citiesQuery.data?.find(city => city.id === item.city_id)?.slug ?? []),
+    slots: isNew ? Array.from({ length: 7 }, (_, day_of_week) => ({ day_of_week, start_time: '09:00', end_time: '21:00' })) : teacher.availability.map(({ day_of_week, start_time, end_time }) => ({ day_of_week, start_time: start_time.slice(0, 5), end_time: end_time.slice(0, 5) })),
+  }
+  const draftJson = JSON.stringify(currentDraft)
+  const isDirty = catalogsReady ? draftJson !== JSON.stringify(savedDraft ?? serverDraft) : Boolean(restoredDraft)
+  useEffect(() => {
+    if (!draftOwner || !isDirty) return
+    try { writeOnboardingDraft(sessionStorage, draftOwner, JSON.parse(draftJson) as OnboardingDraft) } catch { return }
+  }, [draftOwner, isDirty, draftJson])
   const slotErrors = slots.flatMap((slot, index) => {
     if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.start_time) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.end_time) || slot.start_time >= slot.end_time) return [`חלון ${index + 1}: שעת הסיום חייבת להיות אחרי שעת ההתחלה`]
     if (slots.some((other, otherIndex) => otherIndex < index && other.day_of_week === slot.day_of_week && other.start_time < slot.end_time && slot.start_time < other.end_time)) return [`חלון ${index + 1}: קיימת חפיפה ביום ${days[slot.day_of_week]}`]
@@ -122,30 +143,12 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
         await apiRequest(`${endpoints.currentTeacher}/onboarding`, { method: 'POST', body: { acceptTerms: acceptedTerms, firstName, lastName, phone, citySlug, avatarPath, headline, bio, hourlyPrice: Number(price), yearsExperience: Number(experience), teachesOnline: online, teachesInPerson: inPerson, subjectSlugs, levelIds, citySlugs, slots: slots.map((slot) => ({ dayOfWeek: slot.day_of_week, startTime: slot.start_time, endTime: slot.end_time, timezone: 'Asia/Jerusalem', isActive: true })) } })
         return { submittedForReview: true }
       }
-      if (teacher.profile_status === 'published' && inPerson && !teacher.teaches_in_person) {
-        await apiRequest(endpoints.teacherServiceAreas, { method: 'PUT', body: { citySlugs } })
-      }
-      if (teacher.profile_status === 'published' && !online && teacher.teaches_online) {
-        await apiRequest(endpoints.teacherAvailability, { method: 'PUT', body: { slots: slots.map((slot) => ({ dayOfWeek: slot.day_of_week, startTime: slot.start_time, endTime: slot.end_time, timezone: 'Asia/Jerusalem', isActive: true })) } })
-      }
-      await apiRequest(endpoints.currentUser, { method: 'PATCH', body: { firstName, lastName, phone, ...(citySlug ? { citySlug } : {}) } })
-      await apiRequest(endpoints.currentTeacher, { method: 'PATCH', body: { headline, bio, hourlyPrice: Number(price), currency: teacher.currency, yearsExperience: Number(experience), teachesOnline: online, teachesInPerson: inPerson } })
-      const results = await Promise.allSettled([
-        apiRequest(endpoints.teacherSubjects, { method: 'PUT', body: { subjects: subjectSlugs.map((subjectSlug) => ({ subjectSlug })) } }),
-        apiRequest(endpoints.teacherLevels, { method: 'PUT', body: { levelIds } }),
-        apiRequest(endpoints.teacherServiceAreas, { method: 'PUT', body: { citySlugs } }),
-        apiRequest(endpoints.teacherAvailability, { method: 'PUT', body: { slots: slots.map((slot) => ({ dayOfWeek: slot.day_of_week, startTime: slot.start_time, endTime: slot.end_time, timezone: 'Asia/Jerusalem', isActive: true })) } }),
-      ])
-      const failed = results.flatMap((result, index) => result.status === 'rejected' ? [['מקצועות', 'רמות לימוד', 'ערים', 'זמינות שבועית'][index]] : [])
-      if (failed.length) throw new Error(`חלק מהפרטים נשמרו, אך לא הצלחנו לשמור: ${failed.join(', ')}. בדקו את הבחירות ואת חפיפות השעות ונסו שוב.`)
-      if (intent === 'review') {
-        try { await apiRequest(endpoints.submitTeacherReview, { method: 'POST' }) }
-        catch { throw new Error('הטיוטה נשמרה, אך השליחה לבדיקה לא הושלמה. בדקו את פרטי החובה ונסו לשלוח שוב.') }
-        return { submittedForReview: true }
-      }
-      return { submittedForReview: false }
+      await apiRequest(`${endpoints.currentTeacher}/profile`, { method: 'PUT', body: { firstName, lastName, phone, citySlug, avatarPath: avatarPath ?? '', headline, bio, hourlyPrice: Number(price), yearsExperience: Number(experience), teachesOnline: online, teachesInPerson: inPerson, subjectSlugs, levelIds, citySlugs, slots: slots.map(slot => ({ dayOfWeek: slot.day_of_week, startTime: slot.start_time, endTime: slot.end_time, timezone: 'Asia/Jerusalem', isActive: true })), submitForReview: intent === 'review' } })
+      return { submittedForReview: intent === 'review' }
     },
     onSuccess: async ({ submittedForReview }, intent) => {
+      setSavedDraft(currentDraft)
+      try { if (draftOwner) clearOnboardingDraft(sessionStorage, draftOwner) } catch { /* Storage is optional. */ }
       if (submittedForReview) {
         setSavedMessage('הפרופיל נשלח לבדיקה. הוא עדיין אינו מופיע בחיפוש; ההחלטה תופיע כאן ותישלח באימייל.')
         toast.success('הפרופיל נשמר ונשלח לבדיקה')
@@ -160,7 +163,7 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
       }
     },
     onError: (error) => {
-      const message = isNew ? 'השליחה לא אושרה. הפרטים נשארו כאן. בדקו את החיבור ונסו שוב; אם התשובה אבדה לאחר שמירה, ניסיון חוזר לא ייצור חשבון נוסף.' : error instanceof Error && /[\u0590-\u05ff]/.test(error.message) ? error.message : 'השמירה לא הושלמה. חלק מהפרטים עשויים להישמר; בדקו את החיבור ואת הנתונים ונסו שוב.'
+      const message = isNew ? 'השליחה לא אושרה. הפרטים נשארו כאן. בדקו את החיבור ונסו שוב; אם התשובה אבדה לאחר שמירה, ניסיון חוזר לא ייצור חשבון נוסף.' : error instanceof Error && /[\u0590-\u05ff]/.test(error.message) ? error.message : 'לא התקבל אישור שמירה. הפרטים נשארו כאן; בדקו את החיבור ונסו שוב.'
       setSaveError(message)
       toast.error(message)
     },
@@ -168,7 +171,7 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
   })
 
   const toggle = (values: number[], value: number, setter: (next: number[]) => void) => setter(values.includes(value) ? values.filter((item) => item !== value) : [...values, value])
-  const addSlot = () => setSlots((current) => [...current, { day_of_week: 0, start_time: '16:00', end_time: '18:00' }])
+  const addSlot = () => setSlots((current) => [...current, { day_of_week: 0, start_time: '09:00', end_time: '21:00' }])
   const updateSlot = (index: number, field: keyof EditableSlot, value: string | number) => setSlots((current) => current.map((slot, slotIndex) => slotIndex === index ? { ...slot, [field]: value } : slot))
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -180,6 +183,8 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
     save.mutate(intent)
   }
   return <AccountShell title={teacher.profile_status === 'draft' ? 'השלמת פרופיל המורה' : 'פרטי ההוראה'} description="כל מה שתלמידים צריכים כדי להחליט אם לפנות אליכם." actions={teacher.profile_status === 'published' ? <span className="published-badge"><BadgeCheck />הפרופיל מפורסם</span> : teacher.profile_status === 'pending' ? <span className="published-badge is-pending"><Clock3 />ממתין לאישור</span> : null}>
+    <UnsavedChangesDialog when={isDirty && !save.isPending} />
+    {restoredDraft && !savedMessage ? <p role="status" className="profile-save-status">הטיוטה מהלשונית הזו שוחזרה. הפרטים עדיין לא נשלחו.</p> : null}
     {isNew ? <p className="onboarding-account-notice">החשבון שלך נשאר חשבון תלמיד עד לשמירה ושליחה מוצלחת. לאחר השליחה הוא יהפוך לחשבון מורה, ולא יהיה ניתן לשלוח ממנו בקשות שיעור כתלמיד. הפרסום בחיפוש ימתין לאישור מנהל.</p> : null}
     <p className="onboarding-progress" role="status">{stepMissing.filter((items) => !items.length).length} מתוך 4 שלבים הושלמו</p>
     {teacher.profile_status === 'published' ? <Link className="button-link" to={`/teachers/${teacher.slug}`}>צפייה בפרופיל הציבורי</Link> : null}
@@ -218,7 +223,7 @@ function ChoiceGrid({ title, icon, items, selected, onToggle }: { title: string;
 }
 
 function OnboardingStep({ index, title, open, missing, onOpen, onContinue, children }: { index: number; title: string; open: boolean; missing: string[]; onOpen: () => void; onContinue?: () => void; children: ReactNode }) {
-  return <details className="onboarding-step" open={open}><summary onClick={(event) => { event.preventDefault(); onOpen() }}><span className="onboarding-step__number">{missing.length ? index + 1 : <Check aria-hidden="true" />}</span><span><strong>{title}</strong><small>{missing.length === 1 ? 'נותר פרט אחד להשלמה' : missing.length ? `נותרו ${missing.length} פרטים להשלמה` : 'הושלם'}</small></span><ChevronDown aria-hidden="true" /></summary><div className="onboarding-step__body">{children}{onContinue ? <Button type="button" className="onboarding-next" onClick={onContinue}>המשך לשלב הבא</Button> : null}</div></details>
+  return <details className="onboarding-step" open={open}><summary role="button" aria-expanded={open} aria-controls={`onboarding-step-${index}`} onClick={(event) => { event.preventDefault(); onOpen() }}><span className="onboarding-step__number">{missing.length ? index + 1 : <Check aria-hidden="true" />}</span><span><strong>{title}</strong><small>{missing.length === 1 ? 'נותר פרט אחד להשלמה' : missing.length ? `נותרו ${missing.length} פרטים להשלמה` : 'הושלם'}</small></span><ChevronDown aria-hidden="true" /></summary><div id={`onboarding-step-${index}`} className="onboarding-step__body">{children}{onContinue ? <Button type="button" className="onboarding-next" onClick={onContinue}>המשך לשלב הבא</Button> : null}</div></details>
 }
 
 function AvatarUpload({ currentPath, onUploaded, onBusyChange }: { currentPath: string | null; onUploaded: (path: string) => void; onBusyChange: (busy: boolean) => void }) {

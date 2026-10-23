@@ -1,8 +1,10 @@
 import {
   Bell,
   CalendarDays,
+  CreditCard,
   ClipboardList,
   Heart,
+  LifeBuoy,
   LayoutDashboard,
   MessageCircle,
   Star,
@@ -37,6 +39,8 @@ const teacherLinks = [
   { to: '/teacher/onboarding', label: 'השלמת הפרופיל', icon: ClipboardList },
   { to: '/teacher/inquiries', label: 'פניות מתלמידים', icon: MessageCircle },
   { to: '/teacher/students', label: 'התלמידים שלי', icon: UsersRound },
+  { to: '/teacher/reviews', label: 'ביקורות ותגובות', icon: Star },
+  { to: '/teacher/access', label: 'גישה ותשלום', icon: CreditCard },
   { to: '/teacher/schedule', label: 'זמינות שבועית', icon: CalendarDays },
 ] as const
 
@@ -54,7 +58,7 @@ export function AccountShell({ title, description, actions, children }: AccountS
   return (
     <div className="workspace-page" dir="rtl">
       <Header />
-      <main className="page-shell workspace-layout">
+      <main id="main-content" tabIndex={-1} className="page-shell workspace-layout">
         <aside className="workspace-sidebar">
           <div className="workspace-sidebar__identity">
             <span>{profile?.first_name.trim().charAt(0) || 'מ'}</span>
@@ -73,6 +77,7 @@ export function AccountShell({ title, description, actions, children }: AccountS
               <Bell aria-hidden="true" />התראות
               {unreadQuery.data?.count ? <span className="workspace-nav-count">{unreadQuery.data.count}</span> : null}
             </NavLink>
+            <NavLink to="/support" className={({ isActive }) => isActive ? 'is-active' : undefined}><LifeBuoy aria-hidden="true" />עזרה ותמיכה</NavLink>
           </nav>
         </aside>
 
