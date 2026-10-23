@@ -32,6 +32,28 @@ Selectors display Hebrew and submit slugs. Never add server secrets to `VITE_*`.
 Query devtools are opt-in during development: set `VITE_ENABLE_QUERY_DEVTOOLS=true`
 to show their floating launcher. They are hidden by default and in production.
 
+## Production Deployment
+
+[.env.production](.env.production) supplies the public production API default:
+`https://more-li-backend.vercel.app/api`. Local development keeps the API from
+your local environment, normally `http://localhost:5146/api`. Vercel environment
+variables override the committed defaults; remove or update any old production
+`VITE_API_URL` value that still points to localhost or a previous API.
+
+Connect this repository to a Vercel **Vite** project using Node 24.x,
+`npm run build`, and output directory `dist`. Set
+`VITE_CLERK_PUBLISHABLE_KEY` to the matching live Clerk publishable key in Vercel's
+production build environment. The production build guard rejects test keys.
+Only public defaults belong in the committed production environment file; keep
+server secrets out of every `VITE_*` variable and out of this repository.
+
+Before release, `GET https://more-li-backend.vercel.app/api/health` must succeed.
+Set the backend `PUBLIC_APP_URL` to the final client URL and include that exact
+origin in `CORS_ORIGIN`; configure the same frontend domain and redirect URLs
+in Clerk. These server/provider settings are not changed by building the client.
+Rebuild after changing client environment values. Existing browser E2E tests
+provision data and must not be run against the production backend.
+
 ## Teacher Search
 
 - A subject ending in ` - הכל` includes its entire category. Specific subsubjects

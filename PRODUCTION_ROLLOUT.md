@@ -27,21 +27,28 @@ reserved bookings. Code is prepared for staging, not certified for public launch
 
 ### Vercel Setup
 
-1. Import root `client` as **Vite**, Node 24.x, `npm ci`, `npm run build`, output `dist`.
+1. Import the separate client Git repository at its root as **Vite**, Node 24.x,
+   `npm ci`, `npm run build`, output `dist`.
 2. [vercel.json](vercel.json) supplies SPA deep-link rewrites and security headers.
    Do not deploy the Vite dev server.
-3. Set `VITE_API_URL=https://<api-domain>/api` and matching
-   `VITE_CLERK_PUBLISHABLE_KEY=pk_live_...` before build. No server keys in Vite.
+3. [.env.production](.env.production) supplies
+   `VITE_API_URL=https://more-li-backend.vercel.app/api`. Configure matching
+   `VITE_CLERK_PUBLISHABLE_KEY=pk_live_...` in Vercel before build. Vercel environment
+   values override the file, so update/remove any stale API override. The file
+   contains public defaults only; no server keys belong in Vite.
 4. Vercel production builds reject localhost/non-HTTPS API URLs and test Clerk keys.
    Local builds may use development settings; previews need staging API/Clerk/data.
 5. Set matching backend `PUBLIC_APP_URL`/`CORS_ORIGIN`, live Clerk allowed origins,
    redirect/account URLs and verified-email requirements; rebuild after env changes.
 6. Verify direct links and refresh, signup, account switching, all roles and inboxes
    on deployed domains. Actual Vercel deployment has not been run here.
+7. Require a successful backend `/api/health` response before certifying integration.
+   A deployed URL or successful client build does not prove the backend is healthy.
+   Do not run the data-provisioning browser E2E suite against production.
 
-Only `backend` is currently a Git repository; root/client are not. Choose monorepo
-or separate client repository before connecting Vercel. No repository/commit was
-created automatically. See [backend rollout](../backend/PRODUCTION_ROLLOUT.md).
+The client and backend are separate Git repositories. No repository/commit or
+client deployment was created automatically.
+See [backend rollout](../backend/PRODUCTION_ROLLOUT.md).
 
 ### Remaining Public-Launch Gates
 
