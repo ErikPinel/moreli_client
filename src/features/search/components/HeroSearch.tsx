@@ -32,20 +32,20 @@ export function HeroSearch() {
   return (
     <form
       className="hero-search"
-      aria-label="חיפוש מורה"
+      aria-labelledby="hero-search-title"
       onSubmit={submit}
     >
       <SearchCombobox
         label="מה תרצו ללמוד?"
-        placeholder="לדוגמה: מתמטיקה, אנגלית..."
+        placeholder="מתמטיקה, אנגלית, פסנתר..."
         icon={<BookOpen className="size-5" />}
         options={subjectOptions}
         value={subject}
         onChange={setSubject}
       />
       <SearchCombobox
-        label="איפה?"
-        placeholder="אונליין או אזור מגורים"
+        label="איפה תרצו ללמוד?"
+        placeholder="עיר או אונליין"
         icon={<MapPin className="size-5" />}
         options={cityOptions}
         value={location}

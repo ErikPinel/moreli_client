@@ -2,6 +2,14 @@ import { GraduationCap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
+export function BrandName({ className }: { className?: string }) {
+  return (
+    <span className={cn('brand-name', className)} dir="rtl">
+      מוֹרֶה<span className="brand-name__suffix">לִי</span>
+    </span>
+  )
+}
+
 export function Logo({ className }: { className?: string }) {
   return (
     <Link
@@ -10,10 +18,7 @@ export function Logo({ className }: { className?: string }) {
       aria-label="מורהלי - עמוד הבית"
     >
       <span className="site-logo__mark"><GraduationCap aria-hidden="true" /></span>
-      <span className="site-logo__name">
-        מורה
-        <span>לי</span>
-      </span>
+      <BrandName />
     </Link>
   )
 }

@@ -9,9 +9,9 @@ import { AccountViewSwitch } from '@/features/account/AccountViewSwitch'
 import { Logo } from './Logo'
 
 const publicNavigation = [
-  { label: 'מציאת מורים', to: '/teachers' },
-  { label: 'למורים', to: '/teach' },
+  { label: 'חיפוש מורים', to: '/teachers' },
   { label: 'איך זה עובד', to: '/#how-it-works' },
+  { label: 'למורים', to: '/teach' },
 ] as const
 
 export function Header() {
@@ -64,7 +64,7 @@ export function Header() {
         <div className="site-actions">
           {!user ? (
             <>
-              <Link className="site-actions__student" to="/signup">הרשמה כתלמיד</Link>
+              <Link className="site-actions__student" to="/signup">הרשמה לתלמידים</Link>
               <Link className="site-actions__login" to="/login">התחברות</Link>
             </>
           ) : (
@@ -78,7 +78,7 @@ export function Header() {
           ) : null}
           {canTeach ? <AccountViewSwitch compact /> : (
             <Link className="site-actions__teach" to="/teach">
-              הצטרפות כמורה
+              הצטרפות כמורים
               <UserRoundPlus className="size-4" aria-hidden="true" />
             </Link>
           )}
@@ -127,7 +127,7 @@ export function Header() {
                 התחברות
               </Link>
               <Link to="/signup" onClick={() => setIsOpen(false)}>
-                הרשמה כתלמיד
+                הרשמה לתלמידים
               </Link>
             </>
           )}
@@ -138,7 +138,7 @@ export function Header() {
             </div>
           ) : (
             <Link className="text-primary" to="/teach" onClick={() => setIsOpen(false)}>
-              הצטרפות כמורה
+              הצטרפות כמורים
             </Link>
           )}
         </nav>

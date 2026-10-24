@@ -9,9 +9,9 @@ export function SubjectsSection() {
     <section className="page-shell subjects-section" aria-labelledby="subjects-title">
       <div className="subjects-section__header">
         <div>
-          <p className="section-kicker">מאיפה מתחילים?</p>
+          <p className="section-kicker">מקצועות ותחומי לימוד</p>
           <h2 id="subjects-title" className="section-title">
-            בוחרים <span className="subjects-section__mark">מקצוע<ScribbleUnderline /></span>, אנחנו מראים מורים.
+            מה תרצו <span className="subjects-section__mark">ללמוד<ScribbleUnderline /></span>?
           </h2>
         </div>
         <Link className="text-link" to="/teachers">
@@ -38,7 +38,7 @@ export function SubjectsSection() {
             <span className="subject-tile__art"><SubjectIllustration subject="more" /></span>
             <span className="subject-tile__body">
               <strong>משהו אחר?</strong>
-              <span>מאות תחומים, משחמט ועד ספרדית</span>
+              <span>חפשו מורים בתחומים נוספים</span>
             </span>
             <span className="subject-tile__go" aria-hidden="true"><ArrowLeft /></span>
           </Link>

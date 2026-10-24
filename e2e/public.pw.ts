@@ -16,6 +16,57 @@ test.beforeEach(async ({ page }) => {
 
 test.afterEach(async ({ page }) => { await page.unrouteAll({ behavior: 'ignoreErrors' }) })
 
+test('homepage wordmarks keep their niqqud and orange suffix at every breakpoint', async ({ page }) => {
+  await page.route('**/api/teachers?**', route => route.fulfill({ json: {
+    items: [], page: 1, limit: 5, hasMore: false, meta: { total: 0, pageCount: 0 },
+  } }))
+  await page.goto('/')
+  await expect(page.getByRole('heading', { level: 1, name: 'מורה פרטי שמתאים לכם', exact: true })).toBeVisible()
+  await expect(page.getByRole('form', { name: 'איזה מורה אתם מחפשים?', exact: true })).toBeVisible()
+  await expect(page.locator('#how-it-works')).toContainText('אחרי אישור המורה תקבלו פרטי קשר')
+  await expect(page.locator('.teacher-acquisition__benefits')).toContainText('התלמיד החדש הראשון ללא עלות')
+
+  const wordmarks = page.locator('.brand-name')
+  await expect(wordmarks).toHaveCount(4)
+  for (const width of [320, 390, 768, 1024, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await expect(page.getByRole('heading', { name: 'איזה מורה אתם מחפשים?', exact: true })).toBeVisible()
+    for (const wordmark of await wordmarks.all()) {
+      await expect(wordmark).toHaveText('מוֹרֶהלִי')
+      await expect(wordmark).toHaveCSS('color', 'rgb(12, 36, 79)')
+      await expect(wordmark).toHaveCSS('direction', 'rtl')
+      await expect(wordmark).toHaveCSS('white-space', 'nowrap')
+      await expect(wordmark.locator('.brand-name__suffix')).toHaveText('לִי')
+      await expect(wordmark.locator('.brand-name__suffix')).toHaveCSS('color', 'rgb(255, 90, 10)')
+    }
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    const geometry = await page.locator('.hero-search__submit').boundingBox()
+    expect(geometry?.width).toBeGreaterThanOrEqual(44)
+    expect(geometry?.height).toBeGreaterThanOrEqual(44)
+  }
+})
+
+test('public navigation uses consistent labels on desktop and mobile', async ({ page }, testInfo) => {
+  await page.route('**/api/teachers?**', route => route.fulfill({ json: {
+    items: [], page: 1, limit: 5, hasMore: false, meta: { total: 0, pageCount: 0 },
+  } }))
+  await page.goto('/')
+  if (testInfo.project.name === 'mobile') {
+    await page.getByRole('button', { name: 'פתיחת תפריט' }).click()
+  }
+  const navigation = page.getByRole('navigation', {
+    name: testInfo.project.name === 'mobile' ? 'ניווט למובייל' : 'ניווט ראשי', exact: true,
+  })
+  for (const [name, href] of [['חיפוש מורים', '/teachers'], ['איך זה עובד', '/#how-it-works'], ['למורים', '/teach']]) {
+    await expect(navigation.getByRole('link', { name, exact: true })).toHaveAttribute('href', href)
+  }
+  const actions = testInfo.project.name === 'mobile' ? navigation : page.locator('.site-actions')
+  await expect(actions.getByRole('link', { name: 'הרשמה לתלמידים', exact: true })).toHaveAttribute('href', '/signup')
+  await expect(actions.getByRole('link', { name: 'הצטרפות כמורים', exact: true })).toHaveAttribute('href', '/teach')
+  await navigation.getByRole('link', { name: 'חיפוש מורים', exact: true }).click()
+  await expect(page).toHaveURL(/\/teachers$/)
+})
+
 test('public pages have a main landmark, working navigation and no horizontal overflow', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.name))
@@ -96,7 +147,7 @@ test('auth service failure has recovery actions instead of an endless loading sc
   await expect(page.getByRole('heading', { name: 'לא הצלחנו לחבר את החשבון' })).toBeVisible({ timeout: 25_000 })
   await expect(page.getByRole('button', { name: 'ניסיון נוסף' })).toBeVisible()
   await page.getByRole('link', { name: 'חזרה לדף הבית' }).click()
-  await expect(page.getByRole('heading', { name: 'מורהלי', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'מורה פרטי שמתאים לכם', exact: true })).toBeVisible()
 })
 
 test('unverified email recovery sends a code, handles failures and verifies before continuing', async ({ page }, testInfo) => {

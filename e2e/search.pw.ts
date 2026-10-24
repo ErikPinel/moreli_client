@@ -28,6 +28,31 @@ test.beforeEach(async ({ page }) => {
   ] }))
 })
 
+for (const location of ['פתח תקווה', 'אונליין']) {
+  test(`homepage search keeps the chosen subject and location: ${location}`, async ({ page }) => {
+    await page.route('**/api/teachers?**', route => route.fulfill({ json: {
+      items: [], page: 1, limit: 20, hasMore: false, meta: { total: 0, pageCount: 0 },
+    } }))
+    await page.goto('/')
+    const search = page.getByRole('form', { name: 'איזה מורה אתם מחפשים?', exact: true })
+    await search.getByRole('combobox', { name: 'מה תרצו ללמוד?', exact: true }).fill('מתמטיקה')
+    await search.getByRole('option', { name: math.name_he, exact: true }).click()
+    await search.getByRole('combobox', { name: 'איפה תרצו ללמוד?', exact: true }).fill(location)
+    await search.getByRole('option', { name: location, exact: true }).click()
+    await search.getByRole('button', { name: 'מצאו לי מורה', exact: true }).click()
+    await expect(page).toHaveURL(/\/teachers\?/)
+    const params = new URL(page.url()).searchParams
+    expect(params.get('subject')).toBe(math.slug)
+    if (location === 'אונליין') {
+      expect(params.get('online')).toBe('true')
+      expect(params.get('inPerson')).toBe('false')
+      expect(params.has('city')).toBe(false)
+    } else {
+      expect(params.get('city')).toBe('petah-tikva')
+    }
+  })
+}
+
 test('city searches separate local in-person teachers from online teachers and ignore old levels', async ({ page }) => {
   const requests: URLSearchParams[] = []
   await page.route('**/api/teachers?**', route => {

@@ -89,6 +89,17 @@ in Clerk. These server/provider settings are not changed by building the client.
 Rebuild after changing client environment values. Existing browser E2E tests
 provision data and must not be run against the production backend.
 
+## Public Copy And Branding
+
+The shared `BrandName` component in [Logo.tsx](src/components/layout/Logo.tsx)
+renders the pointed wordmark **מוֹרֶהלִי**. Use it for visual brand names:
+the `לי` suffix, including its niqqud, is always brand orange (`--primary`).
+Navigation, body text and accessible link labels keep the unpointed name
+`מורהלי`. Keep Hebrew copy direct, plural and specific to the actual workflow:
+visitors can browse teachers; sending a lesson request requires sign-in, and
+contact details are shared only after teacher approval. Do not promise immediate
+contact, guaranteed matches or unrestricted free teacher access.
+
 ## Teacher Search
 
 - A subject ending in ` - הכל` includes its entire category. Specific subsubjects

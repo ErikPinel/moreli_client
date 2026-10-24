@@ -15,10 +15,10 @@ export function RecommendedTeachersSection() {
       <div className="recommended-section__header">
         <div className="recommended-section__heading">
           <h2 id="recommended-title" className="section-title">מורים שכדאי להכיר</h2>
-          <p>מגוון מקצועות ודרכי למידה.</p>
+          <p>הכירו את המורים, בדקו מחירים ובחרו למי לפנות.</p>
         </div>
         <Link className="text-link" to="/teachers">
-          הצגת הכל
+          לכל המורים
           <ArrowLeft className="size-4" aria-hidden="true" />
         </Link>
       </div>

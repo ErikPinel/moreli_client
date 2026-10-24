@@ -6,19 +6,19 @@ const steps = [
     number: '01',
     icon: BookOpenCheck,
     title: 'בוחרים מקצוע ואזור',
-    description: 'מספרים לנו מה אתם מחפשים',
+    description: 'מה תרצו ללמוד, ובאיזו עיר או אונליין.',
   },
   {
     number: '02',
     icon: Search,
-    title: 'מקבלים המלצות',
-    description: 'אנחנו מציעים מורים מתאימים',
+    title: 'מכירים את המורים',
+    description: 'קוראים על הניסיון, בודקים מחירים ובוחרים למי לפנות.',
   },
   {
     number: '03',
     icon: MessageSquareText,
-    title: 'יוצרים קשר',
-    description: 'מדברים, מתאמים ומתחילים',
+    title: 'שולחים בקשה לשיעור',
+    description: 'אחרי אישור המורה תקבלו פרטי קשר ותוכלו לתאם ישירות.',
   },
 ] as const
 
@@ -28,8 +28,8 @@ export function HowItWorksSection() {
       <div className="page-shell how-it-works__inner">
         <div className="how-it-works__heading">
           <p className="section-kicker">איך זה עובד</p>
-          <h2 id="how-title" className="section-title">מהחיפוש לשיעור הראשון.</h2>
-          <p className="how-it-works__lead">שלושה צעדים פשוטים. אתם מחליטים מתי ועם מי.</p>
+          <h2 id="how-title" className="section-title">איך מוצאים מורה פרטי?</h2>
+          <p className="how-it-works__lead">אתם בוחרים את המורה ואת הזמן שנוח לכם.</p>
         </div>
         <ol className="steps-list">
           {steps.map(({ number, icon: Icon, title, description }) => (
@@ -48,7 +48,7 @@ export function HowItWorksSection() {
             מתחילים לחפש
             <ArrowLeft aria-hidden="true" />
           </Link>
-          <Link className="text-link" to="/match">או שנמצא מורה בשבילכם</Link>
+          <Link className="text-link" to="/match">צריכים עזרה בבחירת מורה?</Link>
         </div>
       </div>
     </section>

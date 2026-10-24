@@ -12,20 +12,20 @@ export function TeacherAcquisitionSection() {
       <div className="page-shell teacher-acquisition">
         <img className="teacher-acquisition__portrait" src={teacherPortrait} alt="" loading="lazy" />
         <div className="teacher-acquisition__copy">
-          <h2 id="teach-title">הידע שלכם. ההתקדמות של מישהו אחר.</h2>
+          <h2 id="teach-title">מורים פרטיים? הכירו תלמידים חדשים</h2>
           <p>
-            צרו פרופיל בחינם והתחילו לקבל פניות מתלמידים.
+            הציגו את הניסיון שלכם, בחרו מקצועות וקבעו מחיר וזמינות. התלמידים יוכלו למצוא אתכם ולשלוח בקשה לשיעור.
           </p>
         </div>
         <Link className="teacher-acquisition__cta" to="/teach">
           <UserRoundPlus aria-hidden="true" />
-          הצטרפות כמורה
+          הצטרפות כמורים
           <ArrowLeft aria-hidden="true" />
         </Link>
         <ul className="teacher-acquisition__benefits">
-          <li><Check /> קובעים את הזמינות שלכם</li>
-          <li><Check /> מקבלים פניות מתאימות</li>
-          <li><Check /> ללא עלות התחלה</li>
+          <li><Check /> פתיחת פרופיל בחינם</li>
+          <li><Check /> אתם קובעים את המחיר והזמינות</li>
+          <li><Check /> התלמיד החדש הראשון ללא עלות</li>
         </ul>
       </div>
     </section>

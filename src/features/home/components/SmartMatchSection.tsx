@@ -11,10 +11,10 @@ export function SmartMatchSection() {
         <SlidersHorizontal className="smart-match-band__icon" aria-hidden="true" />
         <div className="smart-match-band__copy">
           <h2 id="smart-match-title">
-            קצת יותר אישי.
+            רוצים עזרה בבחירת מורה?
           </h2>
           <p>
-            התאמה לפי המקצוע, התקציב והזמינות שלכם.
+            ספרו מה תרצו ללמוד, מה התקציב ומתי נוח לכם. נציע מורים לפי ההעדפות שלכם.
           </p>
           <ul className="smart-match-band__criteria" aria-hidden="true">
             {criteria.map((item) => <li key={item}>{item}</li>)}
@@ -25,7 +25,7 @@ export function SmartMatchSection() {
           <ScribbleArrow className="smart-match-band__note-arrow" />
         </p>
         <Link className="smart-match-band__cta" to="/match">
-          לבקשת התאמה
+          קבלו המלצות למורים
           <ArrowLeft aria-hidden="true" />
         </Link>
       </div>
