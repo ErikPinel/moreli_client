@@ -211,6 +211,9 @@
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 18px 32px; padding-block: 8px; font-size: .9rem; }
 .site-footer nav a:hover { color: var(--primary); text-decoration: underline; text-underline-offset: 5px; }
 .site-footer__bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; border-top: 1px solid var(--border); padding-top: 20px; color: var(--muted-foreground); font-size: .8rem; }
+.site-footer__contact { padding-bottom: 24px; color: var(--foreground); font-size: .9rem; line-height: 1.8; }
+.site-footer__contact address { display: flex; flex-wrap: wrap; gap: 8px 24px; font-style: normal; overflow-wrap: anywhere; }
+.site-footer__contact a { text-decoration: underline; text-underline-offset: 4px; }
 
 .profile-page {
   min-height: 100vh;
@@ -3058,6 +3061,22 @@ section.ticket-payment-panel > header { display: flex; align-items: start; gap: 
 .service-policy h2 { font-size: 1.2rem; margin-bottom: 12px; }
 .service-policy p { line-height: 1.9; margin-bottom: 12px; }
 .service-policy a { text-decoration: underline; text-underline-offset: 4px; }
+.legal-draft { overflow-wrap: anywhere; }
+.legal-draft-notice { border: 1px solid #df7c4e; border-inline-start-width: 4px; border-radius: 6px; background: #fff8ee; padding: 18px; color: var(--navy); }
+.legal-draft-notice p:last-child { margin-bottom: 0; }
+.legal-draft__documents { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-block: 24px; }
+.legal-draft__contents { border-block: 1px solid var(--border); padding-block: 20px; }
+.legal-draft ol, .legal-draft ul { padding-inline-start: 24px; margin-block: 12px; }
+.legal-draft ol { list-style: decimal; }
+.legal-draft ul { list-style: disc; }
+.legal-draft li { margin-block: 8px; }
+.legal-draft h2 { scroll-margin-top: 24px; }
+.legal-draft h3 { font-size: 1rem; font-weight: 700; margin-block: 20px 10px; }
+.legal-draft dt { font-weight: 700; margin-top: 14px; }
+.legal-draft dd { margin-inline-start: 0; }
+.legal-placeholder { background: #fff0e5; color: #8b310c; font-weight: 600; }
+.onboarding-legal-note { color: var(--muted-foreground); line-height: 1.8; margin-top: 20px; }
+.onboarding-legal-note a { color: var(--navy); text-decoration: underline; text-underline-offset: 4px; }
 .support-page { max-width: 1000px; padding-block: 36px 110px; }
 .service-heading { display: flex; gap: 16px; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 24px; }
 .service-heading > svg { width: 32px; height: 32px; color: var(--primary); }
@@ -3091,6 +3110,23 @@ section.ticket-payment-panel > header { display: flex; align-items: start; gap: 
 .support-helper { position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); left: max(8px, env(safe-area-inset-left)); z-index: 35; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; color: var(--navy); background: white; box-shadow: 0 2px 10px #0c244f12; }
 .support-helper svg { width: 19px; height: 19px; }
 .support-helper span { display: none; }
+.whatsapp-button {
+  position: fixed;
+  left: max(8px, env(safe-area-inset-left));
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 56px);
+  z-index: 35;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 4px 16px #0003;
+}
+.whatsapp-button:hover { background: #128c4a; }
+.whatsapp-button:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; }
+.whatsapp-button svg { width: 24px; height: 24px; }
 .lesson-calendar-summary { border-block: 1px solid var(--border); padding-block: 12px; font-size: .85rem; color: var(--muted-foreground); }
 .lesson-calendar-summary p:first-child { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--navy); }
 .lesson-calendar-summary svg { width: 18px; height: 18px; }

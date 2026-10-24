@@ -16,7 +16,10 @@ import {
   Search,
   Star,
 } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
+import { ApiError } from '@/api/api-error';
+import { setPageMetadata } from '@/lib/page-metadata';
+import { site } from '@/lib/site';
 import {
   Link,
   useNavigate,
@@ -314,6 +317,16 @@ export function TeacherPublicProfilePage() {
     queryFn: () => apiRequest<PublicTeacherDto>(endpoints.teacher(slug)),
     enabled: Boolean(slug),
   });
+  useEffect(() => {
+    if (!teacher.data) return;
+    const item = teacher.data;
+    const name = `${item.profile.first_name} ${item.profile.last_name}`.trim();
+    setPageMetadata(
+      `${name} — מורה פרטי | מורהלי`,
+      `${name}: ${item.headline || item.bio}`.replace(/\s+/g, ' ').slice(0, 160),
+      `${site.url}/teachers/${encodeURIComponent(slug)}`,
+    );
+  }, [teacher.data, slug]);
   const availability = useQuery({
     queryKey: ["teachers", "availability", slug],
     queryFn: () =>
@@ -354,6 +367,7 @@ export function TeacherPublicProfilePage() {
   if (teacher.isError || !teacher.data)
     return (
       <div dir="rtl">
+        {teacher.error instanceof ApiError && teacher.error.status === 404 ? <meta name="robots" content="noindex" /> : null}
         <Header />
         <main id="main-content" tabIndex={-1} className="page-shell teacher-public">
           <WorkspaceState tone="error">

@@ -1,0 +1,43 @@
+# Morehli | מורהלי
+
+## עברית — פרטי השירות
+
+מורהלי היא פלטפורמה לחיפוש מורים פרטיים בישראל לשיעורים אונליין ופנים אל פנים. אפשר לחפש לפי מקצוע, עיר, תקציב ואופן הלימוד, לעיין בפרופילי המורים ולהשוות תחומי הוראה, ניסיון מוצג ומחירים לשעה.
+
+תחומי הלימוד המוצגים באתר כוללים מתמטיקה, אנגלית, תכנות, פסנתר, גיטרה, פסיכומטרי וציור. לעזרה בבחירת מורה, התחילו מהמקצוע ומהמטרה שתרצו לקדם ובדקו את הפרטים בפרופיל.
+
+חיפוש וצפייה בפרופילים פתוחים ללא חשבון. לשליחת בקשה לשיעור נכנסים לחשבון ובוחרים מועד. לאחר אישור המורה נוצר השיעור הראשון ונפתחים פרטי הקשר להמשך התיאום. מורים יכולים להצטרף באמצעות מילוי פרופיל הוראה ושליחתו לבדיקה ואישור צוות מורהלי.
+
+לשאלות, לעזרה, לתקלה באתר או לתיקון מידע, פנו אלינו בהקדם:
+- טלפון בישראל: 0503939008
+- טלפון בינלאומי: +972503939008
+- דוא״ל: morehlisrael@gmail.com
+- וואטסאפ: https://wa.me/972503939008
+- אודות ויצירת קשר: https://morehli.co.il/about.html
+- תמיכה: https://morehli.co.il/support
+
+## English — service information
+
+Morehli connects students with private tutors in Israel for online and in-person lessons. Students can search by subject, city, budget and lesson format, review teaching backgrounds and compare hourly rates.
+
+Featured learning areas include mathematics, English, programming, piano, guitar, psychometric test preparation and drawing. Start with your subject and learning goal, then compare the relevant tutor profiles.
+
+Searching and browsing are available without an account. Sign in to request a lesson at your preferred time. Once the tutor accepts, the first lesson is created and contact details become available for coordination. Tutors can join by completing a teaching profile and submitting it for review and approval by the Morehli team. The main marketplace interface is in Hebrew, with business information also available in English.
+
+For questions, help choosing a tutor, website issues or corrections, please contact us promptly:
+- Phone in Israel: 0503939008
+- International phone: +972503939008
+- Email: morehlisrael@gmail.com
+- WhatsApp: https://wa.me/972503939008
+- About and contact: https://morehli.co.il/about-en.html
+- Support: https://morehli.co.il/support
+
+## קישורים שימושיים | Useful links
+
+- Official website: https://morehli.co.il/
+- Tutor directory: https://morehli.co.il/teachers
+- Join as a tutor: https://morehli.co.il/teach
+- Tutor access and payment terms: https://morehli.co.il/teacher-access-terms
+- Detailed service information in Hebrew and English: https://morehli.co.il/llms.txt
+- Sitemap: https://morehli.co.il/sitemap.xml
+- Crawler directives: https://morehli.co.il/robots.txt

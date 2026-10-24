@@ -90,6 +90,32 @@ async function preview(page: Page, options: { identity?: boolean; avatar?: boole
 const step = (page: Page, index: number) => page.locator('.onboarding-step').nth(index)
 const next = (page: Page, index: number) => step(page, index).getByRole('button', { name: 'המשך לשלב הבא', exact: true })
 
+for (const existing of [false, true]) {
+  test(`legal draft links open safely without losing unsaved teacher details: ${existing ? 'existing' : 'new'}`, async ({ page }) => {
+    const { writes, errors } = await preview(page, { existing })
+    await page.getByLabel('שם פרטי', { exact: true }).fill('טיוטה שלא נשלחה')
+    const note = page.locator('.onboarding-legal-note')
+    await expect(note).toContainText('אינם נוסח סופי')
+    for (const [path, title] of [['/terms', 'תנאי שימוש'], ['/privacy', 'מדיניות פרטיות']]) {
+      const link = note.locator(`a[href="${path}"]`)
+      await expect(link).toHaveAttribute('target', '_blank')
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+      await expect(link).toHaveAccessibleName(/נפתח בלשונית חדשה/)
+      const popupPromise = page.waitForEvent('popup')
+      await link.click()
+      const popup = await popupPromise
+      await expect(popup).toHaveURL(new RegExp(`${path}$`))
+      await expect(popup.getByRole('heading', { level: 1, name: new RegExp(`^${title} — `) })).toBeVisible()
+      await popup.close()
+      await expect(page).toHaveURL(/\/onboarding-preview$/)
+      await expect(page.getByLabel('שם פרטי', { exact: true })).toHaveValue('טיוטה שלא נשלחה')
+      await expect(page.getByRole('dialog', { name: 'לצאת בלי לשמור?', exact: true })).toHaveCount(0)
+    }
+    expect(writes).toEqual([])
+    expect(errors).toEqual([])
+  })
+}
+
 test('incomplete identity blocks headers, keyboard and Continue and highlights only invalid fields', async ({ page }, testInfo) => {
   const { writes, errors } = await preview(page)
   const firstName = page.getByLabel('שם פרטי', { exact: true })

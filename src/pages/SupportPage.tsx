@@ -12,7 +12,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { WorkspaceState } from '@/features/account/AccountShell'
-import { useSupportContact, useTeacherAccess } from '@/features/account/useEngagementData'
+import { useTeacherAccess } from '@/features/account/useEngagementData'
+import { site } from '@/lib/site'
 import { supportStatuses as statuses } from '@/features/account/support-status'
 import type { PaginatedDto, SupportTicketDto } from '@/types/api'
 
@@ -21,7 +22,6 @@ const categories = { support: 'עזרה כללית', bug: 'דיווח תקלה',
 export function SupportPage() {
   const { id } = useParams()
   const { profile } = useAuth()
-  const contact = useSupportContact()
   const access = useTeacherAccess()
   const [params] = useSearchParams()
   const navigate = useNavigate()
@@ -37,7 +37,7 @@ export function SupportPage() {
   const supportPath = `/support${id ? `/${id}` : params.size ? `?${params.toString()}` : ''}`
   const create = useMutation({ mutationFn: () => apiRequest<SupportTicketDto>(endpoints.supportTickets, { method: 'POST', body: { requestKey, category, subject: subject.trim(), message: message.trim(), ...(params.get('lesson') ? { lessonId: params.get('lesson') } : {}), ...(params.get('inquiry') ? { inquiryId: params.get('inquiry') } : {}), ...(params.get('teacher') ? { teacherId: params.get('teacher') } : {}), ...(params.get('review') ? { reviewId: params.get('review') } : {}) } }), onSuccess: ticket => { setSubject(''); setMessage(''); setRequestKey(crypto.randomUUID()); void queryClient.invalidateQueries({ queryKey: ['account', 'support'] }); toast.success('הפנייה נשמרה ונשלחה לתמיכה'); navigate(`/support/${ticket.id}`) } })
   return <div dir="rtl"><Header /><main id="main-content" tabIndex={-1} className="page-shell support-page"><header className="service-heading"><LifeBuoy aria-hidden="true" /><div><p>מורהלי כאן בשבילכם</p><h1>{id ? 'פרטי הפנייה לתמיכה' : 'עזרה, תמיכה ודיווח תקלות'}</h1></div></header>
-    <section className="support-contact"><h2>יצירת קשר</h2>{contact.data ? <div className="contact-actions"><a href={`tel:${contact.data.phone}`}><Phone aria-hidden="true" /><span dir="ltr">{contact.data.phone}</span></a><a href={`mailto:${contact.data.email}`}><Mail aria-hidden="true" /><span dir="ltr">{contact.data.email}</span></a></div> : <p>{contact.isError ? 'פרטי הקשר לא נטענו.' : 'טוען פרטי קשר...'}</p>}<p>אין לשלוח סיסמאות, מפתחות API, פרטי כרטיס או קוד אימות. במקרה של סכנה מיידית פנו לגורמי החירום המתאימים, ולא לטופס באתר.</p></section>
+    <section className="support-contact"><h2>יצירת קשר</h2><p>יש שאלה, תקלה או מידע שדורש תיקון? פנו אלינו בהקדם בטלפון, בדוא״ל או בוואטסאפ. פרטי הקשר זמינים גם ללא חשבון.</p><div className="contact-actions"><a href={`tel:${site.internationalPhone}`}><Phone aria-hidden="true" /><span dir="ltr">{site.phone}</span></a><a href={`mailto:${site.email}`}><Mail aria-hidden="true" /><span dir="ltr">{site.email}</span></a><a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer"><MessageCircle aria-hidden="true" />וואטסאפ (בחלון חדש)</a></div><p>אין לשלוח סיסמאות, מפתחות API, פרטי כרטיס או קוד אימות. במקרה של סכנה מיידית פנו לגורמי החירום המתאימים, ולא לטופס באתר.</p></section>
     {!profile ? <WorkspaceState><MessageCircle /><h2>למעקב אחר פנייה אישית</h2><Button asChild><Link to={`/login?redirect=${encodeURIComponent(supportPath)}`}>כניסה לחשבון</Link></Button></WorkspaceState> : id ? <SupportThread id={id} /> : <>
       <form className="support-form" onSubmit={(event) => { event.preventDefault(); if (!create.isPending) create.mutate() }}>
         <h2>פנייה חדשה</h2>

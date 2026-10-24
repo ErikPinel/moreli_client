@@ -16,6 +16,56 @@ test.beforeEach(async ({ page }) => {
 
 test.afterEach(async ({ page }) => { await page.unrouteAll({ behavior: 'ignoreErrors' }) })
 
+test('floating WhatsApp contact opens the owner chat and stays accessible across viewport sizes', async ({ page, context }) => {
+  const message = 'שלום, הגעתי דרך מורהלי ואשמח לקבל עזרה.'
+  const chatUrl = `https://wa.me/972503939008?text=${encodeURIComponent(message)}`
+  await page.route('**/api/teachers?**', route => route.fulfill({ json: {
+    items: [], page: 1, limit: 5, hasMore: false, meta: { total: 0, pageCount: 0 },
+  } }))
+  const contact = page.getByRole('link', { name: 'פתיחת שיחה בוואטסאפ (בחלון חדש)', exact: true })
+  for (const path of ['/', '/teachers', '/support', '/login', '/does-not-exist']) {
+    await page.goto(path)
+    await expect(contact).toHaveCount(1)
+    await expect(contact).toBeVisible()
+    await expect(contact).toHaveAttribute('href', chatUrl)
+    await expect(contact).toHaveAttribute('target', '_blank')
+    await expect(contact).toHaveAttribute('rel', 'noopener noreferrer')
+  }
+
+  await page.goto('/')
+  for (const width of [320, 390, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await expect(contact).toHaveCSS('position', 'fixed')
+    await expect(contact).toHaveCSS('background-color', 'rgb(37, 211, 102)')
+    const before = await contact.boundingBox()
+    expect(before).not.toBeNull()
+    expect(before!.width).toBe(44)
+    expect(before!.height).toBe(44)
+    expect(before!.x).toBeGreaterThanOrEqual(0)
+    expect(before!.x + before!.width).toBeLessThanOrEqual(width)
+    expect(before!.y + before!.height).toBeLessThanOrEqual(900)
+    const support = await page.getByRole('link', { name: 'עזרה ודיווח תקלה', exact: true }).boundingBox()
+    expect(support).not.toBeNull()
+    expect(before!.x).toBe(support!.x)
+    expect(support!.y - (before!.y + before!.height)).toBe(12)
+    await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }))
+    expect(await contact.boundingBox()).toEqual(before)
+    await expect(contact).toBeInViewport()
+  }
+  await contact.focus()
+  await page.keyboard.press('Shift+Tab')
+  await page.keyboard.press('Tab')
+  await expect(contact).toBeFocused()
+  await context.route('https://wa.me/**', route => route.fulfill({ body: 'WhatsApp chat target' }))
+  const [chat] = await Promise.all([
+    page.waitForEvent('popup'),
+    page.keyboard.press('Enter'),
+  ])
+  await expect(chat).toHaveURL(chatUrl)
+  expect(new URL(chat.url()).searchParams.get('text')).toBe(message)
+  await chat.close()
+})
+
 test('homepage wordmarks keep their niqqud and orange suffix at every breakpoint', async ({ page }) => {
   await page.route('**/api/teachers?**', route => route.fulfill({ json: {
     items: [], page: 1, limit: 5, hasMore: false, meta: { total: 0, pageCount: 0 },
@@ -71,7 +121,7 @@ test('public navigation uses consistent labels on desktop and mobile', async ({ 
 test('public pages have a main landmark, working navigation and no horizontal overflow', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.name))
-  for (const path of ['/', '/teachers', '/teach', '/support', '/teacher-access-terms', '/does-not-exist']) {
+  for (const path of ['/', '/teachers', '/teach', '/support', '/teacher-access-terms', '/terms', '/privacy', '/does-not-exist']) {
     await page.goto(path)
     await expect(page.getByRole('main')).toBeVisible()
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
@@ -79,6 +129,72 @@ test('public pages have a main landmark, working navigation and no horizontal ov
     await expect(page.locator('#main-content')).toHaveCount(1)
   }
   expect(errors).toEqual([])
+})
+
+test('legal draft pages expose complete review content, noindex and working section anchors without overflow', async ({ page }, testInfo) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  for (const document of [
+    { path: '/terms', title: 'תנאי שימוש', lastSection: 'סגירת חשבון, שינויים ודין חל' },
+    { path: '/privacy', title: 'מדיניות פרטיות', lastSection: 'עדכונים ופניות' },
+  ]) {
+    await page.goto(document.path)
+    const main = page.getByRole('main')
+    const heading = main.getByRole('heading', { level: 1, name: new RegExp(`^${document.title} — `) })
+    await expect(heading).toBeVisible()
+    await expect(page.getByRole('banner')).toBeInViewport()
+    await expect(heading.locator('.brand-name__suffix')).toHaveText('לִי')
+    await expect(heading.locator('.brand-name__suffix')).toHaveCSS('color', 'rgb(255, 90, 10)')
+    await expect(main.getByRole('complementary', { name: 'טיוטה לבדיקה משפטית', exact: true })).toContainText('לא נוסח סופי')
+    await expect(main.locator('time')).toHaveAttribute('datetime', '2026-10-24')
+    await expect(main.locator('time')).toHaveText('24.10.2026')
+    await expect(main).toContainText('[השם המשפטי המלא של מפעיל האתר]')
+    await expect(main).toContainText('[פרטי העסק או התאגיד, ככל שנדרש]')
+    await expect(main).toContainText('[כתובת עסק לפניות]')
+    await expect(main.getByRole('heading', { level: 2 })).toHaveCount(13)
+    await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', 'noindex')
+    await expect(main.locator('a[href="mailto:morehlisrael@gmail.com"]').first()).toBeVisible()
+    await expect(main.locator('a[href="tel:0503939008"]').first()).toBeVisible()
+    for (const width of [320, 390, 768, 1280]) {
+      await page.setViewportSize({ width, height: 900 })
+      await expect(main).toHaveCSS('direction', 'rtl')
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+      if (width === 390 || width === 1280) {
+        await page.screenshot({ path: testInfo.outputPath(`${document.path.slice(1)}-draft-${width}.png`) })
+      }
+    }
+    const contents = main.getByRole('navigation', { name: 'תוכן העניינים', exact: true })
+    await expect(contents.getByRole('link')).toHaveCount(13)
+    await contents.getByRole('link', { name: document.lastSection, exact: true }).click()
+    await expect(main.getByRole('heading', { level: 2, name: `13. ${document.lastSection}`, exact: true })).toBeInViewport()
+    if (document.path === '/terms') {
+      await expect(main).toContainText('60 ש״ח לחודש גישה')
+      await expect(main).toContainText('אין חיוב אוטומטי ואין חידוש אוטומטי')
+      await expect(main).toContainText('18 ומעלה')
+    } else {
+      for (const provider of ['Clerk', 'Supabase', 'Vercel', 'Resend']) await expect(main).toContainText(provider)
+      await expect(main.locator('#privacy-retention').locator('..')).toContainText('[להשלמה לפני פרסום:')
+      await expect(main.locator('#privacy-browser-storage').locator('..')).toContainText('[לפני פרסום:')
+    }
+  }
+  expect(errors).toEqual([])
+})
+
+test('footer links identify drafts and existing teacher payment terms remain separate', async ({ page }) => {
+  await page.goto('/teach')
+  await page.getByRole('contentinfo').getByRole('link', { name: 'תנאי שימוש (טיוטה)', exact: true }).click()
+  await expect(page).toHaveURL(/\/terms$/)
+  await expect(page.getByRole('banner')).toBeInViewport()
+  await expect(page.getByRole('heading', { level: 1, name: /^תנאי שימוש — / })).toBeInViewport()
+  await page.getByRole('contentinfo').getByRole('link', { name: 'מדיניות פרטיות (טיוטה)', exact: true }).click()
+  await expect(page).toHaveURL(/\/privacy$/)
+  await expect(page.getByRole('banner')).toBeInViewport()
+  await expect(page.getByRole('heading', { level: 1, name: /^מדיניות פרטיות — / })).toBeInViewport()
+  await page.getByRole('contentinfo').getByRole('link', { name: 'תנאי גישת מורים', exact: true }).click()
+  await expect(page).toHaveURL(/\/teacher-access-terms$/)
+  await expect(page.getByRole('heading', { level: 1, name: 'גישת מורים ותשלום', exact: true })).toBeVisible()
+  await expect(page.getByRole('main')).toContainText('60 ש״ח')
+  await expect(page.locator('head meta[name="robots"]')).toHaveCount(0)
 })
 
 test('the teach page explains the shared account and sends visitors to sign up first', async ({ page }) => {
@@ -93,8 +209,8 @@ test('the teach page explains the shared account and sends visitors to sign up f
 
 test('public support offers real contacts and requires authentication for private tickets', async ({ page }) => {
   await page.goto('/support')
-  await expect(page.locator('main a[href^="mailto:"]')).toHaveAttribute('href', 'mailto:erik.zusin@gmail.com')
-  await expect(page.locator('main a[href^="tel:"]')).toHaveAttribute('href', 'tel:0503939008')
+  await expect(page.locator('main a[href^="mailto:"]')).toHaveAttribute('href', 'mailto:morehlisrael@gmail.com')
+  await expect(page.locator('main a[href^="tel:"]')).toHaveAttribute('href', 'tel:+972503939008')
   await page.getByRole('link', { name: 'כניסה לחשבון', exact: true }).click()
   await expect(page).toHaveURL(/\/login\?redirect=%2Fsupport/)
 })

@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
+import { publicDiscovery } from './seo/public-discovery.ts'
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url))
 
@@ -25,7 +26,7 @@ export default defineConfig(({ mode }) => {
     }
   }
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), publicDiscovery()],
     // SDKs can read the entire env object, so expose only supported public settings.
     envPrefix: [],
     define: {

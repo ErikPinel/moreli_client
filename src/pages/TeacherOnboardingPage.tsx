@@ -273,6 +273,11 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
         {fieldError('availability')}
       </OnboardingStep>
       </fieldset>
+      <p className="onboarding-legal-note">
+        לעיון: <Link to="/terms" target="_blank" rel="noopener noreferrer">תנאי שימוש (טיוטה)<span className="sr-only"> — נפתח בלשונית חדשה</span></Link>
+        {' · '}<Link to="/privacy" target="_blank" rel="noopener noreferrer">מדיניות פרטיות (טיוטה)<span className="sr-only"> — נפתח בלשונית חדשה</span></Link>.
+        {' '}המסמכים בבדיקה משפטית ואינם נוסח סופי.
+      </p>
       {isNew ? <><label className="onboarding-consent"><input type="checkbox" checked={acceptedTerms} disabled={save.isPending} onChange={(event) => setAcceptedTerms(event.target.checked)} {...fieldState('terms')} />אני מסכים/ה לתנאי השימוש ולמדיניות הפרטיות ומבקש/ת להוסיף פרופיל מורה לחשבון שלי.</label>{fieldError('terms')}</> : null}
       {savedMessage ? <p role="status" className="profile-save-status">{savedMessage}</p> : null}
       <div className="onboarding-save">{!isNew ? <Button type="submit" disabled={save.isPending || avatarPending || !catalogsReady} variant={teacher.profile_status === 'draft' ? 'outline' : 'default'}><Save />{save.isPending ? 'שומר...' : teacher.profile_status === 'draft' ? 'שמירת טיוטה' : 'שמירת שינויים'}</Button> : null}{teacher.profile_status === 'draft' ? <Button type="submit" value="review" disabled={save.isPending || avatarPending || !catalogsReady}><BadgeCheck />{save.isPending ? 'שומר ושולח...' : 'שמירה ושליחה לבדיקה'}</Button> : null}{isNew ? <Link to="/student">ביטול וחזרה לחשבון התלמיד</Link> : null}</div>

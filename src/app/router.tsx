@@ -21,6 +21,7 @@ import { AdminActivityPage, AdminPaymentsPage, AdminSupportPage } from '@/featur
 import { TeacherReviewsPage } from '@/pages/TeacherReviewsPage'
 import { TeacherAccessPage } from '@/pages/TeacherAccessPage'
 import { TeacherAccessTermsPage } from '@/pages/TeacherAccessTermsPage'
+import { PrivacyDraftPage, TermsDraftPage } from '@/pages/LegalDraftPages'
 import { TeachIntroPage } from '@/pages/TeachIntroPage'
 import { InquiryDetailPage } from '@/pages/InquiryDetailPage'
 import { SupportPage } from '@/pages/SupportPage'
@@ -36,6 +37,8 @@ export function AppRouter() {
       <Route path="/login/*" element={<LoginPage />} />
       <Route path="/signup/*" element={<LoginPage mode="signup" />} />
       <Route path="/teacher-access-terms" element={<TeacherAccessTermsPage />} />
+      <Route path="/terms" element={<TermsDraftPage />} />
+      <Route path="/privacy" element={<PrivacyDraftPage />} />
       <Route path="/support" element={<SupportPage />} />
       <Route path="/support/:id" element={<SupportPage />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
