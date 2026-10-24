@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BadgeCheck, CalendarDays, Camera, Check, ChevronDown, Clock3, GraduationCap, MapPin, Save } from 'lucide-react'
-import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react'
+import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link, Navigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -27,6 +27,13 @@ type EditableSlot = Pick<AvailabilitySlotDto, 'day_of_week' | 'start_time' | 'en
 type UploadUrl = { signedUrl: string; path: string; token: string }
 
 const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת']
+const stepFields = [
+  ['firstName', 'lastName', 'email', 'phone', 'city', 'avatar'],
+  ['headline', 'bio', 'price', 'experience', 'mode'],
+  ['subjects', 'areas'],
+  ['availability'],
+] as const
+type OnboardingField = typeof stepFields[number][number] | 'terms'
 
 export function TeachClaimPage() {
   const { profile } = useAuth()
@@ -54,6 +61,7 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
   })
   const [savedDraft, setSavedDraft] = useState<OnboardingDraft | null>(null)
   const [activeStep, setActiveStep] = useState(0)
+  const [validatedFields, setValidatedFields] = useState<Set<OnboardingField>>(() => new Set())
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [avatarPath, setAvatarPath] = useState(restoredDraft?.avatarPath ?? teacher.profile.avatar_path)
   const [avatarPending, setAvatarPending] = useState(false)
@@ -103,30 +111,60 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
     if (slots.some((other, otherIndex) => otherIndex < index && other.day_of_week === slot.day_of_week && other.start_time < slot.end_time && slot.start_time < other.end_time)) return [`חלון ${index + 1}: קיימת חפיפה ביום ${days[slot.day_of_week]}`]
     return []
   })
-  const stepMissing = [[
-    !firstName.trim() && 'שם פרטי', !lastName.trim() && 'שם משפחה',
-    phone.trim().length < 7 && 'טלפון תקין', !teacher.profile.contact_email && 'אימייל מאומת',
-    !citySlug && 'עיר מגורים', !avatarPath && 'תמונת פרופיל', avatarPending && 'סיום העלאת התמונה',
-  ], [
-    !headline.trim() && 'כותרת מקצועית', !bio.trim() && 'אודות',
-    (!Number.isInteger(Number(price)) || Number(price) < 1 || Number(price) > 100000) && 'מחיר לשעה בין 1 ל-100,000',
-    (experience === '' || !Number.isInteger(Number(experience)) || Number(experience) < 0 || Number(experience) > 80) && 'שנות ניסיון בין 0 ל-80',
-    !online && !inPerson && 'אופן לימוד',
-  ], [
-    !subjectSlugs.length && 'מקצוע הוראה',
-    inPerson && !citySlugs.length && 'עיר לשיעורים פרונטליים',
-  ], [!slots.length && 'לפחות חלון זמינות שבועי אחד', ...slotErrors]].map((items) => items.filter((item): item is string => Boolean(item)))
-  const missing = [...stepMissing.flat(), ...(isNew && !acceptedTerms ? ['אישור תנאי השימוש והוספת פרופיל מורה'] : [])]
+  const fieldErrors: Record<OnboardingField, string> = {
+    firstName: firstName.trim() ? '' : 'יש למלא שם פרטי.',
+    lastName: lastName.trim() ? '' : 'יש למלא שם משפחה.',
+    email: teacher.profile.contact_email ? '' : 'נדרשת כתובת אימייל מאומתת בחשבון.',
+    phone: phone.trim().length >= 7 ? '' : 'יש למלא מספר טלפון תקין, לפחות 7 תווים.',
+    city: citySlug ? '' : 'יש לבחור עיר מגורים מהרשימה.',
+    avatar: avatarPending ? 'יש להמתין לסיום העלאת התמונה.' : avatarPath ? '' : 'יש להעלות תמונת פרופיל.',
+    headline: headline.trim() ? '' : 'יש למלא כותרת מקצועית.',
+    bio: bio.trim() ? '' : 'יש לכתוב כמה מילים עליכם ועל הניסיון שלכם.',
+    price: Number.isInteger(Number(price)) && Number(price) >= 1 && Number(price) <= 100000 ? '' : 'יש למלא מחיר שלם בין 1 ל-100,000 ש״ח.',
+    experience: experience.trim() && Number.isInteger(Number(experience)) && Number(experience) >= 0 && Number(experience) <= 80 ? '' : 'יש למלא שנות ניסיון בין 0 ל-80. אפשר גם 0.',
+    mode: online || inPerson ? '' : 'יש לבחור לפחות אופן לימוד אחד.',
+    subjects: subjectSlugs.length ? '' : 'יש לבחור לפחות מקצוע הוראה אחד.',
+    areas: inPerson && !citySlugs.length ? 'יש לבחור לפחות עיר אחת לשיעורים פנים אל פנים.' : '',
+    availability: !slots.length ? 'יש להוסיף לפחות חלון זמינות שבועי אחד.' : slotErrors.join('. '),
+    terms: isNew && !acceptedTerms ? 'יש לאשר את תנאי השימוש והוספת פרופיל המורה.' : '',
+  }
+  const stepMissing = stepFields.map((fields) => fields.map((field) => fieldErrors[field]).filter(Boolean))
+  const missing = [...stepMissing.flat(), ...(fieldErrors.terms ? [fieldErrors.terms] : [])]
+  const firstIncompleteStep = stepMissing.findIndex((items) => items.length > 0)
+  const errorId = useId()
+  function validateFields(fields: readonly OnboardingField[]) {
+    setValidatedFields((current) => new Set([...current, ...fields]))
+  }
+  function fieldState(field: OnboardingField) {
+    const invalid = validatedFields.has(field) && Boolean(fieldErrors[field])
+    return {
+      'aria-invalid': invalid || undefined,
+      'aria-describedby': invalid ? `${errorId}-${field}` : undefined,
+      onBlur: () => validateFields([field]),
+    }
+  }
+  function fieldError(field: OnboardingField) {
+    return validatedFields.has(field) && fieldErrors[field]
+      ? <p id={`${errorId}-${field}`} className="onboarding-field-error">{fieldErrors[field]}</p>
+      : null
+  }
   function showMissing(items: string[], step: number) {
-    setSaveError(`יש להשלים או לתקן: ${items.join(', ')}.`)
+    validateFields(stepFields[step])
+    setSaveError(`יש להשלים או לתקן: ${items.join(' ')}`)
     setActiveStep(step)
     alertRef.current?.focus()
     alertRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
-  function continueStep(step: number) {
-    if (stepMissing[step].length) { showMissing(stepMissing[step], step); return }
+  function openStep(step: number) {
+    if (firstIncompleteStep !== -1 && firstIncompleteStep < step) {
+      showMissing(stepMissing[firstIncompleteStep], firstIncompleteStep)
+      return
+    }
     setSaveError('')
-    setActiveStep(step + 1)
+    setActiveStep(step)
+  }
+  function continueStep(step: number) {
+    openStep(step + 1)
   }
   const refresh = () => {
     void queryClient.invalidateQueries({ queryKey: accountKeys.teacher })
@@ -178,7 +216,11 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
     if (save.isPending) return
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null
     const intent = isNew || submitter?.value === 'review' ? 'review' : teacher.profile_status === 'draft' ? 'draft' : 'save'
-    if ((intent !== 'draft' && missing.length) || slotErrors.length) { showMissing(intent === 'draft' ? slotErrors : missing, Math.max(0, stepMissing.findIndex((items) => items.length > 0))); return }
+    if ((intent !== 'draft' && missing.length) || slotErrors.length) {
+      validateFields(intent === 'draft' ? ['availability'] : [...stepFields.flat(), 'terms'])
+      showMissing(intent === 'draft' ? slotErrors : missing, intent === 'draft' ? 3 : Math.max(0, firstIncompleteStep))
+      return
+    }
     save.mutate(intent)
   }
   return <AccountShell title={teacher.profile_status === 'draft' ? 'השלמת פרופיל המורה' : 'פרטי ההוראה'} description="כל מה שתלמידים צריכים כדי להחליט אם לפנות אליכם." actions={teacher.profile_status === 'published' ? <span className="published-badge"><BadgeCheck />הפרופיל מפורסם</span> : teacher.profile_status === 'pending' ? <span className="published-badge is-pending"><Clock3 />ממתין לאישור</span> : null}>
@@ -196,31 +238,50 @@ function TeacherOnboardingForm({ teacher, isNew = false }: { teacher: FormTeache
     <form className="onboarding-sections" onSubmit={submit} noValidate>
       <div ref={alertRef} tabIndex={-1} role={saveError ? 'alert' : undefined} className={saveError ? 'profile-save-error' : undefined}>{saveError}</div>
       <fieldset className="onboarding-fields" disabled={save.isPending || !catalogsReady}>
-      <OnboardingStep index={0} title="זהות ופרטי קשר" open={activeStep === 0} missing={stepMissing[0]} onOpen={() => setActiveStep(0)} onContinue={() => continueStep(0)}>
-        <AvatarUpload currentPath={avatarPath} onUploaded={setAvatarPath} onBusyChange={setAvatarPending} />
-        <div className="workspace-form__grid"><label><span>שם פרטי</span><Input required maxLength={100} value={firstName} onChange={(event) => setFirstName(event.target.value)} /></label><label><span>שם משפחה</span><Input required maxLength={100} value={lastName} onChange={(event) => setLastName(event.target.value)} /></label><label><span>אימייל מאומת</span><Input type="email" dir="ltr" value={teacher.profile.contact_email ?? ''} disabled /></label><label><span>טלפון</span><Input required type="tel" dir="ltr" inputMode="tel" maxLength={30} value={phone} onChange={(event) => setPhone(event.target.value)} /></label><CatalogCombobox catalog="cities" value={citySlug} onChange={setSelectedCity} label="עיר מגורים" placeholder="בחרו עיר" /></div>
+      <OnboardingStep index={0} title="זהות ופרטי קשר" open={activeStep === 0} missing={stepMissing[0]} onOpen={() => openStep(0)} onContinue={() => continueStep(0)}>
+        <div className="onboarding-field">
+          <div className="onboarding-field-group" role="group" aria-label="תמונת פרופיל" {...fieldState('avatar')}><AvatarUpload currentPath={avatarPath} onUploaded={setAvatarPath} onBusyChange={setAvatarPending} /></div>
+          {fieldError('avatar')}
+        </div>
+        <div className="workspace-form__grid">
+          <div className="onboarding-field"><label><span>שם פרטי</span><Input required maxLength={100} value={firstName} onChange={(event) => setFirstName(event.target.value)} {...fieldState('firstName')} /></label>{fieldError('firstName')}</div>
+          <div className="onboarding-field"><label><span>שם משפחה</span><Input required maxLength={100} value={lastName} onChange={(event) => setLastName(event.target.value)} {...fieldState('lastName')} /></label>{fieldError('lastName')}</div>
+          <div className="onboarding-field"><label><span>אימייל מאומת</span><Input type="email" dir="ltr" value={teacher.profile.contact_email ?? ''} disabled {...fieldState('email')} /></label>{fieldError('email')}</div>
+          <div className="onboarding-field"><label><span>טלפון</span><Input required type="tel" dir="ltr" inputMode="tel" maxLength={30} value={phone} onChange={(event) => setPhone(event.target.value)} {...fieldState('phone')} /></label>{fieldError('phone')}</div>
+          <div className="onboarding-field"><CatalogCombobox catalog="cities" value={citySlug} onChange={setSelectedCity} label="עיר מגורים" placeholder="בחרו עיר" {...fieldState('city')} />{fieldError('city')}</div>
+        </div>
       </OnboardingStep>
-      <OnboardingStep index={1} title="הצגה מקצועית" open={activeStep === 1} missing={stepMissing[1]} onOpen={() => setActiveStep(1)} onContinue={() => continueStep(1)}>
-        <label><span>כותרת מקצועית</span><Input required maxLength={200} value={headline} onChange={(event) => setHeadline(event.target.value)} /></label><label><span>אודות</span><Textarea required maxLength={5000} rows={7} value={bio} onChange={(event) => setBio(event.target.value)} /></label><div className="workspace-form__grid"><label><span>מחיר לשעה בשקלים</span><Input required type="number" min="1" max="100000" value={price} onChange={(event) => setPrice(event.target.value)} /></label><label><span>שנות ניסיון (0 למורים בתחילת הדרך)</span><Input required type="number" min="0" max="80" value={experience} onChange={(event) => setExperience(event.target.value)} /></label></div><fieldset className="workspace-checks"><legend>אופן הלימוד</legend><label><input type="checkbox" checked={online} onChange={(event) => setOnline(event.target.checked)} />אונליין</label><label><input type="checkbox" checked={inPerson} onChange={(event) => setInPerson(event.target.checked)} />פרונטלי</label></fieldset>
+      <OnboardingStep index={1} title="הצגה מקצועית" open={activeStep === 1} missing={stepMissing[1]} locked={firstIncompleteStep !== -1 && firstIncompleteStep < 1} onOpen={() => openStep(1)} onContinue={() => continueStep(1)}>
+        <div className="onboarding-field"><label><span>כותרת מקצועית</span><Input required maxLength={200} value={headline} onChange={(event) => setHeadline(event.target.value)} {...fieldState('headline')} /></label>{fieldError('headline')}</div>
+        <div className="onboarding-field"><label><span>אודות</span><Textarea required maxLength={5000} rows={7} value={bio} onChange={(event) => setBio(event.target.value)} {...fieldState('bio')} /></label>{fieldError('bio')}</div>
+        <div className="workspace-form__grid">
+          <div className="onboarding-field"><label><span>מחיר לשעה בשקלים</span><Input required type="number" min="1" max="100000" value={price} onChange={(event) => setPrice(event.target.value)} {...fieldState('price')} /></label>{fieldError('price')}</div>
+          <div className="onboarding-field"><label><span>שנות ניסיון (0 למורים בתחילת הדרך)</span><Input required type="number" min="0" max="80" value={experience} onChange={(event) => setExperience(event.target.value)} {...fieldState('experience')} /></label>{fieldError('experience')}</div>
+        </div>
+        <div className="onboarding-field"><fieldset className="workspace-checks onboarding-field-group" {...fieldState('mode')}><legend>אופן הלימוד</legend><label><input type="checkbox" checked={online} onChange={(event) => setOnline(event.target.checked)} />אונליין</label><label><input type="checkbox" checked={inPerson} onChange={(event) => setInPerson(event.target.checked)} />פנים אל פנים</label></fieldset>{fieldError('mode')}</div>
       </OnboardingStep>
-      <OnboardingStep index={2} title="מקצועות הוראה" open={activeStep === 2} missing={stepMissing[2]} onOpen={() => setActiveStep(2)} onContinue={() => continueStep(2)}>
-        <CatalogMultiSelect catalog="professions" selected={subjectSlugs} onChange={setSelectedSubjects} />{inPerson ? <CatalogMultiSelect catalog="cities" selected={citySlugs} onChange={setSelectedAreas} /> : null}
+      <OnboardingStep index={2} title="מקצועות הוראה" open={activeStep === 2} missing={stepMissing[2]} locked={firstIncompleteStep !== -1 && firstIncompleteStep < 2} onOpen={() => openStep(2)} onContinue={() => continueStep(2)}>
+        <div className="onboarding-field"><CatalogMultiSelect catalog="professions" selected={subjectSlugs} onChange={setSelectedSubjects} {...fieldState('subjects')} />{fieldError('subjects')}</div>
+        {inPerson ? <div className="onboarding-field"><CatalogMultiSelect catalog="cities" selected={citySlugs} onChange={setSelectedAreas} {...fieldState('areas')} />{fieldError('areas')}</div> : null}
       </OnboardingStep>
-      <OnboardingStep index={3} title="זמינות שבועית" open={activeStep === 3} missing={stepMissing[3]} onOpen={() => setActiveStep(3)}>
+      <OnboardingStep index={3} title="זמינות שבועית" open={activeStep === 3} missing={stepMissing[3]} locked={firstIncompleteStep !== -1 && firstIncompleteStep < 3} onOpen={() => openStep(3)}>
         <p>שעות הפעילות לפי שעון ישראל · תצוגת 24 שעות</p>
+        <div className="onboarding-field-group" role="group" aria-label="חלונות זמינות" {...fieldState('availability')}>
         <AvailabilityGrid slots={slots} onChange={setSlots} disabled={save.isPending} />
         <div className="onboarding-schedule">{slots.map((slot, index) => <div className="onboarding-slot" key={index}><label><span>יום בשבוע</span><select value={slot.day_of_week} onChange={(event) => updateSlot(index, 'day_of_week', Number(event.target.value))}>{days.map((day, dayIndex) => <option value={dayIndex} key={day}>{day}</option>)}</select></label><TimeSelect label="שעת התחלה" value={slot.start_time} onChange={(value) => updateSlot(index, 'start_time', value)} /><TimeSelect label="שעת סיום" value={slot.end_time} onChange={(value) => updateSlot(index, 'end_time', value)} /><Button type="button" variant="ghost" aria-label={`הסרת חלון ${index + 1}`} onClick={() => setSlots((current) => current.filter((_, slotIndex) => slotIndex !== index))}>הסרה</Button></div>)}</div><Button type="button" variant="outline" onClick={addSlot}><CalendarDays />הוספת חלון זמן</Button>
+        </div>
+        {fieldError('availability')}
       </OnboardingStep>
       </fieldset>
-      {isNew ? <label className="onboarding-consent"><input type="checkbox" checked={acceptedTerms} disabled={save.isPending} onChange={(event) => setAcceptedTerms(event.target.checked)} />אני מסכים/ה לתנאי השימוש ולמדיניות הפרטיות ומבקש/ת להוסיף פרופיל מורה לחשבון שלי.</label> : null}
+      {isNew ? <><label className="onboarding-consent"><input type="checkbox" checked={acceptedTerms} disabled={save.isPending} onChange={(event) => setAcceptedTerms(event.target.checked)} {...fieldState('terms')} />אני מסכים/ה לתנאי השימוש ולמדיניות הפרטיות ומבקש/ת להוסיף פרופיל מורה לחשבון שלי.</label>{fieldError('terms')}</> : null}
       {savedMessage ? <p role="status" className="profile-save-status">{savedMessage}</p> : null}
       <div className="onboarding-save">{!isNew ? <Button type="submit" disabled={save.isPending || avatarPending || !catalogsReady} variant={teacher.profile_status === 'draft' ? 'outline' : 'default'}><Save />{save.isPending ? 'שומר...' : teacher.profile_status === 'draft' ? 'שמירת טיוטה' : 'שמירת שינויים'}</Button> : null}{teacher.profile_status === 'draft' ? <Button type="submit" value="review" disabled={save.isPending || avatarPending || !catalogsReady}><BadgeCheck />{save.isPending ? 'שומר ושולח...' : 'שמירה ושליחה לבדיקה'}</Button> : null}{isNew ? <Link to="/student">ביטול וחזרה לחשבון התלמיד</Link> : null}</div>
     </form>
   </AccountShell>
 }
 
-function OnboardingStep({ index, title, open, missing, onOpen, onContinue, children }: { index: number; title: string; open: boolean; missing: string[]; onOpen: () => void; onContinue?: () => void; children: ReactNode }) {
-  return <details className="onboarding-step" open={open}><summary role="button" aria-expanded={open} aria-controls={`onboarding-step-${index}`} onClick={(event) => { event.preventDefault(); onOpen() }}><span className="onboarding-step__number">{missing.length ? index + 1 : <Check aria-hidden="true" />}</span><span><strong>{title}</strong><small>{missing.length === 1 ? 'נותר פרט אחד להשלמה' : missing.length ? `נותרו ${missing.length} פרטים להשלמה` : 'הושלם'}</small></span><ChevronDown aria-hidden="true" /></summary><div id={`onboarding-step-${index}`} className="onboarding-step__body">{children}{onContinue ? <Button type="button" className="onboarding-next" onClick={onContinue}>המשך לשלב הבא</Button> : null}</div></details>
+function OnboardingStep({ index, title, open, missing, locked = false, onOpen, onContinue, children }: { index: number; title: string; open: boolean; missing: string[]; locked?: boolean; onOpen: () => void; onContinue?: () => void; children: ReactNode }) {
+  return <details className="onboarding-step" open={open}><summary role="button" aria-expanded={open} aria-disabled={locked || undefined} aria-controls={`onboarding-step-${index}`} onClick={(event) => { event.preventDefault(); onOpen() }}><span className="onboarding-step__number">{locked || missing.length ? index + 1 : <Check aria-hidden="true" />}</span><span><strong>{title}</strong><small>{locked ? 'יש להשלים קודם את השלבים הקודמים' : missing.length === 1 ? 'נותר פרט אחד להשלמה' : missing.length ? `נותרו ${missing.length} פרטים להשלמה` : 'הושלם'}</small></span><ChevronDown aria-hidden="true" /></summary><div id={`onboarding-step-${index}`} className="onboarding-step__body">{children}{onContinue ? <Button type="button" className="onboarding-next" onClick={onContinue}>המשך לשלב הבא</Button> : null}</div></details>
 }
 
 function AvatarUpload({ currentPath, onUploaded, onBusyChange }: { currentPath: string | null; onUploaded: (path: string) => void; onBusyChange: (busy: boolean) => void }) {
@@ -276,8 +337,8 @@ function AvatarUpload({ currentPath, onUploaded, onBusyChange }: { currentPath: 
   return <><div className="avatar-upload"><div>{avatarImage ? <img src={avatarImage} alt="תצוגה מקדימה של תמונת הפרופיל" /> : <Camera />}</div><label><Camera />{upload.isPending ? 'מעלה תמונה...' : currentPath ? 'החלפת תמונה' : 'בחירת תמונת פרופיל'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={selectFile} disabled={upload.isPending} /></label><p>בחרו תמונה עד 20MB, מקמו את האזור החשוב והתאימו את הזום לפני השמירה.</p></div>{editorImage ? <AvatarCropDialog imageUrl={editorImage} isSaving={upload.isPending} onCancel={closeEditor} onError={() => toast.error('לא הצלחנו לעבד את התמונה')} onSave={(file) => upload.mutate(file)} /> : null}</>
 }
 
-function CatalogMultiSelect({ catalog, selected, onChange }: { catalog: keyof typeof catalogs; selected: string[]; onChange: (slugs: string[]) => void }) {
+function CatalogMultiSelect({ catalog, selected, onChange, ...validation }: { catalog: keyof typeof catalogs; selected: string[]; onChange: (slugs: string[]) => void; 'aria-invalid'?: boolean; 'aria-describedby'?: string; onBlur?: () => void }) {
   const isCity = catalog === 'cities'
   const title = isCity ? 'אזורי שירות' : 'מקצועות'
-  return <fieldset className="subject-multi-select"><legend>{isCity ? <MapPin /> : <GraduationCap />}{title}</legend><CatalogCombobox catalog={catalog} value="" excluded={selected} selected={selected} onRemove={(removed) => onChange(selected.filter((slug) => slug !== removed))} onChange={(slug) => { if (slug && !selected.includes(slug)) onChange([...selected, slug]) }} label={isCity ? 'ערים שבהן מתקיימים שיעורים' : 'מקצועות ההוראה'} placeholder={isCity ? 'חיפוש עיר נוספת' : 'חיפוש מקצוע נוסף'} /></fieldset>
+  return <fieldset className="subject-multi-select"><legend>{isCity ? <MapPin /> : <GraduationCap />}{title}</legend><CatalogCombobox catalog={catalog} value="" excluded={selected} selected={selected} onRemove={(removed) => onChange(selected.filter((slug) => slug !== removed))} onChange={(slug) => { if (slug && !selected.includes(slug)) onChange([...selected, slug]) }} label={isCity ? 'ערים שבהן מתקיימים שיעורים' : 'מקצועות ההוראה'} placeholder={isCity ? 'חיפוש עיר נוספת' : 'חיפוש מקצוע נוסף'} {...validation} /></fieldset>
 }

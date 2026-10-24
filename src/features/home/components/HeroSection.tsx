@@ -41,7 +41,7 @@ export function HeroSection() {
             <span><Check /> בתקציב שלי</span>
             <span><Check /> אונליין או קרוב לבית</span>
           </div>
-          <p className="home-hero__sticky" aria-hidden="true">שיעור ראשון?<br />מתחילים מחיפוש אחד</p>
+          <p className="home-hero__sticky" aria-hidden="true">השיעור הראשון<br />במרחק של קליק</p>
         </figure>
 
         <div className="home-hero__search">

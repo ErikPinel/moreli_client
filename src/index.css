@@ -3808,11 +3808,20 @@ section.ticket-payment-panel > header { display: flex; align-items: start; gap: 
 .onboarding-step > summary > span:nth-child(2) { flex: 1; min-width: 0; }
 .onboarding-step > summary strong { display: block; font-size: 1.1rem; }
 .onboarding-step > summary small { display: block; color: var(--muted-foreground); margin-top: 4px; }
+.onboarding-step > summary[aria-disabled="true"] { color: var(--muted-foreground); cursor: not-allowed; }
+.onboarding-step > summary[aria-disabled="true"] .onboarding-step__number { background: var(--muted); color: var(--muted-foreground); }
 .onboarding-step > summary > svg { flex-shrink: 0; transition: transform 150ms; }
 .onboarding-step[open] > summary > svg { transform: rotate(180deg); }
 .onboarding-step__number { display: grid; place-items: center; width: 40px; height: 40px; flex: 0 0 40px; background: var(--navy); color: white; border-radius: 6px; }
 .onboarding-step__body { display: grid; gap: 20px; padding-bottom: 24px; min-width: 0; }
 .onboarding-next { justify-self: start; }
+.onboarding-field, .onboarding-field > label { display: grid; align-content: start; gap: 8px; min-width: 0; }
+.onboarding-field-error { margin: 0; color: var(--destructive); font-size: .875rem; }
+.onboarding-field-group { min-width: 0; }
+.onboarding-field-group[role="group"] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.onboarding-field-group[aria-invalid="true"] { outline: 2px solid var(--destructive); outline-offset: 4px; border-radius: 6px; }
+.onboarding-sections .search-combobox:has(input[aria-invalid="true"]) .search-combobox__control { border-color: var(--destructive); box-shadow: 0 0 0 2px color-mix(in srgb, var(--destructive) 20%, transparent); }
+.onboarding-sections input[type="checkbox"][aria-invalid="true"] { outline: 2px solid var(--destructive); outline-offset: 2px; }
 .onboarding-consent { display: flex; align-items: flex-start; gap: 12px; line-height: 1.7; padding-block: 20px; }
 .onboarding-consent input { margin-top: 7px; flex-shrink: 0; }
 .onboarding-schedule { display: grid; gap: 16px; }

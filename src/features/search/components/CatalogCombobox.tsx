@@ -12,9 +12,12 @@ type Props = {
   excluded?: string[]
   selected?: string[]
   onRemove?: (slug: string) => void
+  'aria-invalid'?: boolean
+  'aria-describedby'?: string
+  onBlur?: () => void
 }
 
-export function CatalogCombobox({ catalog, value, onChange, label, placeholder = '', excluded, selected, onRemove }: Props) {
+export function CatalogCombobox({ catalog, value, onChange, label, placeholder = '', excluded, selected, onRemove, ...validation }: Props) {
   const options = useMemo(() => catalogs[catalog]
     .filter((item) => !excluded?.includes(item.slug))
     .map((item) => ({ id: item.slug, label: item.name_he })), [catalog, excluded])
@@ -29,5 +32,6 @@ export function CatalogCombobox({ catalog, value, onChange, label, placeholder =
     variant="field"
     selectedOptions={selected?.map((slug) => ({ id: slug, label: catalogs[catalog].find((item) => item.slug === slug)?.name_he ?? slug }))}
     onRemove={(id) => onRemove?.(String(id))}
+    {...validation}
   />
 }

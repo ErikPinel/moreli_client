@@ -22,6 +22,7 @@ test('homepage wordmarks keep their niqqud and orange suffix at every breakpoint
   } }))
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1, name: 'מורה פרטי שמתאים לכם', exact: true })).toBeVisible()
+  await expect(page.locator('.home-hero__sticky')).toHaveText(/השיעור הראשון\s*במרחק של קליק/)
   await expect(page.getByRole('form', { name: 'איזה מורה אתם מחפשים?', exact: true })).toBeVisible()
   await expect(page.locator('#how-it-works')).toContainText('אחרי אישור המורה תקבלו פרטי קשר')
   await expect(page.locator('.teacher-acquisition__benefits')).toContainText('התלמיד החדש הראשון ללא עלות')

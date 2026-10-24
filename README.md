@@ -128,6 +128,12 @@ The React Compiler is not enabled; follow the existing code style.
 
 ## Student And Tutor Workflows
 
+- Teacher-profile steps unlock in order, based on the current validity of all
+  preceding steps (including restored drafts). Clicking Continue or trying to
+  skip ahead keeps the earliest incomplete step open and shows its field errors.
+  Fields also validate on blur; red indicators and associated Hebrew messages
+  clear as the values are corrected. Full submission validates every required
+  field and consent; saving an existing private draft still permits partial data.
 - `/student/dashboard` is the student home; `/student/profile` remains the profile
   editor. Both account dashboards show the next five persisted lessons in server
   chronological order and separate lessons requiring the viewer's attendance update.

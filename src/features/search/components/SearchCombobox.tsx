@@ -22,6 +22,9 @@ type SearchComboboxProps = {
   className?: string
   selectedOptions?: SearchOption[]
   onRemove?: (id: SearchOption['id']) => void
+  'aria-invalid'?: boolean
+  'aria-describedby'?: string
+  onBlur?: () => void
 }
 
 export function SearchCombobox({
@@ -36,6 +39,9 @@ export function SearchCombobox({
   className,
   selectedOptions,
   onRemove,
+  'aria-invalid': invalid,
+  'aria-describedby': describedBy,
+  onBlur,
 }: SearchComboboxProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const inputId = useId()
@@ -104,7 +110,10 @@ export function SearchCombobox({
         className,
       )}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false)
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setIsOpen(false)
+          onBlur?.()
+        }
       }}
     >
       <label className="sr-only" htmlFor={inputId}>
@@ -126,6 +135,8 @@ export function SearchCombobox({
             id={inputId}
             role="combobox"
             aria-autocomplete="list"
+            aria-invalid={invalid}
+            aria-describedby={describedBy}
             aria-controls={listId}
             aria-expanded={isOpen}
             aria-activedescendant={
