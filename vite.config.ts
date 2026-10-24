@@ -9,8 +9,15 @@ const currentDirectory = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig(({ mode }) => {
   const environment = { ...loadEnv(mode, currentDirectory, ''), ...process.env }
+  const apiUrl = new URL(environment.VITE_API_URL || 'http://localhost:5146/api')
+  const sitemapProxy = {
+    '^/sitemap\\.xml(?:\\?.*)?$': {
+      target: apiUrl.origin,
+      changeOrigin: true,
+      rewrite: () => `${apiUrl.pathname.replace(/\/$/, '')}/seo/sitemap.xml`,
+    },
+  }
   if (environment.VERCEL_ENV === 'production') {
-    const apiUrl = new URL(environment.VITE_API_URL || 'http://localhost:5146/api')
     if (apiUrl.protocol !== 'https:' || apiUrl.hostname === 'localhost' || apiUrl.hostname === '127.0.0.1' || !apiUrl.pathname.endsWith('/api')) {
       throw new Error('Production VITE_API_URL must be the public HTTPS API URL ending in /api')
     }
@@ -27,6 +34,8 @@ export default defineConfig(({ mode }) => {
   }
   return {
     plugins: [react(), tailwindcss(), publicDiscovery()],
+    server: { proxy: sitemapProxy },
+    preview: { proxy: sitemapProxy },
     // SDKs can read the entire env object, so expose only supported public settings.
     envPrefix: [],
     define: {

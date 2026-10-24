@@ -1,29 +1,30 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { businessStructuredData, publicPages, site } from '../src/lib/site.ts'
 import { generatedDiscoveryFiles } from './public-discovery.ts'
 
 describe('public search and AI discovery', () => {
-  const staticFilenames = ['robots.txt', 'sitemap.xml', 'sitemap-pages.xml', 'llms.txt', 'ai.txt']
+  const staticFilenames = ['robots.txt', 'llms.txt', 'ai.txt']
   const files: Record<string, { content: string }> = {
     ...generatedDiscoveryFiles(),
+    'sitemap.xml': { content: readFileSync(new URL('../public/sitemap.xml', import.meta.url), 'utf8') },
     ...Object.fromEntries(staticFilenames.map(filename => [
       filename, { content: readFileSync(new URL(`../public/${filename}`, import.meta.url), 'utf8') },
     ])),
   }
   const vercel = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8')) as {
-    rewrites: { source: string; destination: string }[]
-    headers: { source: string; headers: { key: string; value: string }[] }[]
+    routes: { src?: string; dest?: string; handle?: string; headers?: Record<string, string>; continue?: boolean }[]
   }
 
-  it('provides real robots directives and an absolute sitemap index', () => {
+  it('advertises one ordinary sitemap with direct page URLs', () => {
     expect(files['robots.txt'].content.replace(/\r\n/g, '\n')).toBe(`User-agent: *\nAllow: /\n\nSitemap: ${site.url}/sitemap.xml\n`)
-    expect(files['sitemap.xml'].content).toContain(`<loc>${site.url}/sitemap-pages.xml</loc>`)
-    expect(files['sitemap.xml'].content).toContain(`<loc>${site.url}/sitemap-teachers.xml</loc>`)
+    expect(files['sitemap.xml'].content).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    expect(files['sitemap.xml'].content).not.toMatch(/sitemapindex|sitemap-pages\.xml|sitemap-teachers\.xml/)
+    expect(existsSync(new URL('../public/sitemap-pages.xml', import.meta.url))).toBe(false)
   })
 
   it('submits only canonical public pages, not drafts, filters or account routes', () => {
-    const xml = files['sitemap-pages.xml'].content
+    const xml = files['sitemap.xml'].content
     const urls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1])
     expect(urls).toEqual(publicPages.map(page => `${site.url}${page.path}`))
     expect(new Set(urls).size).toBe(publicPages.length)
@@ -61,11 +62,11 @@ describe('public search and AI discovery', () => {
     for (const filename of staticFilenames) expect(generatedDiscoveryFiles()).not.toHaveProperty(filename)
   })
 
-  it('declares explicit production text and XML content types', () => {
+  it('declares explicit production text content types', () => {
     for (const filename of staticFilenames) {
-      const group = vercel.headers.find(group => new RegExp(`^${group.source}$`).test(`/${filename}`) && group.headers.some(header => header.key === 'Content-Type'))
-      const type = filename.endsWith('.xml') ? 'application/xml' : 'text/plain'
-      expect(group?.headers.find(header => header.key === 'Content-Type')?.value).toBe(`${type}; charset=utf-8`)
+      const route = vercel.routes.find(route => route.src && new RegExp(`^${route.src}$`).test(`/${filename}`) && route.headers?.['Content-Type'])
+      expect(route?.headers?.['Content-Type']).toBe('text/plain; charset=utf-8')
+      expect(route?.continue).toBe(true)
     }
   })
 
@@ -106,17 +107,36 @@ describe('public search and AI discovery', () => {
   })
 
   it('keeps generated and missing root files out of the SPA rewrite while preserving profile slugs', () => {
-    const spa = vercel.rewrites.find(rewrite => rewrite.destination === '/index.html')!
-    const pattern = new RegExp(`^${spa.source}$`)
+    const spa = vercel.routes.find(route => route.dest === '/index.html')!
+    const pattern = new RegExp(`^${spa.src}$`)
     for (const path of ['/', '/teachers', '/teachers/name.with-dot', '/support/ticket-1', '/teacher/onboarding']) expect(pattern.test(path)).toBe(true)
     for (const path of ['/robots.txt', '/llms.txt', '/ai.txt', '/sitemap.xml', '/about.html', '/about-en.html', '/ai-catalog.json', '/missing.js', '/assets/missing.js']) expect(pattern.test(path)).toBe(false)
-    expect(vercel.rewrites.find(rewrite => rewrite.source === '/sitemap-teachers.xml')?.destination).toBe('https://more-li-backend.vercel.app/api/seo/teachers.xml')
+    const sitemapIndex = vercel.routes.findIndex(route => route.dest === 'https://more-li-backend.vercel.app/api/seo/sitemap.xml')
+    const filesystemIndex = vercel.routes.findIndex(route => route.handle === 'filesystem')
+    expect(sitemapIndex).toBeGreaterThanOrEqual(0)
+    expect(sitemapIndex).toBeLessThan(filesystemIndex)
+    expect(new RegExp(`^${vercel.routes[sitemapIndex].src}$`).test('/sitemap.xml')).toBe(true)
+    expect(vercel.routes.some(route => route.src?.includes('sitemap-teachers'))).toBe(false)
   })
 
   it('marks account routes, personal support threads and legal drafts noindex at HTTP level', () => {
-    const patterns = vercel.headers.filter(group => group.headers.some(header => header.key === 'X-Robots-Tag' && header.value === 'noindex')).map(group => new RegExp(`^${group.source.replace(':id', '[^/]+')}$`))
+    const routes = vercel.routes.filter(route => route.headers?.['X-Robots-Tag'] === 'noindex')
+    const patterns = routes.map(route => new RegExp(`^${route.src}$`))
     for (const path of ['/admin', '/student/requests', '/teacher/onboarding', '/login', '/signup', '/auth/callback', '/terms', '/privacy', '/match', '/support/private-id']) expect(patterns.some(pattern => pattern.test(path))).toBe(true)
     for (const page of publicPages) expect(patterns.some(pattern => pattern.test(page.path))).toBe(false)
+    expect(routes.every(route => route.continue)).toBe(true)
+  })
+
+  it('preserves the existing global response headers before filesystem routing', () => {
+    const route = vercel.routes.find(route => route.src === '/(.*)')
+    expect(route?.headers).toEqual({
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'no-referrer',
+      'X-Frame-Options': 'DENY',
+      'Content-Security-Policy': "frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    })
+    expect(route?.continue).toBe(true)
   })
 
   it('keeps support usable in the static fallback if JavaScript cannot load', () => {

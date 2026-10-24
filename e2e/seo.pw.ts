@@ -16,16 +16,24 @@ test('search discovery files have valid formats instead of SPA HTML', async ({ p
   expect(ai.status()).toBe(200)
   expect(ai.headers()['content-type']).toContain('text/plain')
   expect(await ai.text()).toContain('morehlisrael@gmail.com')
-  for (const [path, root] of [['/sitemap.xml', 'sitemapindex'], ['/sitemap-pages.xml', 'urlset']]) {
-    const response = await request.get(path)
-    expect(response.status()).toBe(200)
-    expect(response.headers()['content-type']).toMatch(/^(application|text)\/xml(?:;|$)/)
-    const parsed = await page.evaluate(xml => {
-      const document = new DOMParser().parseFromString(xml, 'application/xml')
-      return { error: Boolean(document.querySelector('parsererror')), root: document.documentElement.localName, namespace: document.documentElement.namespaceURI }
-    }, await response.text())
-    expect(parsed).toEqual({ error: false, root, namespace: 'http://www.sitemaps.org/schemas/sitemap/0.9' })
-  }
+  const response = await request.get('/sitemap.xml')
+  expect(response.status()).toBe(200)
+  expect(response.headers()['content-type']).toMatch(/^(application|text)\/xml(?:;|$)/)
+  const parsed = await page.evaluate(xml => {
+    const document = new DOMParser().parseFromString(xml, 'application/xml')
+    return {
+      error: Boolean(document.querySelector('parsererror')),
+      root: document.documentElement.localName,
+      namespace: document.documentElement.namespaceURI,
+      urls: [...document.querySelectorAll('url > loc')].map(element => element.textContent),
+    }
+  }, await response.text())
+  expect(parsed.error).toBe(false)
+  expect(parsed.root).toBe('urlset')
+  expect(parsed.namespace).toBe('http://www.sitemaps.org/schemas/sitemap/0.9')
+  for (const path of ['/', '/teachers', '/teach', '/support', '/teacher-access-terms', '/about.html', '/about-en.html']) expect(parsed.urls).toContain(`https://morehli.co.il${path}`)
+  expect(await response.text()).not.toMatch(/sitemapindex|sitemap-pages\.xml|sitemap-teachers\.xml/)
+  for (const path of ['/sitemap-pages.xml', '/sitemap-teachers.xml']) expect((await request.get(path)).status()).toBe(404)
   const unknown = await request.get('/ai-catalog.json')
   expect(unknown.status()).toBe(404)
 })

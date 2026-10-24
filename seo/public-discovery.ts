@@ -144,7 +144,7 @@ export function publicDiscovery(): Plugin {
         if (file) {
           response.setHeader('Content-Type', file.type)
           response.end(file.content)
-        } else if (pathname === '/ai-catalog.json') {
+        } else if (['/ai-catalog.json', '/sitemap-pages.xml', '/sitemap-teachers.xml'].includes(pathname)) {
           response.statusCode = 404
           response.end('Not found')
         } else {

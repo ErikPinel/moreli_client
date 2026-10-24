@@ -80,4 +80,16 @@ describe('Vercel client configuration', () => {
 
     expect(createConfig).not.toThrow()
   })
+
+  it('proxies the single sitemap to the same API endpoint in development and preview', () => {
+    const config = createConfig()
+    const key = '^/sitemap\\.xml(?:\\?.*)?$'
+    const proxy = config.server?.proxy?.[key]
+    if (!proxy || typeof proxy === 'string') throw new Error('Expected a sitemap proxy configuration')
+    expect(proxy.target).toBe('https://more-li-backend.vercel.app')
+    expect(proxy.rewrite?.('/sitemap.xml?check=1')).toBe('/api/seo/sitemap.xml')
+    expect(config.preview?.proxy?.[key]).toEqual(proxy)
+    expect(new RegExp(key).test('/sitemap.xml?check=1')).toBe(true)
+    expect(new RegExp(key).test('/sitemap.xml-other')).toBe(false)
+  })
 })
