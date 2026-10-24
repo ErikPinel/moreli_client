@@ -276,8 +276,9 @@ Only public browser-safe values may use the `VITE_` prefix.
 - Run screen-reader and contrast audits across public and account pages.
 - Add loading/error/offline recovery tests for critical mutations.
 - Add cross-browser checks for current Chrome, Edge, Firefox, and Safari.
-- Add production analytics and consent behavior without collecting private
-  inquiry or contact content.
+- Vercel Web Analytics is wired at the client root. Enable it in the Vercel
+  dashboard and verify deployed page views; finalize consent behavior without
+  collecting private inquiry or contact content.
 
 ## Current Validation Status
 

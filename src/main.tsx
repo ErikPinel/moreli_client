@@ -2,6 +2,7 @@ import { heIL } from '@clerk/localizations'
 import { ClerkProvider } from '@clerk/react'
 import { ui } from '@clerk/ui'
 import { shadcn } from '@clerk/ui/themes'
+import { Analytics } from '@vercel/analytics/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
@@ -24,5 +25,6 @@ createRoot(document.getElementById('root')!).render(
     >
       <App />
     </ClerkProvider>
+    <Analytics />
   </StrictMode>,
 )

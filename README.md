@@ -40,6 +40,15 @@ Selectors display Hebrew and submit slugs. Never add server secrets to `VITE_*`.
 Query devtools are opt-in during development: set `VITE_ENABLE_QUERY_DEVTOOLS=true`
 to show their floating launcher. They are hidden by default and in production.
 
+### Web Analytics
+
+`@vercel/analytics/react` is mounted once at the application root for Vercel
+Web Analytics. Enable **Analytics** in the client project's Vercel dashboard,
+then redeploy to start collecting page views. No analytics API key or additional
+client environment variable is required. Local development uses the SDK's debug
+mode and does not send analytics events. No custom events or form/contact
+payloads are added by this integration.
+
 ## Initial Vercel Deployment
 
 [.env.production](.env.production) supplies the public production API default:
